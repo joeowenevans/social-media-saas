@@ -64,7 +64,7 @@
 @layer utilities {
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: theme('colors.gray.300') transparent;
+    scrollbar-color: #d1d5db transparent;
   }
 
   .scrollbar-thin::-webkit-scrollbar {
@@ -77,7 +77,7 @@
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: theme('colors.gray.300');
+    background-color: #d1d5db;
     border-radius: 3px;
   }
 }
