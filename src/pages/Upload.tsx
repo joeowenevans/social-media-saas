@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { useBrand } from '../hooks/useBrand'
 import { MediaUploader } from '../components/upload/MediaUploader'
-import { ArrowLeft, Wand2 } from 'lucide-react'
+import { ArrowLeft, Wand2, Sparkles, Image, Send, FileText } from 'lucide-react'
 import type { Media } from '../types'
 import toast from 'react-hot-toast'
 import { supabase } from '../lib/supabase'
@@ -19,42 +19,39 @@ export function Upload() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-primary-50/30">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+          <p className="text-gray-500 text-sm">Loading...</p>
+        </div>
       </div>
     )
   }
 
-if (loading) {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-    </div>
-  )
-}
-
-if (!brand) {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md text-center">
-        <h2 className="text-2xl font-bold mb-4">Brand Profile Required</h2>
-        <p className="text-gray-600 mb-6">
-          Please create a brand profile first to use this feature.
-        </p>
-        <button
-          onClick={() => navigate('/settings')}
-          className="bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700"
-        >
-          Create Brand Profile
-        </button>
+  if (!brand) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-primary-50/30">
+        <div className="max-w-md w-full card p-8 text-center animate-fade-in">
+          <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-accent-500 shadow-lg mb-6">
+            <Sparkles className="h-8 w-8 text-white" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Brand Profile Required</h2>
+          <p className="text-gray-600 mb-6">
+            Please create a brand profile first to use this feature.
+          </p>
+          <button
+            onClick={() => navigate('/settings')}
+            className="btn-primary px-6 py-3 w-full"
+          >
+            Create Brand Profile
+          </button>
+        </div>
       </div>
-    </div>
-  )
-}
+    )
+  }
 
   const handleUploadComplete = async (media: Media) => {
     setUploadedMedia(media)
-    // Auto-generate caption
     await generateCaption(media)
   }
 
@@ -119,87 +116,109 @@ if (!brand) {
 
   const handleSchedule = () => {
     if (!uploadedMedia) return
-    // Navigate to schedule page with media and caption
     navigate('/schedule', {
       state: { media: uploadedMedia, caption },
     })
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="container mx-auto max-w-4xl">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-primary-50/30 p-4 sm:p-8">
+      <div className="container mx-auto max-w-4xl animate-fade-in">
         <button
           onClick={() => navigate('/dashboard')}
-          className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 mb-6"
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
           <span>Back to Dashboard</span>
         </button>
 
-        <div className="bg-white rounded-lg shadow p-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">Upload Content</h1>
+        <div className="card p-6 sm:p-8">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 shadow-lg">
+              <Image className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Upload Content</h1>
+              <p className="text-gray-500">Create AI-powered posts for your brand</p>
+            </div>
+          </div>
 
           <div className="space-y-8">
-            {/* Media Upload */}
-            <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                Step 1: Upload Media
-              </h2>
-              <MediaUploader brandId={brand.id} onUploadComplete={handleUploadComplete} />
+            {/* Step 1: Media Upload */}
+            <div className="relative">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white text-sm font-bold">1</div>
+                <h2 className="text-lg font-semibold text-gray-900">Upload Media</h2>
+              </div>
+              <div className="ml-11">
+                <MediaUploader brandId={brand.id} onUploadComplete={handleUploadComplete} />
+              </div>
             </div>
 
-            {/* Caption Generation */}
+            {/* Step 2: Caption Generation */}
             {uploadedMedia && (
-              <div className="border-t pt-8">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-semibold text-gray-900">
-                    Step 2: Review & Edit Caption
-                  </h2>
+              <div className="relative border-t border-gray-100 pt-8">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white text-sm font-bold">2</div>
+                    <h2 className="text-lg font-semibold text-gray-900">Review & Edit Caption</h2>
+                  </div>
                   <button
                     onClick={() => generateCaption(uploadedMedia)}
                     disabled={generating}
-                    className="flex items-center space-x-2 px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 disabled:opacity-50"
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-accent-50 text-accent-700 font-medium hover:bg-accent-100 disabled:opacity-50 transition-all duration-200"
                   >
-                    <Wand2 className="w-4 h-4" />
+                    <Wand2 className={`w-4 h-4 ${generating ? 'animate-spin' : ''}`} />
                     <span>{generating ? 'Generating...' : 'Regenerate'}</span>
                   </button>
                 </div>
 
-                {generating ? (
-                  <div className="flex items-center justify-center py-12">
-                    <div className="text-center">
-                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-                      <p className="text-gray-600">AI is crafting your perfect caption...</p>
+                <div className="ml-11">
+                  {generating ? (
+                    <div className="flex flex-col items-center justify-center py-12 rounded-xl bg-gradient-to-br from-accent-50 to-primary-50 border border-accent-100">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-accent-500 to-primary-500 shadow-lg mb-4">
+                        <Sparkles className="h-8 w-8 text-white animate-pulse" />
+                      </div>
+                      <p className="text-gray-600 font-medium">AI is crafting your perfect caption...</p>
+                      <p className="text-gray-400 text-sm mt-1">This may take a few seconds</p>
                     </div>
-                  </div>
-                ) : (
-                  <textarea
-                    value={caption}
-                    onChange={(e) => setCaption(e.target.value)}
-                    rows={8}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                    placeholder="Your caption will appear here..."
-                  />
-                )}
+                  ) : (
+                    <textarea
+                      value={caption}
+                      onChange={(e) => setCaption(e.target.value)}
+                      rows={8}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl input-focus resize-none text-gray-900"
+                      placeholder="Your AI-generated caption will appear here..."
+                    />
+                  )}
+                </div>
               </div>
             )}
 
-            {/* Actions */}
+            {/* Step 3: Actions */}
             {uploadedMedia && caption && !generating && (
-              <div className="border-t pt-8 flex justify-end space-x-4">
-                <button
-                  onClick={handleSaveDraft}
-                  disabled={saving}
-                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50"
-                >
-                  {saving ? 'Saving...' : 'Save as Draft'}
-                </button>
-                <button
-                  onClick={handleSchedule}
-                  className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-                >
-                  Schedule Post
-                </button>
+              <div className="relative border-t border-gray-100 pt-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white text-sm font-bold">3</div>
+                  <h2 className="text-lg font-semibold text-gray-900">Save or Schedule</h2>
+                </div>
+                <div className="ml-11 flex flex-col sm:flex-row gap-4">
+                  <button
+                    onClick={handleSaveDraft}
+                    disabled={saving}
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50 transition-all duration-200"
+                  >
+                    <FileText className="w-5 h-5" />
+                    <span>{saving ? 'Saving...' : 'Save as Draft'}</span>
+                  </button>
+                  <button
+                    onClick={handleSchedule}
+                    className="flex-1 btn-primary px-6 py-3"
+                  >
+                    <Send className="w-5 h-5" />
+                    <span>Schedule Post</span>
+                  </button>
+                </div>
               </div>
             )}
           </div>
