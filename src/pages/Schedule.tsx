@@ -10,8 +10,8 @@ import toast from 'react-hot-toast'
 
 export function Schedule() {
   const { user } = useAuth()
-  const { brand, loading: brandLoading } = useBrand(user?.id)
-  const { posts, loading: postsLoading, refetch } = usePosts(brand?.id)
+  const { brand, brandLoading: brandLoading } = useBrand(user?.id)
+  const { posts, brandLoading: postsbrandLoading, refetch } = usePosts(brand?.id)
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -26,10 +26,32 @@ export function Schedule() {
     )
   }
 
-  if (!brand) {
-    navigate('/settings')
-    return null
-  }
+ if (brandLoading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+    </div>
+  )
+}
+
+if (!brand) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md text-center">
+        <h2 className="text-2xl font-bold mb-4">Brand Profile Required</h2>
+        <p className="text-gray-600 mb-6">
+          Please create a brand profile first to use this feature.
+        </p>
+        <button
+          onClick={() => navigate('/settings')}
+          className="bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700"
+        >
+          Create Brand Profile
+        </button>
+      </div>
+    </div>
+  )
+}
 
   const scheduledPosts = posts.filter((p) => p.status === 'scheduled')
 
@@ -96,7 +118,7 @@ export function Schedule() {
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-6">Scheduled Posts</h2>
 
-            {postsLoading ? (
+            {postsbrandLoading ? (
               <div className="flex justify-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
               </div>

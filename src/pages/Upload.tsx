@@ -10,14 +10,14 @@ import { supabase } from '../lib/supabase'
 
 export function Upload() {
   const { user } = useAuth()
-  const { brand, loading } = useBrand(user?.id)
+  const { brand, brandLoading: brandLoading } = useBrand(user?.id)
   const navigate = useNavigate()
   const [uploadedMedia, setUploadedMedia] = useState<Media | null>(null)
   const [caption, setCaption] = useState('')
   const [generating, setGenerating] = useState(false)
   const [saving, setSaving] = useState(false)
 
-  if (loading) {
+  if (brandLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
@@ -25,10 +25,32 @@ export function Upload() {
     )
   }
 
-  if (!brand) {
-    navigate('/settings')
-    return null
-  }
+if (brandLoading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+    </div>
+  )
+}
+
+if (!brand) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md text-center">
+        <h2 className="text-2xl font-bold mb-4">Brand Profile Required</h2>
+        <p className="text-gray-600 mb-6">
+          Please create a brand profile first to use this feature.
+        </p>
+        <button
+          onClick={() => navigate('/settings')}
+          className="bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700"
+        >
+          Create Brand Profile
+        </button>
+      </div>
+    </div>
+  )
+}
 
   const handleUploadComplete = async (media: Media) => {
     setUploadedMedia(media)
