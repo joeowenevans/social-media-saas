@@ -2,7 +2,7 @@ import { useAuth } from '../hooks/useAuth'
 import { useBrand } from '../hooks/useBrand'
 import { usePosts } from '../hooks/usePosts'
 import { useNavigate } from 'react-router-dom'
-import { Upload, Calendar, Settings as SettingsIcon, LogOut, Sparkles, Zap, TrendingUp, FileText, Clock, CheckCircle2, BarChart3 } from 'lucide-react'
+import { Upload, Calendar, Settings as SettingsIcon, LogOut, Sparkles, Zap, TrendingUp, FileText, Clock, CheckCircle2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export function Dashboard() {
