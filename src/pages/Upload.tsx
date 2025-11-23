@@ -10,14 +10,14 @@ import { supabase } from '../lib/supabase'
 
 export function Upload() {
   const { user } = useAuth()
-  const { brand, brandLoading: brandLoading } = useBrand(user?.id)
+  const { brand, loading } = useBrand(user?.id)
   const navigate = useNavigate()
   const [uploadedMedia, setUploadedMedia] = useState<Media | null>(null)
   const [caption, setCaption] = useState('')
   const [generating, setGenerating] = useState(false)
   const [saving, setSaving] = useState(false)
 
-  if (brandLoading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
@@ -25,7 +25,7 @@ export function Upload() {
     )
   }
 
-if (brandLoading) {
+if (loading) {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>

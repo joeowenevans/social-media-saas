@@ -10,15 +10,15 @@ import toast from 'react-hot-toast'
 
 export function Schedule() {
   const { user } = useAuth()
-  const { brand, brandLoading: brandLoading } = useBrand(user?.id)
-  const { posts, brandLoading: postsbrandLoading, refetch } = usePosts(brand?.id)
+  const { brand, loading } = useBrand(user?.id)
+  const { posts, loading: postsloading, refetch } = usePosts(brand?.id)
   const navigate = useNavigate()
   const location = useLocation()
 
   // Get media and caption from navigation state (when coming from Upload page)
   const { media, caption } = location.state || {}
 
-  if (brandLoading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
@@ -26,7 +26,7 @@ export function Schedule() {
     )
   }
 
- if (brandLoading) {
+ if (loading) {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
@@ -118,7 +118,7 @@ if (!brand) {
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-6">Scheduled Posts</h2>
 
-            {postsbrandLoading ? (
+            {postsloading ? (
               <div className="flex justify-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
               </div>
