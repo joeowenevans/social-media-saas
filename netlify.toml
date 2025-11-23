@@ -11,9 +11,5 @@
 [functions]
   node_bundler = "esbuild"
 
-# Scheduled function for auto-posting
-[[plugins]]
-  package = "@netlify/plugin-functions"
-
 [functions."post-scheduler-cron"]
   schedule = "@hourly"
