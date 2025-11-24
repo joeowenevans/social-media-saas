@@ -3,7 +3,7 @@ import { usePosts } from '../hooks/usePosts'
 import { useAuth } from '../hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
 import { AppLayout } from '../components/layout/AppLayout'
-import { Upload, Calendar, Settings as SettingsIcon, FileText, Clock, CheckCircle2, TrendingUp, Sparkles, X, Hash } from 'lucide-react'
+import { Upload, Calendar, Settings as SettingsIcon, FileText, Clock, CheckCircle2, Sparkles, X, Hash } from 'lucide-react'
 import { useState } from 'react'
 
 export function Dashboard() {
