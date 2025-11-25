@@ -3,10 +3,11 @@ import { useBrand } from '../hooks/useBrand'
 import { usePosts } from '../hooks/usePosts'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { PostScheduler } from '../components/scheduling/PostScheduler'
-import { ArrowLeft, Calendar, Clock, Trash2, Sparkles, Upload, CalendarDays } from 'lucide-react'
+import { ArrowLeft, Calendar, Clock, Trash2, Sparkles, Upload, CalendarDays, Send } from 'lucide-react'
 import { format } from 'date-fns'
 import { supabase } from '../lib/supabase'
 import toast from 'react-hot-toast'
+import { useState } from 'react'
 
 export function Schedule() {
   const { user } = useAuth()
@@ -14,6 +15,7 @@ export function Schedule() {
   const { posts, loading: postsloading, refetch } = usePosts(brand?.id)
   const navigate = useNavigate()
   const location = useLocation()
+  const [posting, setPosting] = useState<string | null>(null)
 
   const { media, caption } = location.state || {}
 
@@ -51,6 +53,52 @@ export function Schedule() {
   }
 
   const scheduledPosts = posts.filter((p) => p.status === 'scheduled')
+
+  const handlePostNow = async (postId: string) => {
+    setPosting(postId)
+    try {
+      // Get post data with media relation
+      const { data: post, error } = await supabase
+        .from('posts')
+        .select('*, media(*)')
+        .eq('id', postId)
+        .single()
+
+      if (error) throw error
+
+      // Call n8n webhook
+      const response = await fetch('https://n8n-latest-8yp2.onrender.com/webhook/instagram-post', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          media_url: post.media?.cloudinary_url || post.media_url,
+          caption: post.final_caption || post.generated_caption,
+          post_id: post.id
+        })
+      })
+
+      if (!response.ok) throw new Error('Failed to post to Instagram')
+
+      // Update status in database
+      await supabase
+        .from('posts')
+        .update({
+          status: 'posted',
+          posted_at: new Date().toISOString()
+        })
+        .eq('id', postId)
+
+      toast.success('Posted successfully!')
+      refetch()
+    } catch (error: any) {
+      console.error('Error posting:', error)
+      toast.error(error.message || 'Failed to post. Please try again.')
+    } finally {
+      setPosting(null)
+    }
+  }
 
   const handleDelete = async (postId: string) => {
     if (!confirm('Are you sure you want to delete this scheduled post?')) return
@@ -187,12 +235,27 @@ export function Schedule() {
                           ))}
                         </div>
                       </div>
-                      <button
-                        onClick={() => handleDelete(post.id)}
-                        className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
-                      >
-                        <Trash2 className="w-5 h-5" />
-                      </button>
+                      <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={() => handlePostNow(post.id)}
+                          disabled={posting === post.id}
+                          className="p-2 rounded-lg text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                          title="Post Now"
+                        >
+                          {posting === post.id ? (
+                            <div className="w-5 h-5 spinner border-2 border-white border-t-transparent"></div>
+                          ) : (
+                            <Send className="w-5 h-5" />
+                          )}
+                        </button>
+                        <button
+                          onClick={() => handleDelete(post.id)}
+                          className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                          title="Delete"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { useBrand } from '../hooks/useBrand'
 import { MediaUploader } from '../components/upload/MediaUploader'
-import { ArrowLeft, Wand2, Sparkles, Image, Send, FileText } from 'lucide-react'
+import { ArrowLeft, Wand2, Sparkles, Image, Send, FileText, Clock } from 'lucide-react'
 import type { Media } from '../types'
 import toast from 'react-hot-toast'
 import { supabase } from '../lib/supabase'
@@ -16,6 +16,7 @@ export function Upload() {
   const [caption, setCaption] = useState('')
   const [generating, setGenerating] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [scheduledTime, setScheduledTime] = useState<string>('')
 
   if (loading) {
     return (
@@ -92,23 +93,32 @@ export function Upload() {
 
     setSaving(true)
     try {
-      const { error } = await supabase.from('posts').insert([
-        {
-          brand_id: brand.id,
-          media_id: uploadedMedia.id,
-          generated_caption: caption,
-          final_caption: caption,
-          status: 'draft',
-        },
-      ])
+      const postData: any = {
+        brand_id: brand.id,
+        media_id: uploadedMedia.id,
+        generated_caption: caption,
+        final_caption: caption,
+        status: scheduledTime ? 'scheduled' : 'draft',
+      }
+
+      // Add scheduled_for if scheduledTime is set
+      if (scheduledTime) {
+        postData.scheduled_for = new Date(scheduledTime).toISOString()
+      }
+
+      const { error } = await supabase.from('posts').insert([postData])
 
       if (error) throw error
 
-      toast.success('Draft saved!')
+      if (scheduledTime) {
+        toast.success('Post scheduled successfully!')
+      } else {
+        toast.success('Draft saved!')
+      }
       navigate('/dashboard')
     } catch (error: any) {
       console.error('Save error:', error)
-      toast.error('Failed to save draft')
+      toast.error('Failed to save post')
     } finally {
       setSaving(false)
     }
@@ -195,28 +205,64 @@ export function Upload() {
               </div>
             )}
 
-            {/* Step 3: Actions */}
+            {/* Step 3: Schedule Time (Optional) */}
             {uploadedMedia && caption && !generating && (
               <div className="relative border-t border-gray-100 pt-8">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white text-sm font-bold">3</div>
-                  <h2 className="text-lg font-semibold text-gray-900">Save or Schedule</h2>
+                  <h2 className="text-lg font-semibold text-gray-900">Schedule Time (Optional)</h2>
+                </div>
+                <div className="ml-11">
+                  <div className="relative">
+                    <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                    <input
+                      type="datetime-local"
+                      value={scheduledTime}
+                      onChange={(e) => setScheduledTime(e.target.value)}
+                      className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                      placeholder="Select date and time"
+                    />
+                  </div>
+                  <p className="mt-2 text-sm text-gray-500">
+                    {scheduledTime
+                      ? 'Your post will be saved as scheduled'
+                      : 'Leave empty to save as draft'}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Step 4: Actions */}
+            {uploadedMedia && caption && !generating && (
+              <div className="relative border-t border-gray-100 pt-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white text-sm font-bold">4</div>
+                  <h2 className="text-lg font-semibold text-gray-900">Save or Continue</h2>
                 </div>
                 <div className="ml-11 flex flex-col sm:flex-row gap-4">
                   <button
                     onClick={handleSaveDraft}
                     disabled={saving}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50 transition-all duration-200"
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold hover:from-primary-600 hover:to-primary-700 disabled:opacity-50 transition-all duration-200 shadow-lg hover:shadow-xl"
                   >
-                    <FileText className="w-5 h-5" />
-                    <span>{saving ? 'Saving...' : 'Save as Draft'}</span>
+                    {scheduledTime ? (
+                      <>
+                        <Clock className="w-5 h-5" />
+                        <span>{saving ? 'Scheduling...' : 'Schedule Post'}</span>
+                      </>
+                    ) : (
+                      <>
+                        <FileText className="w-5 h-5" />
+                        <span>{saving ? 'Saving...' : 'Save as Draft'}</span>
+                      </>
+                    )}
                   </button>
                   <button
                     onClick={handleSchedule}
-                    className="flex-1 btn-primary px-6 py-3"
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-all duration-200"
                   >
                     <Send className="w-5 h-5" />
-                    <span>Schedule Post</span>
+                    <span>Advanced Schedule</span>
                   </button>
                 </div>
               </div>
