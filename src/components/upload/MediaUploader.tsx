@@ -16,7 +16,7 @@ export function MediaUploader({ brandId, onUploadComplete }: MediaUploaderProps)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [preview, setPreview] = useState<string | null>(null)
   const [fileType, setFileType] = useState<'image' | 'video' | null>(null)
-  const progressIntervalRef = useRef<NodeJS.Timeout | null>(null)
+  const progressIntervalRef = useRef<number | null>(null)
 
   // Cleanup interval on unmount
   useEffect(() => {
