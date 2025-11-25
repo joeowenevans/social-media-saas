@@ -77,7 +77,7 @@ export function Upload() {
 
     setGenerating(true)
     try {
-      const response = await fetch('/.netlify/functions/generate-caption', {
+      const response = await fetch('/api/generate-caption', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
