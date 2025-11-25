@@ -49,10 +49,10 @@ export function Dashboard() {
   const draftPosts = posts.filter(p => p.status === 'draft')
 
   const stats = [
-    { label: 'Total Posts', value: posts.length, icon: FileText, colorClass: 'from-primary-500 to-primary-600', bgColor: 'bg-blue-50 dark:bg-blue-900/20' },
-    { label: 'Scheduled', value: scheduledPosts.length, icon: Clock, colorClass: 'from-amber-500 to-orange-500', bgColor: 'bg-amber-50 dark:bg-amber-900/20' },
-    { label: 'Posted', value: postedPosts.length, icon: CheckCircle2, colorClass: 'from-emerald-500 to-teal-500', bgColor: 'bg-emerald-50 dark:bg-emerald-900/20' },
-    { label: 'Drafts', value: draftPosts.length, icon: FileText, colorClass: 'from-indigo-500 to-purple-500', bgColor: 'bg-indigo-50 dark:bg-indigo-900/20' },
+    { label: 'Total Posts', value: posts.length, icon: FileText, colorClass: 'from-primary-500 to-primary-600', bgColor: 'bg-primary-50/50 dark:bg-primary-900/10' },
+    { label: 'Scheduled', value: scheduledPosts.length, icon: Clock, colorClass: 'from-primary-400 to-primary-500', bgColor: 'bg-primary-50/30 dark:bg-primary-900/10' },
+    { label: 'Posted', value: postedPosts.length, icon: CheckCircle2, colorClass: 'from-primary-600 to-primary-700', bgColor: 'bg-primary-50/40 dark:bg-primary-900/10' },
+    { label: 'Drafts', value: draftPosts.length, icon: FileText, colorClass: 'from-primary-500 to-primary-600', bgColor: 'bg-primary-50/30 dark:bg-primary-900/10' },
   ]
 
   const filteredPosts = statusFilter === 'all'
@@ -72,7 +72,7 @@ export function Dashboard() {
         <div className="flex flex-wrap gap-3">
           <button
             onClick={() => navigate('/upload')}
-            className="group relative overflow-hidden rounded-full bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 px-6 py-3 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-2"
+            className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 px-6 py-3 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] active:scale-95 flex items-center gap-2"
           >
             <Upload className="w-5 h-5" />
             <span>Upload Content</span>
@@ -81,21 +81,18 @@ export function Dashboard() {
 
           <button
             onClick={() => navigate('/schedule')}
-            className="group relative overflow-hidden rounded-full bg-gradient-to-r from-coral-500 via-pink-500 to-rose-500 hover:from-coral-600 hover:via-pink-600 hover:to-rose-600 px-6 py-3 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-2"
-            style={{ background: 'linear-gradient(to right, #FF6B6B, #FF6B9D, #C73866)' }}
+            className="group relative overflow-hidden rounded-xl border border-gray-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 hover:bg-gray-50 dark:hover:bg-charcoal-700 px-6 py-3 text-charcoal-900 dark:text-charcoal-100 font-medium shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.02] active:scale-95 flex items-center gap-2"
           >
             <Calendar className="w-5 h-5" />
             <span>View Calendar</span>
-            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
           </button>
 
           <button
             onClick={() => navigate('/settings')}
-            className="group relative overflow-hidden rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 px-6 py-3 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-2"
+            className="group relative overflow-hidden rounded-xl border border-gray-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 hover:bg-gray-50 dark:hover:bg-charcoal-700 px-6 py-3 text-charcoal-900 dark:text-charcoal-100 font-medium shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.02] active:scale-95 flex items-center gap-2"
           >
             <SettingsIcon className="w-5 h-5" />
             <span>Brand Settings</span>
-            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
           </button>
         </div>
 
@@ -117,15 +114,15 @@ export function Dashboard() {
         </div>
 
         {/* AI Feature Card */}
-        <div className="card overflow-hidden bg-gradient-to-br from-violet-50 via-fuchsia-50 to-pink-50 dark:from-violet-900/20 dark:via-fuchsia-900/20 dark:to-pink-900/20 border-violet-200 dark:border-violet-800">
+        <div className="card overflow-hidden bg-gradient-to-br from-primary-50/50 via-cyan-50/30 to-blue-50/30 dark:from-primary-900/10 dark:via-cyan-900/10 dark:to-blue-900/10 border-primary-200/50 dark:border-primary-800/30">
           <div className="p-6">
             <div className="flex flex-col md:flex-row md:items-center gap-6">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-600 shadow-lg">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg">
                 <Sparkles className="w-7 h-7 text-white" />
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-semibold mb-1">AI-Powered Caption Generation</h3>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">Upload your media and let our AI create engaging captions optimized for your brand voice and target audience.</p>
+                <p className="text-charcoal-600 dark:text-charcoal-400 text-sm">Upload your media and let our AI create engaging captions optimized for your brand voice and target audience.</p>
               </div>
               <button onClick={() => navigate('/upload')} className="btn-primary shrink-0 shadow-lg">
                 Get Started
@@ -135,7 +132,7 @@ export function Dashboard() {
         </div>
 
         {/* Recent Posts Gallery */}
-        <div className="card p-6 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900">
+        <div className="card p-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <h2 className="text-xl font-semibold">Recent Posts</h2>
 
@@ -145,10 +142,10 @@ export function Dashboard() {
                 <button
                   key={filter}
                   onClick={() => setStatusFilter(filter as any)}
-                  className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                  className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                     statusFilter === filter
-                      ? 'bg-primary-500 text-white shadow-md'
-                      : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
+                      ? 'bg-primary-500 text-white shadow-sm'
+                      : 'bg-white dark:bg-charcoal-800 text-charcoal-700 dark:text-charcoal-300 hover:bg-gray-50 dark:hover:bg-charcoal-700 border border-gray-200 dark:border-charcoal-700'
                   }`}
                 >
                   {filter.charAt(0).toUpperCase() + filter.slice(1)}

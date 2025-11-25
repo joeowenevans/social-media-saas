@@ -33,23 +33,23 @@ export function Settings() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-primary-50/30 p-4 sm:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-charcoal-50 via-gray-50 to-charcoal-100 dark:from-charcoal-950 dark:via-charcoal-900 dark:to-charcoal-950 p-4 sm:p-8">
       <div className="container mx-auto max-w-4xl animate-fade-in">
         <button
           onClick={() => navigate('/dashboard')}
-          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6 transition-colors"
+          className="flex items-center gap-2 text-charcoal-600 dark:text-charcoal-400 hover:text-charcoal-900 dark:hover:text-charcoal-100 mb-6 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
           <span>Back to Dashboard</span>
         </button>
 
         <div className="flex items-center gap-4 mb-8">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 shadow-lg">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg">
             <SettingsIcon className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Brand Settings</h1>
-            <p className="text-gray-500">Configure your brand profile and AI preferences</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-charcoal-900 dark:text-white">Brand Settings</h1>
+            <p className="text-charcoal-600 dark:text-charcoal-400">Configure your brand profile and AI preferences</p>
           </div>
         </div>
 
