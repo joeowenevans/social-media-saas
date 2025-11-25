@@ -40,12 +40,13 @@ export function usePosts(brandId: string | undefined) {
       const { data, error } = await supabase
         .from('posts')
         .insert([{ ...postData, brand_id: brandId }])
-        .select()
+        .select('*, media(*)')
         .single()
 
       if (error) throw error
 
-      await fetchPosts()
+      // Update local state instead of refetching - saves bandwidth!
+      setPosts([data, ...posts])
       return { data, error: null }
     } catch (err: any) {
       return { data: null, error: err.message }
@@ -58,12 +59,13 @@ export function usePosts(brandId: string | undefined) {
         .from('posts')
         .update(postData)
         .eq('id', postId)
-        .select()
+        .select('*, media(*)')
         .single()
 
       if (error) throw error
 
-      await fetchPosts()
+      // Update local state by replacing the updated post
+      setPosts(posts.map(post => post.id === postId ? data : post))
       return { data, error: null }
     } catch (err: any) {
       return { data: null, error: err.message }
@@ -79,7 +81,8 @@ export function usePosts(brandId: string | undefined) {
 
       if (error) throw error
 
-      await fetchPosts()
+      // Update local state by filtering out deleted post
+      setPosts(posts.filter(post => post.id !== postId))
       return { error: null }
     } catch (err: any) {
       return { error: err.message }

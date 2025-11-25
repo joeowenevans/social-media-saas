@@ -189,8 +189,9 @@ export function Dashboard() {
                   {post.media ? (
                     <>
                       <img
-                        src={post.media.thumbnail_url || post.media.cloudinary_url}
+                        src={post.media.thumbnail_url || `${post.media.cloudinary_url}?w=400&h=400&c=fill&q=80&f_auto`}
                         alt="Post media"
+                        loading="lazy"
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -247,7 +248,7 @@ export function Dashboard() {
                 {selectedPost.media && (
                   <div className="rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-900">
                     <img
-                      src={selectedPost.media.cloudinary_url}
+                      src={`${selectedPost.media.cloudinary_url}?w=1200&h=800&c_limit&q=90&f_auto`}
                       alt="Post media"
                       className="w-full max-h-96 object-contain mx-auto"
                     />

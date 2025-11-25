@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { useBrand } from '../hooks/useBrand'
@@ -17,6 +17,16 @@ export function Upload() {
   const [generating, setGenerating] = useState(false)
   const [saving, setSaving] = useState(false)
   const [scheduledTime, setScheduledTime] = useState<string>('')
+  const abortControllerRef = useRef<AbortController | null>(null)
+
+  // Cleanup abort controller on unmount
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort()
+      }
+    }
+  }, [])
 
   if (loading) {
     return (
@@ -57,6 +67,14 @@ export function Upload() {
   }
 
   const generateCaption = async (media: Media) => {
+    // Abort any existing request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort()
+    }
+
+    // Create new abort controller for this request
+    abortControllerRef.current = new AbortController()
+
     setGenerating(true)
     try {
       const response = await fetch('/.netlify/functions/generate-caption', {
@@ -72,6 +90,7 @@ export function Upload() {
           ctaPreference: brand.cta_preference,
           emojiCount: brand.emoji_count,
         }),
+        signal: abortControllerRef.current.signal,
       })
 
       if (!response.ok) throw new Error('Failed to generate caption')
@@ -80,11 +99,17 @@ export function Upload() {
       setCaption(data.caption)
       toast.success('Caption generated!')
     } catch (error: any) {
+      // Don't show error if request was aborted
+      if (error.name === 'AbortError') {
+        console.log('Caption generation aborted')
+        return
+      }
       console.error('Caption generation error:', error)
       toast.error('Failed to generate caption. You can write one manually.')
       setCaption('')
     } finally {
       setGenerating(false)
+      abortControllerRef.current = null
     }
   }
 
