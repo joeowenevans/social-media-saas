@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useRef, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Upload as UploadIcon, X, Image, Video } from 'lucide-react'
 import { uploadToCloudinary } from '../../lib/cloudinary'
@@ -16,6 +16,16 @@ export function MediaUploader({ brandId, onUploadComplete }: MediaUploaderProps)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [preview, setPreview] = useState<string | null>(null)
   const [fileType, setFileType] = useState<'image' | 'video' | null>(null)
+  const progressIntervalRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Cleanup interval on unmount
+  useEffect(() => {
+    return () => {
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current)
+      }
+    }
+  }, [])
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (acceptedFiles.length === 0) return
@@ -48,15 +58,18 @@ export function MediaUploader({ brandId, onUploadComplete }: MediaUploaderProps)
     reader.readAsDataURL(file)
 
     try {
-      // Simulate progress
-      const progressInterval = setInterval(() => {
+      // Simulate progress with proper cleanup
+      progressIntervalRef.current = setInterval(() => {
         setUploadProgress((prev) => Math.min(prev + 10, 90))
       }, 200)
 
       // Upload to Cloudinary
       const cloudinaryData = await uploadToCloudinary(file)
 
-      clearInterval(progressInterval)
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current)
+        progressIntervalRef.current = null
+      }
       setUploadProgress(100)
 
       // Save to Supabase
@@ -89,6 +102,11 @@ export function MediaUploader({ brandId, onUploadComplete }: MediaUploaderProps)
       setPreview(null)
       setFileType(null)
     } finally {
+      // Always cleanup interval in all code paths
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current)
+        progressIntervalRef.current = null
+      }
       setUploading(false)
       setUploadProgress(0)
     }

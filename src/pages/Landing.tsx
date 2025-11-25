@@ -1,33 +1,38 @@
 import { Link } from 'react-router-dom'
-import { Share2, Calendar, Wand2, TrendingUp, CheckCircle2, Sparkles } from 'lucide-react'
+import { Share2, Calendar, Wand2, TrendingUp, CheckCircle2, Sparkles, Twitter, Facebook, Instagram, Linkedin } from 'lucide-react'
 
 export function Landing() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-charcoal-50 via-gray-50 to-charcoal-100 dark:from-charcoal-950 dark:via-charcoal-900 dark:to-charcoal-950">
-      {/* Header */}
-      <header className="container mx-auto px-4 py-6 sticky top-0 backdrop-filter backdrop-blur-xl bg-white/70 dark:bg-charcoal-900/70 z-50 border-b border-gray-200/50 dark:border-charcoal-700/50">
-        <nav className="flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg">
-              <Share2 className="w-6 h-6 text-white" />
+      {/* Header - Dark Full Width */}
+      <header className="sticky top-0 z-50 bg-charcoal-950 border-b border-charcoal-800 shadow-lg">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo - Static, Non-Clickable */}
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg">
+                <Share2 className="h-4 w-4 text-white" />
+              </div>
+              <span className="text-lg font-bold tracking-tight text-white">SocialAI</span>
             </div>
-            <span className="text-2xl font-bold text-charcoal-900 dark:text-white tracking-tight">SocialAI</span>
+
+            {/* Navigation */}
+            <div className="flex items-center gap-4">
+              <Link
+                to="/login"
+                className="px-4 py-2 text-charcoal-300 hover:text-primary-400 font-medium transition-colors duration-300"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/signup"
+                className="px-6 py-2.5 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl hover:from-primary-600 hover:to-primary-700 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] font-medium"
+              >
+                Get Started
+              </Link>
+            </div>
           </div>
-          <div className="flex items-center gap-4">
-            <Link
-              to="/login"
-              className="px-4 py-2 text-charcoal-700 dark:text-charcoal-300 hover:text-charcoal-900 dark:hover:text-white font-medium transition-colors"
-            >
-              Sign In
-            </Link>
-            <Link
-              to="/signup"
-              className="px-6 py-2.5 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl hover:from-primary-600 hover:to-primary-700 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] font-medium"
-            >
-              Get Started
-            </Link>
-          </div>
-        </nav>
+        </div>
       </header>
 
       {/* Hero Section */}
@@ -184,16 +189,76 @@ export function Landing() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="container mx-auto px-4 py-12 border-t border-charcoal-200 dark:border-charcoal-800">
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-primary-600">
-              <Share2 className="w-5 h-5 text-white" />
+      {/* Footer - Dark Matching Theme */}
+      <footer className="bg-charcoal-950 border-t border-charcoal-800 shadow-2xl mt-auto">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            {/* Brand Section */}
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center gap-2.5">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg">
+                  <Share2 className="h-4 w-4 text-white" />
+                </div>
+                <span className="text-lg font-bold tracking-tight text-white">SocialAI</span>
+              </div>
+              <p className="text-sm text-charcoal-400 leading-relaxed">
+                AI-powered social media management made simple. Create, schedule, and optimize your content effortlessly.
+              </p>
             </div>
-            <span className="text-xl font-bold text-charcoal-900 dark:text-white tracking-tight">SocialAI</span>
+
+            {/* Quick Links */}
+            <div className="flex flex-col gap-4">
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Quick Links</h3>
+              <div className="flex flex-col gap-2 text-sm">
+                <a href="#" className="text-charcoal-400 hover:text-primary-400 transition-colors duration-200">Privacy Policy</a>
+                <a href="#" className="text-charcoal-400 hover:text-primary-400 transition-colors duration-200">Terms of Service</a>
+                <a href="#" className="text-charcoal-400 hover:text-primary-400 transition-colors duration-200">Contact</a>
+                <a href="#" className="text-charcoal-400 hover:text-primary-400 transition-colors duration-200">Support</a>
+              </div>
+            </div>
+
+            {/* Social Media */}
+            <div className="flex flex-col gap-4">
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Follow Us</h3>
+              <div className="flex gap-3">
+                <a
+                  href="#"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-charcoal-800 text-charcoal-400 hover:bg-primary-500 hover:text-white transition-all duration-200 hover:scale-110"
+                  aria-label="Twitter"
+                >
+                  <Twitter className="h-5 w-5" />
+                </a>
+                <a
+                  href="#"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-charcoal-800 text-charcoal-400 hover:bg-primary-500 hover:text-white transition-all duration-200 hover:scale-110"
+                  aria-label="Facebook"
+                >
+                  <Facebook className="h-5 w-5" />
+                </a>
+                <a
+                  href="#"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-charcoal-800 text-charcoal-400 hover:bg-primary-500 hover:text-white transition-all duration-200 hover:scale-110"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="h-5 w-5" />
+                </a>
+                <a
+                  href="#"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-charcoal-800 text-charcoal-400 hover:bg-primary-500 hover:text-white transition-all duration-200 hover:scale-110"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="h-5 w-5" />
+                </a>
+              </div>
+            </div>
           </div>
-          <p className="text-charcoal-600 dark:text-charcoal-400">&copy; 2024 SocialAI. All rights reserved.</p>
+
+          {/* Bottom Bar */}
+          <div className="pt-8 border-t border-charcoal-800">
+            <p className="text-center text-sm text-charcoal-500">
+              &copy; {new Date().getFullYear()} SocialAI. All rights reserved.
+            </p>
+          </div>
         </div>
       </footer>
     </div>
