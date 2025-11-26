@@ -25,6 +25,9 @@ export function Dashboard() {
   const [selectedPost, setSelectedPost] = useState<any>(null)
   const [currentMonth, setCurrentMonth] = useState(new Date())
 
+  // Get user's first name from metadata
+  const firstName = user?.user_metadata?.first_name || user?.email?.split('@')[0] || 'there'
+
   if (brandLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}>
@@ -60,10 +63,10 @@ export function Dashboard() {
   const draftPosts = posts.filter(p => p.status === 'draft')
 
   const stats = [
-    { label: 'Total Posts', value: posts.length, icon: FileText, colorClass: 'from-primary-500 to-primary-600' },
-    { label: 'Scheduled', value: scheduledPosts.length, icon: Clock, colorClass: 'from-primary-400 to-primary-500' },
-    { label: 'Posted', value: postedPosts.length, icon: CheckCircle2, colorClass: 'from-primary-600 to-primary-700' },
-    { label: 'Drafts', value: draftPosts.length, icon: FileText, colorClass: 'from-primary-500 to-primary-600' },
+    { label: 'Total Posts', value: posts.length, icon: FileText, filter: 'all' },
+    { label: 'Scheduled', value: scheduledPosts.length, icon: Clock, filter: 'scheduled' },
+    { label: 'Posted', value: postedPosts.length, icon: CheckCircle2, filter: 'posted' },
+    { label: 'Drafts', value: draftPosts.length, icon: FileText, filter: 'draft' },
   ]
 
   // Calendar generation
@@ -103,13 +106,13 @@ export function Dashboard() {
       <div style={{ padding: '48px 32px' }}>
         {/* Welcome Title */}
         <h1 style={{
-          color: '#14b8a6',
+          color: '#ffffff',
           fontSize: '32px',
-          fontWeight: 600,
+          fontWeight: 700,
           textAlign: 'center',
           marginBottom: '64px'
         }}>
-          Welcome back{user?.email ? `, ${user.email.split('@')[0]}` : ''}!
+          Welcome back, {firstName}!
         </h1>
 
         {/* AI Caption Generation Section */}
@@ -166,28 +169,52 @@ export function Dashboard() {
           </button>
         </div>
 
-        {/* Stats Grid - 2x2 */}
+        {/* Stats Grid - 1x4 with white glow */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          gap: '24px',
-          maxWidth: '800px',
+          gridTemplateColumns: 'repeat(4, 1fr)',
+          gap: '16px',
+          maxWidth: '1200px',
           margin: '0 auto',
           marginBottom: '64px'
         }}>
           {stats.map((stat) => (
-            <div key={stat.label} style={{
-              background: '#1a1a1a',
-              borderRadius: '12px',
-              padding: '32px'
-            }}>
+            <div
+              key={stat.label}
+              onClick={() => navigate(`/schedule?status=${stat.filter}`)}
+              style={{
+                background: '#1a1a1a',
+                borderRadius: '12px',
+                padding: '24px 20px',
+                boxShadow: '0 0 20px rgba(255, 255, 255, 0.05)',
+                transition: 'all 0.3s ease',
+                cursor: 'pointer'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.05)'
+                e.currentTarget.style.boxShadow = '0 0 30px rgba(255, 255, 255, 0.12)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)'
+                e.currentTarget.style.boxShadow = '0 0 20px rgba(255, 255, 255, 0.05)'
+              }}
+            >
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${stat.colorClass}`}>
-                  <stat.icon className="w-6 h-6 text-white" />
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '10px',
+                  background: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)',
+                  flexShrink: 0
+                }}>
+                  <stat.icon style={{ width: '20px', height: '20px', color: 'white' }} />
                 </div>
-                <div>
+                <div style={{ flex: 1 }}>
                   <p style={{
-                    fontSize: '12px',
+                    fontSize: '11px',
                     fontWeight: 500,
                     color: '#a1a1aa',
                     textTransform: 'uppercase',
@@ -197,9 +224,10 @@ export function Dashboard() {
                     {stat.label}
                   </p>
                   <p style={{
-                    fontSize: '32px',
+                    fontSize: '28px',
                     fontWeight: 600,
-                    color: 'white'
+                    color: 'white',
+                    lineHeight: 1
                   }}>
                     {stat.value}
                   </p>
@@ -406,17 +434,15 @@ export function Dashboard() {
                   style={{
                     width: '18%',
                     margin: '0.5%',
-                    aspectRatio: '1 / 1',
                     borderRadius: '8px',
                     overflow: 'hidden',
                     background: '#1a1a1a',
                     cursor: 'pointer',
-                    position: 'relative'
                   }}
-                  className="group"
                 >
-                  {post.media ? (
-                    <>
+                  {/* Image */}
+                  <div style={{ aspectRatio: '1 / 1', position: 'relative', background: '#0d0d0d' }}>
+                    {post.media ? (
                       <img
                         src={post.media.thumbnail_url || `${post.media.cloudinary_url.split('/upload/')[0]}/upload/w_200,h_200,c_fill/${post.media.cloudinary_url.split('/upload/')[1]}`}
                         alt="Post media"
@@ -427,36 +453,66 @@ export function Dashboard() {
                           objectFit: 'cover'
                         }}
                       />
-                      <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center gap-2 p-2">
-                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                          post.status === 'posted' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
-                          post.status === 'scheduled' ? 'bg-primary-500/20 text-primary-400 border border-primary-500/30' :
-                          'bg-[#27272a] text-[#a1a1aa] border border-[#3a3a3a]'
-                        }`}>
-                          {post.status.charAt(0).toUpperCase() + post.status.slice(1)}
-                        </span>
-                        {post.platforms && post.platforms.length > 0 && (
-                          <div className="flex gap-1">
-                            {post.platforms.map((platform: string, idx: number) => (
-                              <div
-                                key={idx}
-                                style={{
-                                  width: '8px',
-                                  height: '8px',
-                                  borderRadius: '50%',
-                                  background: getPlatformColor([platform])
-                                }}
-                              />
-                            ))}
-                          </div>
-                        )}
+                    ) : (
+                      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <FileText style={{ width: '32px', height: '32px', color: '#666' }} />
                       </div>
-                    </>
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <FileText className="w-8 h-8 text-[#a1a1aa]" />
+                    )}
+                  </div>
+
+                  {/* Info Card */}
+                  <div style={{
+                    background: '#1a1a1a',
+                    padding: '12px'
+                  }}>
+                    {/* Caption Preview */}
+                    <p style={{
+                      color: '#e5e5e5',
+                      fontSize: '12px',
+                      lineHeight: 1.4,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      marginBottom: '8px'
+                    }}>
+                      {post.final_caption || post.generated_caption || 'No caption'}
+                    </p>
+
+                    {/* Status Badge */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{
+                        padding: '2px 8px',
+                        borderRadius: '10px',
+                        fontSize: '10px',
+                        fontWeight: 500,
+                        background: post.status === 'posted' ? 'rgba(16, 185, 129, 0.2)' :
+                                    post.status === 'scheduled' ? 'rgba(20, 184, 166, 0.2)' :
+                                    'rgba(107, 114, 128, 0.2)',
+                        color: post.status === 'posted' ? '#10b981' :
+                               post.status === 'scheduled' ? '#14b8a6' :
+                               '#888'
+                      }}>
+                        {post.status.charAt(0).toUpperCase() + post.status.slice(1)}
+                      </span>
+
+                      {/* Platform Dots */}
+                      {post.platforms && post.platforms.length > 0 && (
+                        <div style={{ display: 'flex', gap: '4px' }}>
+                          {post.platforms.slice(0, 3).map((platform: string, idx: number) => (
+                            <div
+                              key={idx}
+                              style={{
+                                width: '14px',
+                                height: '14px',
+                                borderRadius: '50%',
+                                background: getPlatformColor([platform])
+                              }}
+                            />
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </div>
               ))}
             </div>
