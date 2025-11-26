@@ -28,7 +28,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
     { icon: Upload, label: 'Upload', path: '/upload' },
-    { icon: Calendar, label: 'Schedule', path: '/schedule' },
+    { icon: Calendar, label: 'Scheduled', path: '/schedule' },
     { icon: Settings, label: 'Settings', path: '/settings' },
   ]
 
