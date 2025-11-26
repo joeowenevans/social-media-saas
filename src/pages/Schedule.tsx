@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { useBrand } from '../hooks/useBrand'
 import { usePosts } from '../hooks/usePosts'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { AppLayout } from '../components/layout/AppLayout'
 import {
   Calendar as CalendarIcon,
@@ -50,9 +50,11 @@ export function Schedule() {
   const { brand, loading } = useBrand(user?.id)
   const { posts, loading: postsLoading, refetch } = usePosts(brand?.id)
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
 
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const [selectedPlatform, setSelectedPlatform] = useState<'all' | Platform>('all')
+  const [selectedStatus, setSelectedStatus] = useState<'all' | 'scheduled' | 'posted' | 'draft'>('all')
   const [posting, setPosting] = useState<string | null>(null)
   const [editingPost, setEditingPost] = useState<Post | null>(null)
   const [editFormData, setEditFormData] = useState({
@@ -62,13 +64,23 @@ export function Schedule() {
     platforms: [] as string[]
   })
 
-  // Filter scheduled posts
-  const scheduledPosts = posts.filter((p) => p.status === 'scheduled')
+  // Handle URL parameter for status filter
+  useEffect(() => {
+    const statusParam = searchParams.get('status')
+    if (statusParam && ['all', 'scheduled', 'posted', 'draft'].includes(statusParam)) {
+      setSelectedStatus(statusParam as any)
+    }
+  }, [searchParams])
 
-  // Apply platform filter
+  // Filter by status first
+  const statusFilteredPosts = selectedStatus === 'all'
+    ? posts
+    : posts.filter((p) => p.status === selectedStatus)
+
+  // Then apply platform filter
   const filteredPosts = selectedPlatform === 'all'
-    ? scheduledPosts
-    : scheduledPosts.filter(p => p.platforms?.includes(selectedPlatform))
+    ? statusFilteredPosts
+    : statusFilteredPosts.filter(p => p.platforms?.includes(selectedPlatform))
 
   // Sort by date (earliest first)
   const sortedPosts = [...filteredPosts].sort((a: any, b: any) => {
@@ -76,8 +88,8 @@ export function Schedule() {
     return new Date(a.scheduled_for).getTime() - new Date(b.scheduled_for).getTime()
   })
 
-  // Group posts by date for calendar
-  const postsByDate = scheduledPosts.reduce((acc: any, post) => {
+  // Group posts by date for calendar (use filtered posts)
+  const postsByDate = filteredPosts.reduce((acc: any, post) => {
     if (post.scheduled_for) {
       const dateKey = format(new Date(post.scheduled_for), 'yyyy-MM-dd')
       if (!acc[dateKey]) acc[dateKey] = []
@@ -422,32 +434,82 @@ export function Schedule() {
           </div>
         </div>
 
+        {/* Status Filter Tabs */}
+        <div style={{ marginBottom: '16px' }}>
+          <h3 style={{
+            color: '#e5e5e5',
+            fontSize: '16px',
+            fontWeight: 600,
+            textAlign: 'center',
+            marginBottom: '12px'
+          }}>
+            Filter by Status
+          </h3>
+          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+            {[
+              { id: 'all', label: 'All', color: '#14b8a6' },
+              { id: 'scheduled', label: 'Scheduled', color: '#14b8a6' },
+              { id: 'posted', label: 'Posted', color: '#14b8a6' },
+              { id: 'draft', label: 'Drafts', color: '#14b8a6' }
+            ].map(status => (
+              <button
+                key={status.id}
+                onClick={() => setSelectedStatus(status.id as any)}
+                style={{
+                  background: selectedStatus === status.id ? status.color : '#1a1a1a',
+                  border: `1px solid ${selectedStatus === status.id ? status.color : '#27272a'}`,
+                  borderRadius: '20px',
+                  padding: '10px 24px',
+                  color: selectedStatus === status.id ? 'white' : '#888',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                {status.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Platform Filter Tabs */}
-        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '32px' }}>
-          {[
-            { id: 'all', label: 'All', color: '#14b8a6' },
-            { id: 'instagram', label: 'Instagram', color: '#E1306C' },
-            { id: 'facebook', label: 'Facebook', color: '#1877F2' },
-            { id: 'pinterest', label: 'Pinterest', color: '#E60023' }
-          ].map(platform => (
-            <button
-              key={platform.id}
-              onClick={() => setSelectedPlatform(platform.id as any)}
-              style={{
-                background: selectedPlatform === platform.id ? platform.color : '#1a1a1a',
-                border: `1px solid ${selectedPlatform === platform.id ? platform.color : '#27272a'}`,
-                borderRadius: '20px',
-                padding: '10px 24px',
-                color: selectedPlatform === platform.id ? 'white' : '#888',
-                fontSize: '14px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              {platform.label}
-            </button>
-          ))}
+        <div style={{ marginBottom: '16px' }}>
+          <h3 style={{
+            color: '#e5e5e5',
+            fontSize: '16px',
+            fontWeight: 600,
+            textAlign: 'center',
+            marginBottom: '12px'
+          }}>
+            Filter by Platform
+          </h3>
+          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '32px' }}>
+            {[
+              { id: 'all', label: 'All', color: '#14b8a6' },
+              { id: 'instagram', label: 'Instagram', color: '#E1306C' },
+              { id: 'facebook', label: 'Facebook', color: '#1877F2' },
+              { id: 'pinterest', label: 'Pinterest', color: '#E60023' }
+            ].map(platform => (
+              <button
+                key={platform.id}
+                onClick={() => setSelectedPlatform(platform.id as any)}
+                style={{
+                  background: selectedPlatform === platform.id ? platform.color : '#1a1a1a',
+                  border: `1px solid ${selectedPlatform === platform.id ? platform.color : '#27272a'}`,
+                  borderRadius: '20px',
+                  padding: '10px 24px',
+                  color: selectedPlatform === platform.id ? 'white' : '#888',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                {platform.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Scheduled Posts Section */}

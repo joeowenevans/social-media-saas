@@ -19,7 +19,7 @@
   }
 
   body {
-    background: linear-gradient(180deg, #111111 0%, #0a0a0a 100%);
+    background: linear-gradient(135deg, #0a0a0a 0%, #111111 25%, #0d1117 50%, #0e1419 75%, #0a0a0a 100%);
     background-attachment: fixed;
     color: #e5e5e5;
     font-size: 16px;

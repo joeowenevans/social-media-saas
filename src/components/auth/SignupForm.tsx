@@ -5,6 +5,8 @@ import { Share2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export function SignupForm() {
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -27,7 +29,7 @@ export function SignupForm() {
 
     setLoading(true)
 
-    const { error } = await signUp(email, password)
+    const { error } = await signUp(email, password, firstName, lastName)
 
     if (error) {
       toast.error(error.message)
@@ -105,6 +107,60 @@ export function SignupForm() {
               width: '100%'
             }}
           >
+            {/* First Name Input */}
+            <input
+              id="first-name"
+              name="firstName"
+              type="text"
+              autoComplete="given-name"
+              required
+              style={{
+                width: '320px',
+                height: '44px',
+                padding: '12px 16px',
+                border: '1px solid #27272a',
+                borderRadius: '8px',
+                backgroundColor: '#0d0d0d',
+                color: '#e5e5e5',
+                fontSize: '15px',
+                outline: 'none',
+                transition: 'border-color 0.2s ease',
+                marginBottom: '20px'
+              }}
+              placeholder="First name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+              onBlur={(e) => e.target.style.borderColor = '#27272a'}
+            />
+
+            {/* Last Name Input */}
+            <input
+              id="last-name"
+              name="lastName"
+              type="text"
+              autoComplete="family-name"
+              required
+              style={{
+                width: '320px',
+                height: '44px',
+                padding: '12px 16px',
+                border: '1px solid #27272a',
+                borderRadius: '8px',
+                backgroundColor: '#0d0d0d',
+                color: '#e5e5e5',
+                fontSize: '15px',
+                outline: 'none',
+                transition: 'border-color 0.2s ease',
+                marginBottom: '20px'
+              }}
+              placeholder="Last name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+              onBlur={(e) => e.target.style.borderColor = '#27272a'}
+            />
+
             {/* Email Input */}
             <input
               id="email-address"
