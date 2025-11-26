@@ -3,14 +3,28 @@ export interface Brand {
   id: string
   user_id: string
   name: string
-  brand_voice: string | null
-  target_audience: string | null
-  hashtag_count: number
-  hashtags_always_use: string[]
-  hashtags_avoid: string[]
-  cta_preference: string | null
-  emoji_count: number
+  industry_niche: string | null
+  voice_description: string | null
+  audience_priorities: string | null
+  brand_values: string | null
+  preferred_caption_length: string | null
+  hashtag_topics: string | null
+  cta_style: string | null
+  example_captions: string | null
+  phrases_taglines: string | null
+  general_goals: string | null
+  num_hashtags: number
+  num_emojis: number
   created_at: string
+  updated_at?: string
+  // Legacy fields (deprecated but kept for backwards compatibility)
+  brand_voice?: string | null
+  target_audience?: string | null
+  hashtag_count?: number
+  hashtags_always_use?: string[]
+  hashtags_avoid?: string[]
+  cta_preference?: string | null
+  emoji_count?: number
 }
 
 export interface SocialAccount {
