@@ -11,10 +11,10 @@ export function Settings() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-primary-50/30">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-charcoal-50 via-white to-primary-50/30 dark:bg-charcoal-950">
         <div className="flex flex-col items-center gap-4">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-          <p className="text-gray-500 text-sm">Loading settings...</p>
+          <p className="text-charcoal-500 dark:text-charcoal-400 text-sm">Loading settings...</p>
         </div>
       </div>
     )
