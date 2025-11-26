@@ -46,9 +46,9 @@ export function AppLayout({ children }: AppLayoutProps) {
   const isActive = (path: string) => location.pathname === path
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0d0d0d]">
+    <div className="min-h-screen flex flex-col" style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}>
       {/* Header - Full Width Dark Bar */}
-      <header className="sticky top-0 z-50 bg-[#0d0d0d] border-b border-[#27272a]">
+      <header className="sticky top-0 z-50 border-b border-[#27272a]" style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}>
         <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
           <div className="flex justify-between items-center h-16">
             {/* Logo - Static, Non-Clickable */}
@@ -66,17 +66,20 @@ export function AppLayout({ children }: AppLayoutProps) {
                   <button
                     key={item.path}
                     onClick={() => navigate(item.path)}
-                    className={`relative text-sm font-medium transition-all duration-200 ease-in-out
+                    className={`unstyled relative text-sm font-medium transition-all duration-200 ease-in-out
                       ${isActive(item.path)
-                        ? 'text-primary-400 font-semibold'
-                        : 'text-[#a1a1aa] hover:text-white'
+                        ? 'font-bold underline'
+                        : 'hover:text-[#14b8a6]'
                       }
                     `}
+                    style={{
+                      color: isActive(item.path) ? '#14b8a6' : '#e5e5e5',
+                      background: 'transparent',
+                      border: 'none',
+                      padding: '0'
+                    }}
                   >
                     {item.label}
-                    {isActive(item.path) && (
-                      <span className="absolute -bottom-[17px] left-0 right-0 h-0.5 bg-primary-400"></span>
-                    )}
                   </button>
                 ))}
               </div>
@@ -86,7 +89,14 @@ export function AppLayout({ children }: AppLayoutProps) {
             <div className="flex items-center gap-2">
               <button
                 onClick={handleSignOut}
-                className="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-[#a1a1aa] hover:text-red-400 hover:bg-[#1a1a1a] transition-all duration-200"
+                className="hidden md:flex items-center gap-2 text-sm font-medium"
+                style={{
+                  color: '#e5e5e5',
+                  padding: '10px 20px',
+                  height: '40px',
+                  background: '#2a2a2a',
+                  borderRadius: '20px'
+                }}
               >
                 <LogOut className="w-4 h-4" />
                 <span>Sign Out</span>
@@ -95,7 +105,8 @@ export function AppLayout({ children }: AppLayoutProps) {
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2 rounded-lg text-[#a1a1aa] hover:text-white hover:bg-[#1a1a1a] transition-colors"
+                className="unstyled md:hidden p-2"
+                style={{ color: '#e5e5e5', background: 'transparent' }}
               >
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
@@ -105,8 +116,8 @@ export function AppLayout({ children }: AppLayoutProps) {
 
         {/* Mobile Navigation - Slide Down Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-[#27272a] bg-[#0d0d0d]">
-            <div className="px-6 lg:px-12 py-3 space-y-1 max-w-[1400px] mx-auto">
+          <div className="md:hidden border-t border-[#27272a]" style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}>
+            <div className="px-6 lg:px-12 py-3 space-y-2 max-w-[1400px] mx-auto">
               {navItems.map((item) => (
                 <button
                   key={item.path}
@@ -114,11 +125,13 @@ export function AppLayout({ children }: AppLayoutProps) {
                     navigate(item.path)
                     setMobileMenuOpen(false)
                   }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200
-                    ${isActive(item.path)
-                      ? 'bg-[#1a1a1a] text-primary-400 font-semibold'
-                      : 'text-[#a1a1aa] hover:text-white hover:bg-[#1a1a1a]'
-                    }`}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium"
+                  style={{
+                    color: isActive(item.path) ? '#14b8a6' : '#e5e5e5',
+                    background: '#1a1a1a',
+                    borderRadius: '12px',
+                    fontWeight: isActive(item.path) ? 'bold' : '500'
+                  }}
                 >
                   <item.icon className="w-5 h-5" />
                   <span>{item.label}</span>
@@ -129,7 +142,12 @@ export function AppLayout({ children }: AppLayoutProps) {
                   handleSignOut()
                   setMobileMenuOpen(false)
                 }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-red-400 hover:bg-[#1a1a1a] transition-all duration-200"
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium"
+                style={{
+                  color: '#e5e5e5',
+                  background: '#2a2a2a',
+                  borderRadius: '12px'
+                }}
               >
                 <LogOut className="w-5 h-5" />
                 <span>Sign Out</span>
@@ -140,14 +158,14 @@ export function AppLayout({ children }: AppLayoutProps) {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 bg-[#0d0d0d]">
+      <main className="flex-1">
         <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-8">
           {children}
         </div>
       </main>
 
       {/* Footer - Dark Matching Theme */}
-      <footer className="bg-[#0d0d0d] border-t border-[#27272a] mt-auto">
+      <footer className="border-t border-[#27272a] mt-auto">
         <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             {/* Brand Section */}

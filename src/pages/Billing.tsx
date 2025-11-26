@@ -55,7 +55,7 @@ export function Billing() {
 
           <div className="grid md:grid-cols-2 gap-6">
             {/* Free Plan */}
-            <div className="bg-[#1a1a1a] border border-[#27272a] p-8 rounded-xl">
+            <div className="bg-[#1a1a1a] p-8 rounded-xl">
               <div className="mb-6">
                 <h3 className="text-2xl font-semibold text-white mb-2">Free Plan</h3>
                 <div className="flex items-baseline gap-2 mb-4">
@@ -88,7 +88,7 @@ export function Billing() {
                 </li>
               </ul>
 
-              <button className="w-full bg-[#0d0d0d] border border-[#27272a] text-[#a1a1aa] font-medium px-6 py-3 rounded-lg cursor-not-allowed" disabled>
+              <button className="w-full bg-[#0d0d0d] text-[#a1a1aa] font-medium px-6 py-3 rounded-lg cursor-not-allowed" disabled>
                 Current Plan
               </button>
             </div>
@@ -142,7 +142,7 @@ export function Billing() {
         </div>
 
         {/* Payment Method */}
-        <div className="bg-[#1a1a1a] border border-[#27272a] rounded-xl p-8">
+        <div className="bg-[#1a1a1a] rounded-xl p-8">
           <div className="flex items-center gap-3 mb-6">
             <CreditCard className="w-6 h-6 text-primary-400" />
             <h2 className="text-2xl font-semibold text-white">Payment Method</h2>
@@ -165,7 +165,7 @@ export function Billing() {
         </div>
 
         {/* Billing History */}
-        <div className="bg-[#1a1a1a] border border-[#27272a] rounded-xl p-8">
+        <div className="bg-[#1a1a1a] rounded-xl p-8">
           <h2 className="text-2xl font-semibold text-white mb-6">Billing History</h2>
 
           <div className="text-center py-12">

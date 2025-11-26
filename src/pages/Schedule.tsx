@@ -21,7 +21,7 @@ export function Schedule() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0d0d0d]">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}>
         <div className="flex flex-col items-center gap-4">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
           <p className="text-[#a1a1aa] text-sm">Loading...</p>
@@ -32,8 +32,8 @@ export function Schedule() {
 
   if (!brand) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0d0d0d]">
-        <div className="max-w-md w-full bg-[#1a1a1a] border border-[#27272a] rounded-xl p-8 text-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}>
+        <div className="max-w-md w-full bg-[#1a1a1a] rounded-xl p-8 text-center">
           <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 mb-6">
             <Sparkles className="h-8 w-8 text-white" />
           </div>
@@ -144,7 +144,7 @@ export function Schedule() {
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Schedule New Post */}
           {media && caption ? (
-            <div className="bg-[#1a1a1a] border border-[#27272a] rounded-xl p-6">
+            <div className="bg-[#1a1a1a] rounded-xl p-6">
               <h2 className="text-xl font-semibold text-white mb-6">Schedule New Post</h2>
               <PostScheduler
                 media={media}
@@ -154,7 +154,7 @@ export function Schedule() {
               />
             </div>
           ) : (
-            <div className="bg-[#1a1a1a] border border-[#27272a] rounded-xl p-6">
+            <div className="bg-[#1a1a1a] rounded-xl p-6">
               <h2 className="text-xl font-semibold text-white mb-4">Schedule New Post</h2>
               <div className="text-center py-8">
                 <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-xl bg-[#0d0d0d] mb-4">
@@ -174,7 +174,7 @@ export function Schedule() {
           )}
 
           {/* Scheduled Posts List */}
-          <div className="bg-[#1a1a1a] border border-[#27272a] rounded-xl p-6">
+          <div className="bg-[#1a1a1a] rounded-xl p-6">
             <h2 className="text-xl font-semibold text-white mb-6">Scheduled Posts</h2>
 
             {postsloading ? (
@@ -193,7 +193,7 @@ export function Schedule() {
                 {scheduledPosts.map((post) => (
                   <div
                     key={post.id}
-                    className="group rounded-xl border border-[#27272a] bg-[#0d0d0d] p-4 hover:border-[#3a3a3a] transition-all duration-200"
+                    className="group rounded-xl bg-[#0d0d0d] p-4 hover:border-[#3a3a3a] transition-all duration-200"
                   >
                     <div className="flex gap-4">
                       {post.media && (

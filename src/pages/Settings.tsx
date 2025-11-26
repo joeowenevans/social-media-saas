@@ -53,7 +53,7 @@ export function Settings() {
           </div>
         </div>
 
-        <div className="bg-[#1a1a1a] border border-[#27272a] rounded-xl p-6 sm:p-8">
+        <div className="bg-[#1a1a1a] rounded-xl p-6 sm:p-8">
           <BrandSettings brand={brand} onSave={handleSave} onComplete={handleComplete} />
         </div>
       </div>

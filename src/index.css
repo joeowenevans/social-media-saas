@@ -19,13 +19,15 @@
   }
 
   body {
-    background: #0d0d0d;
-    color: #fafafa;
+    background: linear-gradient(180deg, #111111 0%, #0a0a0a 100%);
+    background-attachment: fixed;
+    color: #e5e5e5;
+    font-size: 16px;
+    line-height: 1.7;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-    line-height: 1.6;
     margin: 0;
     padding: 0;
     border: none;
@@ -45,10 +47,29 @@
     background-color: rgba(45, 212, 191, 0.3);
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1 {
+    color: #14b8a6;
+    font-size: 32px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 48px;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  h2 {
+    color: #14b8a6;
+    font-size: 24px;
     font-weight: 600;
     line-height: 1.2;
-    color: #fafafa;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+
+  h3, h4, h5, h6 {
+    color: #e5e5e5;
+    font-weight: 600;
+    line-height: 1.2;
     letter-spacing: -0.02em;
   }
 }
@@ -56,152 +77,71 @@
 @layer components {
   /* Card Components */
   .card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    border-radius: 0.75rem;
-    border: 1px solid #e4e4e7;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
-    padding: 1.5rem;
+    background: #1a1a1a;
+    border-radius: 12px;
+    border: none;
+    box-shadow: none;
+    padding: 32px;
   }
 
-  .dark .card {
-    background: #18181b;
-    backdrop-filter: blur(20px);
-    border-color: #27272a;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
-  }
-
+  /* Remove all card hover effects */
   .card-hover {
-    transition: all 200ms ease-in-out;
+    /* No transitions or hover effects */
   }
 
-  .card-hover:hover {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
-    transform: translateY(-3px) scale(1.01);
-  }
-
-  .dark .card-hover:hover {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.2);
-  }
-
-  /* Button Base */
-  .btn {
+  /* Button Base - Design System */
+  .btn,
+  button:not(.unstyled) {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 0.625rem 1rem;
-    border-radius: 0.5rem;
+    padding: 10px 20px;
+    height: 40px;
+    background: #2a2a2a;
+    color: white;
     font-weight: 500;
-    transition: all 200ms ease-in-out;
+    font-size: 14px;
+    border: none;
+    border-radius: 20px;
+    transition: all 0.2s ease;
     outline: none;
+    cursor: pointer;
   }
 
-  .btn:focus {
-    ring: 2px;
-    ring-offset: 2px;
+  .btn:hover,
+  button:not(.unstyled):hover:not(:disabled) {
+    background: #14b8a6;
+    transform: scale(1.05);
   }
 
-  /* Button Primary */
-  .btn-primary {
-    color: #ffffff;
-    background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
-    box-shadow: 0 2px 8px rgba(20, 184, 166, 0.25), 0 1px 2px rgba(0, 0, 0, 0.05);
-    border-radius: 0.75rem;
-  }
-
-  .btn-primary:hover {
-    background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
-    box-shadow: 0 4px 12px rgba(20, 184, 166, 0.35), 0 2px 4px rgba(0, 0, 0, 0.1);
-    transform: translateY(-1px) scale(1.01);
-  }
-
-  .btn-primary:active {
-    transform: translateY(0) scale(0.99);
-  }
-
-  .btn-primary:focus {
-    ring-color: #14b8a6;
-  }
-
-  .dark .btn-primary {
-    background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
-  }
-
-  .dark .btn-primary:hover {
-    background: linear-gradient(135deg, #2dd4bf 0%, #14b8a6 100%);
-  }
-
-  /* Button Secondary */
-  .btn-secondary {
-    color: #ffffff;
-    background-color: #f59e0b;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  }
-
-  .btn-secondary:hover {
-    background-color: #d97706;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  .btn:active,
+  button:not(.unstyled):active:not(:disabled) {
     transform: scale(1.02);
   }
 
-  .btn-secondary:active {
-    transform: scale(0.98);
+  .btn:disabled,
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
   }
 
-  .btn-secondary:focus {
-    ring-color: #f59e0b;
-  }
-
-  .dark .btn-secondary {
-    background-color: #d97706;
-  }
-
-  .dark .btn-secondary:hover {
-    background-color: #b45309;
-  }
-
-  /* Button Neutral */
-  .btn-neutral {
-    color: #374151;
-    background-color: #f3f4f6;
-    border: 1px solid #d1d5db;
-  }
-
-  .btn-neutral:hover {
-    background-color: #e5e7eb;
-  }
-
-  .btn-neutral:focus {
-    ring-color: #6b7280;
-  }
-
-  .dark .btn-neutral {
-    color: #e5e7eb;
-    background-color: #374151;
-    border-color: #4b5563;
-  }
-
-  .dark .btn-neutral:hover {
-    background-color: #4b5563;
-  }
-
-  /* Button Ghost */
+  /* All button variants use same styling */
+  .btn-primary,
+  .btn-secondary,
+  .btn-neutral,
   .btn-ghost {
-    color: #374151;
-    background-color: transparent;
+    background: #2a2a2a;
+    color: white;
   }
 
+  .btn-primary:hover,
+  .btn-secondary:hover,
+  .btn-neutral:hover,
   .btn-ghost:hover {
-    background-color: #f3f4f6;
-  }
-
-  .dark .btn-ghost {
-    color: #d1d5db;
-  }
-
-  .dark .btn-ghost:hover {
-    background-color: #1f2937;
+    background: #14b8a6;
+    transform: scale(1.05);
   }
 
   /* Form Elements */
@@ -390,28 +330,36 @@
     background-color: rgba(55, 65, 81, 0.5);
   }
 
-  /* Page Layout */
+  /* Page Layout - Design System */
+  .page-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
   .page-header {
-    margin-bottom: 1.5rem;
+    margin-bottom: 64px;
   }
 
   .page-title {
-    font-size: 1.875rem;
+    color: #14b8a6;
+    font-size: 32px;
     font-weight: 600;
-    color: #111827;
-    margin-bottom: 0.5rem;
-  }
-
-  .dark .page-title {
-    color: #f9fafb;
+    text-align: center;
+    margin-bottom: 48px;
   }
 
   .page-subtitle {
-    color: #4b5563;
+    color: #e5e5e5;
+    text-align: center;
   }
 
-  .dark .page-subtitle {
-    color: #9ca3af;
+  .section {
+    margin-bottom: 64px;
+  }
+
+  .card-spacing {
+    margin-bottom: 32px;
   }
 
   /* Empty States */

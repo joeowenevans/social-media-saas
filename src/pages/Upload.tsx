@@ -41,8 +41,8 @@ export function Upload() {
 
   if (!brand) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0d0d0d]">
-        <div className="max-w-md w-full bg-[#1a1a1a] border border-[#27272a] rounded-xl p-8 text-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}>
+        <div className="max-w-md w-full bg-[#1a1a1a] text-center" style={{ borderRadius: '12px', padding: '32px' }}>
           <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 mb-6">
             <Sparkles className="h-8 w-8 text-white" />
           </div>
@@ -167,7 +167,7 @@ export function Upload() {
           <span>Back to Dashboard</span>
         </button>
 
-        <div className="bg-[#1a1a1a] border border-[#27272a] rounded-xl p-6 sm:p-8">
+        <div className="bg-[#1a1a1a]" style={{ borderRadius: '12px', padding: '32px' }}>
           <div className="flex items-center gap-4 mb-8">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600">
               <Image className="h-6 w-6 text-white" />
