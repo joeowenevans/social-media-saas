@@ -3,8 +3,20 @@ import { usePosts } from '../hooks/usePosts'
 import { useAuth } from '../hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
 import { AppLayout } from '../components/layout/AppLayout'
-import { Upload, Calendar, Settings as SettingsIcon, FileText, Clock, CheckCircle2, Sparkles, X, Hash } from 'lucide-react'
+import { FileText, Clock, CheckCircle2, Sparkles, X, Hash, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState } from 'react'
+import {
+  startOfMonth,
+  endOfMonth,
+  eachDayOfInterval,
+  format,
+  isSameDay,
+  addMonths,
+  subMonths,
+  startOfWeek,
+  endOfWeek,
+  isSameMonth
+} from 'date-fns'
 
 export function Dashboard() {
   const { user } = useAuth()
@@ -12,7 +24,7 @@ export function Dashboard() {
   const { posts, loading: postsLoading } = usePosts(brand?.id)
   const navigate = useNavigate()
   const [selectedPost, setSelectedPost] = useState<any>(null)
-  const [statusFilter, setStatusFilter] = useState<'all' | 'posted' | 'scheduled' | 'draft'>('all')
+  const [currentMonth, setCurrentMonth] = useState(new Date())
 
   if (brandLoading) {
     return (
@@ -49,154 +61,384 @@ export function Dashboard() {
   const draftPosts = posts.filter(p => p.status === 'draft')
 
   const stats = [
-    { label: 'Total Posts', value: posts.length, icon: FileText, colorClass: 'from-primary-500 to-primary-600', bgColor: 'bg-primary-50/50 dark:bg-primary-900/10' },
-    { label: 'Scheduled', value: scheduledPosts.length, icon: Clock, colorClass: 'from-primary-400 to-primary-500', bgColor: 'bg-primary-50/30 dark:bg-primary-900/10' },
-    { label: 'Posted', value: postedPosts.length, icon: CheckCircle2, colorClass: 'from-primary-600 to-primary-700', bgColor: 'bg-primary-50/40 dark:bg-primary-900/10' },
-    { label: 'Drafts', value: draftPosts.length, icon: FileText, colorClass: 'from-primary-500 to-primary-600', bgColor: 'bg-primary-50/30 dark:bg-primary-900/10' },
+    { label: 'Total Posts', value: posts.length, icon: FileText, colorClass: 'from-primary-500 to-primary-600' },
+    { label: 'Scheduled', value: scheduledPosts.length, icon: Clock, colorClass: 'from-primary-400 to-primary-500' },
+    { label: 'Posted', value: postedPosts.length, icon: CheckCircle2, colorClass: 'from-primary-600 to-primary-700' },
+    { label: 'Drafts', value: draftPosts.length, icon: FileText, colorClass: 'from-primary-500 to-primary-600' },
   ]
 
-  const filteredPosts = statusFilter === 'all'
-    ? posts
-    : posts.filter(p => p.status === statusFilter)
+  // Calendar generation
+  const monthStart = startOfMonth(currentMonth)
+  const monthEnd = endOfMonth(currentMonth)
+  const startDate = startOfWeek(monthStart)
+  const endDate = endOfWeek(monthEnd)
+  const dateRange = eachDayOfInterval({ start: startDate, end: endDate })
+
+  // Group scheduled posts by date
+  const postsByDate = scheduledPosts.reduce((acc: any, post) => {
+    if (post.scheduled_for) {
+      const dateKey = format(new Date(post.scheduled_for), 'yyyy-MM-dd')
+      if (!acc[dateKey]) acc[dateKey] = []
+      acc[dateKey].push(post)
+    }
+    return acc
+  }, {})
+
+  // Get platform color
+  const getPlatformColor = (platforms: string[]) => {
+    if (!platforms || platforms.length === 0) return '#14b8a6'
+    if (platforms.includes('instagram')) return '#E1306C'
+    if (platforms.includes('facebook')) return '#1877F2'
+    if (platforms.includes('pinterest')) return '#E60023'
+    if (platforms.includes('linkedin')) return '#0A66C2'
+    return '#14b8a6'
+  }
+
+  // Recent posts for gallery (all posts, limit 10)
+  const recentPosts = [...posts]
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    .slice(0, 10)
 
   return (
     <AppLayout>
-      <div className="space-y-8">
-        {/* Header */}
-        <div>
-          <h1 className="text-4xl font-semibold text-white mb-2">Welcome back{user?.email ? `, ${user.email.split('@')[0]}` : ''}!</h1>
-          <p className="text-base text-[#a1a1aa]">Here's what's happening with <span className="font-medium text-white">{brand.name}</span></p>
-        </div>
+      <div style={{ padding: '48px 32px' }}>
+        {/* Welcome Title */}
+        <h1 style={{
+          color: '#14b8a6',
+          fontSize: '32px',
+          fontWeight: 600,
+          textAlign: 'center',
+          marginBottom: '64px'
+        }}>
+          Welcome back{user?.email ? `, ${user.email.split('@')[0]}` : ''}!
+        </h1>
 
-        {/* Quick Actions - Top Priority */}
-        <div className="flex flex-wrap gap-3">
+        {/* AI Caption Generation Section */}
+        <div style={{
+          background: '#1a1a1a',
+          padding: '32px',
+          borderRadius: '12px',
+          marginBottom: '64px',
+          textAlign: 'center'
+        }}>
+          <h2 style={{
+            color: '#14b8a6',
+            fontSize: '24px',
+            fontWeight: 600,
+            marginBottom: '16px'
+          }}>
+            AI-Powered Caption Generation
+          </h2>
+          <p style={{
+            color: '#e5e5e5',
+            fontSize: '16px',
+            lineHeight: '1.7',
+            marginTop: '16px',
+            marginBottom: '24px'
+          }}>
+            Upload your media and let our AI create engaging captions optimized for your brand voice and target audience.
+          </p>
           <button
             onClick={() => navigate('/upload')}
-            className="rounded-lg bg-primary-500 hover:bg-primary-600 px-6 py-3 text-white font-medium transition-all duration-200 flex items-center gap-2"
+            style={{
+              width: '200px',
+              height: '48px',
+              background: '#2a2a2a',
+              color: 'white',
+              border: 'none',
+              borderRadius: '24px',
+              fontSize: '15px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              margin: '0 auto',
+              display: 'block'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = '#14b8a6'
+              e.currentTarget.style.transform = 'scale(1.05)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = '#2a2a2a'
+              e.currentTarget.style.transform = 'scale(1)'
+            }}
           >
-            <Upload className="w-5 h-5" />
-            <span>Upload Content</span>
-          </button>
-
-          <button
-            onClick={() => navigate('/schedule')}
-            className="rounded-lg border border-[#27272a] bg-[#1a1a1a] hover:bg-[#222] px-6 py-3 text-white font-medium transition-all duration-200 flex items-center gap-2"
-          >
-            <Calendar className="w-5 h-5" />
-            <span>View Calendar</span>
-          </button>
-
-          <button
-            onClick={() => navigate('/settings')}
-            className="rounded-lg border border-[#27272a] bg-[#1a1a1a] hover:bg-[#222] px-6 py-3 text-white font-medium transition-all duration-200 flex items-center gap-2"
-          >
-            <SettingsIcon className="w-5 h-5" />
-            <span>Brand Settings</span>
+            Get Started
           </button>
         </div>
 
-        {/* Stats Overview - Compact 2x2 Grid */}
-        <div className="grid grid-cols-2 gap-6 max-w-2xl">
+        {/* Stats Grid - 2x2 */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: '24px',
+          maxWidth: '800px',
+          margin: '0 auto',
+          marginBottom: '64px'
+        }}>
           {stats.map((stat) => (
-            <div key={stat.label} className="bg-[#1a1a1a]" style={{ borderRadius: '12px', padding: '32px' }}>
-              <div className="flex items-center gap-4">
+            <div key={stat.label} style={{
+              background: '#1a1a1a',
+              borderRadius: '12px',
+              padding: '32px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                 <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${stat.colorClass}`}>
                   <stat.icon className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-[#a1a1aa] uppercase tracking-wide">{stat.label}</p>
-                  <p className="text-3xl font-semibold mt-1 text-white">{stat.value}</p>
+                  <p style={{
+                    fontSize: '12px',
+                    fontWeight: 500,
+                    color: '#a1a1aa',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    marginBottom: '4px'
+                  }}>
+                    {stat.label}
+                  </p>
+                  <p style={{
+                    fontSize: '32px',
+                    fontWeight: 600,
+                    color: 'white'
+                  }}>
+                    {stat.value}
+                  </p>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* AI Feature Card */}
-        <div className="bg-[#1a1a1a]" style={{ borderRadius: '12px', padding: '32px' }}>
-          <div className="flex flex-col md:flex-row md:items-center gap-6">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600">
-              <Sparkles className="w-7 h-7 text-white" />
+        {/* Calendar View */}
+        <div style={{ marginBottom: '64px' }}>
+          <h2 style={{
+            color: '#14b8a6',
+            fontSize: '24px',
+            fontWeight: 600,
+            marginBottom: '24px'
+          }}>
+            Scheduled Posts Calendar
+          </h2>
+          <div style={{
+            background: '#1a1a1a',
+            padding: '32px',
+            borderRadius: '12px'
+          }}>
+            {/* Month Navigation */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '24px'
+            }}>
+              <button
+                onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+                className="unstyled"
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#14b8a6',
+                  cursor: 'pointer',
+                  padding: '8px'
+                }}
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <h3 style={{
+                color: 'white',
+                fontSize: '18px',
+                fontWeight: 600
+              }}>
+                {format(currentMonth, 'MMMM yyyy')}
+              </h3>
+              <button
+                onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+                className="unstyled"
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#14b8a6',
+                  cursor: 'pointer',
+                  padding: '8px'
+                }}
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
             </div>
-            <div className="flex-1">
-              <h3 className="text-lg font-semibold mb-1 text-white">AI-Powered Caption Generation</h3>
-              <p className="text-[#a1a1aa] text-sm">Upload your media and let our AI create engaging captions optimized for your brand voice and target audience.</p>
+
+            {/* Weekday Headers */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(7, 1fr)',
+              gap: '8px',
+              marginBottom: '8px'
+            }}>
+              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                <div key={day} style={{
+                  textAlign: 'center',
+                  color: '#a1a1aa',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  padding: '8px'
+                }}>
+                  {day}
+                </div>
+              ))}
             </div>
-            <button onClick={() => navigate('/upload')} className="bg-primary-500 hover:bg-primary-600 text-white font-medium px-6 py-3 rounded-lg transition-colors shrink-0">
-              Get Started
-            </button>
+
+            {/* Calendar Grid */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(7, 1fr)',
+              gap: '8px'
+            }}>
+              {dateRange.map((date, idx) => {
+                const dateKey = format(date, 'yyyy-MM-dd')
+                const dayPosts = postsByDate[dateKey] || []
+                const isCurrentMonth = isSameMonth(date, currentMonth)
+
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      background: '#0d0d0d',
+                      border: '1px solid #27272a',
+                      borderRadius: '8px',
+                      padding: '8px',
+                      minHeight: '80px',
+                      opacity: isCurrentMonth ? 1 : 0.4,
+                      position: 'relative'
+                    }}
+                  >
+                    <div style={{
+                      color: isCurrentMonth ? 'white' : '#666',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      marginBottom: '4px'
+                    }}>
+                      {format(date, 'd')}
+                    </div>
+                    {dayPosts.length > 0 && (
+                      <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '2px',
+                        marginTop: '4px'
+                      }}>
+                        {dayPosts.slice(0, 3).map((post: any, postIdx: number) => (
+                          <div
+                            key={postIdx}
+                            style={{
+                              width: '100%',
+                              height: '4px',
+                              borderRadius: '2px',
+                              background: getPlatformColor(post.platforms)
+                            }}
+                          />
+                        ))}
+                        {dayPosts.length > 3 && (
+                          <div style={{
+                            fontSize: '10px',
+                            color: '#14b8a6',
+                            marginTop: '2px'
+                          }}>
+                            +{dayPosts.length - 3}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
           </div>
         </div>
 
         {/* Recent Posts Gallery */}
-        <div className="bg-[#1a1a1a]" style={{ borderRadius: '12px', padding: '32px' }}>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <h2 className="text-xl font-semibold text-white">Recent Posts</h2>
-
-            {/* Filter Tabs */}
-            <div className="flex gap-2 flex-wrap">
-              {['all', 'posted', 'scheduled', 'draft'].map((filter) => (
-                <button
-                  key={filter}
-                  onClick={() => setStatusFilter(filter as any)}
-                  className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-                    statusFilter === filter
-                      ? 'bg-primary-500 text-white'
-                      : 'bg-transparent text-[#a1a1aa] hover:text-white border border-[#27272a] hover:border-[#3a3a3a]'
-                  }`}
-                >
-                  {filter.charAt(0).toUpperCase() + filter.slice(1)}
-                  {filter !== 'all' && (
-                    <span className="ml-1.5 text-xs opacity-75">
-                      ({filter === 'posted' ? postedPosts.length : filter === 'scheduled' ? scheduledPosts.length : draftPosts.length})
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
+        <div style={{ marginBottom: '64px' }}>
+          <h2 style={{
+            color: '#14b8a6',
+            fontSize: '24px',
+            fontWeight: 600,
+            marginBottom: '24px'
+          }}>
+            Recent Posts
+          </h2>
 
           {postsLoading ? (
             <div className="flex justify-center py-12">
               <div className="w-8 h-8 spinner border-primary-500"></div>
             </div>
-          ) : filteredPosts.length === 0 ? (
+          ) : recentPosts.length === 0 ? (
             <div className="text-center py-12">
               <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-xl bg-[#222] mb-4">
                 <FileText className="w-8 h-8 text-[#a1a1aa]" />
               </div>
               <p className="text-[#a1a1aa] mb-4">
-                {statusFilter === 'all'
-                  ? 'No posts yet. Start by uploading your first piece of content!'
-                  : `No ${statusFilter} posts found.`
-                }
+                No posts yet. Start by uploading your first piece of content!
               </p>
               <button onClick={() => navigate('/upload')} className="bg-primary-500 hover:bg-primary-600 text-white font-medium px-6 py-3 rounded-lg transition-colors">
                 Upload Content
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-              {filteredPosts.map((post) => (
-                <button
+            <div style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '1%'
+            }}>
+              {recentPosts.map((post) => (
+                <div
                   key={post.id}
                   onClick={() => setSelectedPost(post)}
-                  className="group relative aspect-square rounded-xl overflow-hidden bg-[#222] hover:ring-2 hover:ring-primary-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  style={{
+                    width: '18%',
+                    margin: '0.5%',
+                    aspectRatio: '1 / 1',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    background: '#1a1a1a',
+                    cursor: 'pointer',
+                    position: 'relative'
+                  }}
+                  className="group"
                 >
                   {post.media ? (
                     <>
                       <img
-                        src={post.media.thumbnail_url || `${post.media.cloudinary_url}?w=400&h=400&c=fill&q=80&f_auto`}
+                        src={post.media.thumbnail_url || `${post.media.cloudinary_url.split('/upload/')[0]}/upload/w_200,h_200,c_fill/${post.media.cloudinary_url.split('/upload/')[1]}`}
                         alt="Post media"
                         loading="lazy"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover'
+                        }}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        <div className="absolute bottom-2 left-2 right-2">
-                          <p className="text-white text-xs line-clamp-2 font-medium">
-                            {post.final_caption || post.generated_caption || 'No caption'}
-                          </p>
-                        </div>
+                      <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center gap-2 p-2">
+                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                          post.status === 'posted' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
+                          post.status === 'scheduled' ? 'bg-primary-500/20 text-primary-400 border border-primary-500/30' :
+                          'bg-[#27272a] text-[#a1a1aa] border border-[#3a3a3a]'
+                        }`}>
+                          {post.status.charAt(0).toUpperCase() + post.status.slice(1)}
+                        </span>
+                        {post.platforms && post.platforms.length > 0 && (
+                          <div className="flex gap-1">
+                            {post.platforms.map((platform: string, idx: number) => (
+                              <div
+                                key={idx}
+                                style={{
+                                  width: '8px',
+                                  height: '8px',
+                                  borderRadius: '50%',
+                                  background: getPlatformColor([platform])
+                                }}
+                              />
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </>
                   ) : (
@@ -204,18 +446,7 @@ export function Dashboard() {
                       <FileText className="w-8 h-8 text-[#a1a1aa]" />
                     </div>
                   )}
-                  <div className="absolute top-2 right-2">
-                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                      post.status === 'posted' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
-                      post.status === 'scheduled' ? 'bg-primary-500/20 text-primary-400 border border-primary-500/30' :
-                      'bg-[#27272a] text-[#a1a1aa] border border-[#3a3a3a]'
-                    }`}>
-                      {post.status === 'posted' && <CheckCircle2 className="w-2.5 h-2.5" />}
-                      {post.status === 'scheduled' && <Clock className="w-2.5 h-2.5" />}
-                      {post.status.charAt(0).toUpperCase() + post.status.slice(1)}
-                    </span>
-                  </div>
-                </button>
+                </div>
               ))}
             </div>
           )}
@@ -236,7 +467,8 @@ export function Dashboard() {
                 <h3 className="text-lg font-semibold text-white">Post Details</h3>
                 <button
                   onClick={() => setSelectedPost(null)}
-                  className="p-2 hover:bg-[#222] rounded-lg transition-colors text-[#a1a1aa] hover:text-white"
+                  className="unstyled p-2 hover:bg-[#222] rounded-lg transition-colors text-[#a1a1aa] hover:text-white"
+                  style={{ background: 'transparent', border: 'none' }}
                 >
                   <X className="w-5 h-5" />
                 </button>
