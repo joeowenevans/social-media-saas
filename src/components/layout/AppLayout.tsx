@@ -2,11 +2,11 @@ import type { ReactNode } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import {
+  Share2,
   LayoutDashboard,
   Upload,
   Calendar,
-  Settings,
-  CreditCard
+  Settings
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -30,50 +30,84 @@ export function AppLayout({ children }: AppLayoutProps) {
     { icon: Upload, label: 'Upload', path: '/upload' },
     { icon: Calendar, label: 'Schedule', path: '/schedule' },
     { icon: Settings, label: 'Settings', path: '/settings' },
-    { icon: CreditCard, label: 'Billing', path: '/billing' },
   ]
 
   const isActive = (path: string) => location.pathname === path
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}>
-      {/* Header - New Design System */}
+      {/* Header - Fixed Layout */}
       <header
-        className="sticky top-0 z-50"
         style={{
           background: '#0f0f0f',
           borderBottom: '1px solid #1a1a1a',
-          height: '64px'
+          height: '64px',
+          width: '100%',
+          position: 'sticky',
+          top: 0,
+          zIndex: 50
         }}
       >
-        <div className="mx-auto flex items-center justify-between h-full" style={{ maxWidth: '900px', padding: '0 32px' }}>
-          {/* Logo - Left Aligned */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            height: '100%',
+            padding: '0 48px',
+            width: '100%'
+          }}
+        >
+          {/* Left Side - Logo Section (1/3) */}
           <div
             style={{
-              color: '#14b8a6',
-              fontWeight: 700,
-              fontSize: '18px'
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px'
             }}
           >
-            SocialAI
+            <Share2
+              style={{
+                color: 'white',
+                width: '24px',
+                height: '24px'
+              }}
+            />
+            <span
+              style={{
+                color: '#14b8a6',
+                fontSize: '20px',
+                fontWeight: 700
+              }}
+            >
+              SocialAI
+            </span>
           </div>
 
-          {/* Navigation - Always visible (no mobile menu) */}
-          <nav className="flex items-center gap-6">
+          {/* Right Side - Navigation (2/3) */}
+          <nav
+            style={{
+              flex: 2,
+              display: 'flex',
+              justifyContent: 'space-evenly',
+              alignItems: 'center'
+            }}
+          >
             {navItems.map((item) => (
               <button
                 key={item.path}
                 onClick={() => navigate(item.path)}
-                className="unstyled transition-colors"
+                className="unstyled"
                 style={{
                   color: isActive(item.path) ? '#14b8a6' : '#e5e5e5',
                   fontSize: '15px',
-                  fontWeight: isActive(item.path) ? 600 : 500,
+                  fontWeight: 600,
                   background: 'transparent',
                   border: 'none',
                   padding: '0',
                   cursor: 'pointer',
-                  transition: 'color 0.2s'
+                  transition: 'color 0.2s ease'
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
                 onMouseLeave={(e) => e.currentTarget.style.color = isActive(item.path) ? '#14b8a6' : '#e5e5e5'}
@@ -83,16 +117,16 @@ export function AppLayout({ children }: AppLayoutProps) {
             ))}
             <button
               onClick={handleSignOut}
-              className="unstyled transition-colors"
+              className="unstyled"
               style={{
                 color: '#e5e5e5',
                 fontSize: '15px',
-                fontWeight: 500,
+                fontWeight: 600,
                 background: 'transparent',
                 border: 'none',
                 padding: '0',
                 cursor: 'pointer',
-                transition: 'color 0.2s'
+                transition: 'color 0.2s ease'
               }}
               onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
               onMouseLeave={(e) => e.currentTarget.style.color = '#e5e5e5'}
