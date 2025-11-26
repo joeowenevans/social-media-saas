@@ -13,7 +13,8 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
-  Sparkles
+  Sparkles,
+  AlertCircle
 } from 'lucide-react'
 import {
   startOfMonth,
@@ -57,6 +58,7 @@ export function Schedule() {
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'scheduled' | 'posted' | 'draft'>('all')
   const [posting, setPosting] = useState<string | null>(null)
   const [editingPost, setEditingPost] = useState<Post | null>(null)
+  const [postToConfirm, setPostToConfirm] = useState<string | null>(null)
   const [editFormData, setEditFormData] = useState({
     caption: '',
     scheduled_date: '',
@@ -112,13 +114,17 @@ export function Schedule() {
     return '#14b8a6'
   }
 
-  const handlePostNow = async (postId: string) => {
-    setPosting(postId)
+  const confirmPostNow = async () => {
+    if (!postToConfirm) return
+
+    setPosting(postToConfirm)
+    setPostToConfirm(null) // Close modal
+
     try {
       const { data: post, error } = await supabase
         .from('posts')
         .select('*, media(*)')
-        .eq('id', postId)
+        .eq('id', postToConfirm)
         .single()
 
       if (error) throw error
@@ -142,7 +148,7 @@ export function Schedule() {
           status: 'posted',
           posted_at: new Date().toISOString()
         })
-        .eq('id', postId)
+        .eq('id', postToConfirm)
 
       toast.success('Posted successfully!')
       refetch()
@@ -287,165 +293,22 @@ export function Schedule() {
           color: '#888',
           fontSize: '16px',
           textAlign: 'center',
-          marginBottom: '64px'
+          marginBottom: '48px'
         }}>
           Plan and edit your scheduled content
         </p>
 
-        {/* Calendar View Section */}
-        <div style={{ marginBottom: '64px' }}>
-          <h2 style={{
-            color: '#14b8a6',
-            fontSize: '24px',
-            fontWeight: 600,
-            marginBottom: '24px'
-          }}>
-            Content Calendar
-          </h2>
-
-          <div style={{ background: '#1a1a1a', padding: '32px', borderRadius: '12px' }}>
-            {/* Calendar Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-              <button
-                onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
-                style={{
-                  background: '#0d0d0d',
-                  border: '1px solid #27272a',
-                  borderRadius: '8px',
-                  padding: '8px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              >
-                <ChevronLeft style={{ width: '20px', height: '20px', color: '#e5e5e5' }} />
-              </button>
-
-              <h3 style={{ color: 'white', fontSize: '18px', fontWeight: 600 }}>
-                {format(currentMonth, 'MMMM yyyy')}
-              </h3>
-
-              <button
-                onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-                style={{
-                  background: '#0d0d0d',
-                  border: '1px solid #27272a',
-                  borderRadius: '8px',
-                  padding: '8px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              >
-                <ChevronRight style={{ width: '20px', height: '20px', color: '#e5e5e5' }} />
-              </button>
-            </div>
-
-            {/* Days of Week */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px', marginBottom: '8px' }}>
-              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                <div key={day} style={{
-                  textAlign: 'center',
-                  color: '#888',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  padding: '8px 0'
-                }}>
-                  {day}
-                </div>
-              ))}
-            </div>
-
-            {/* Calendar Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px' }}>
-              {dateRange.map(date => {
-                const dateKey = format(date, 'yyyy-MM-dd')
-                const dayPosts = postsByDate[dateKey] || []
-                const isCurrentMonth = isSameMonth(date, currentMonth)
-
-                return (
-                  <div
-                    key={dateKey}
-                    style={{
-                      background: '#0d0d0d',
-                      border: '1px solid #27272a',
-                      borderRadius: '8px',
-                      padding: '12px',
-                      minHeight: '100px',
-                      opacity: isCurrentMonth ? 1 : 0.4
-                    }}
-                  >
-                    <div style={{ color: '#888', fontSize: '12px', marginBottom: '8px' }}>
-                      {format(date, 'd')}
-                    </div>
-
-                    {dayPosts.slice(0, 2).map((post: any) => (
-                      <div key={post.id} style={{ marginBottom: '8px' }}>
-                        <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginBottom: '4px' }}>
-                          <img
-                            src={post.media?.thumbnail_url || post.media?.cloudinary_url}
-                            alt=""
-                            style={{
-                              width: '40px',
-                              height: '40px',
-                              borderRadius: '6px',
-                              objectFit: 'cover'
-                            }}
-                          />
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ display: 'flex', gap: '4px', marginBottom: '2px' }}>
-                              {post.platforms?.slice(0, 2).map((platform: string) => (
-                                <div
-                                  key={platform}
-                                  style={{
-                                    width: '6px',
-                                    height: '6px',
-                                    borderRadius: '50%',
-                                    background: getPlatformColor(platform)
-                                  }}
-                                />
-                              ))}
-                            </div>
-                            <div style={{
-                              color: '#888',
-                              fontSize: '11px',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap'
-                            }}>
-                              {post.final_caption.split(' ').slice(0, 3).join(' ')}...
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-
-                    {dayPosts.length > 2 && (
-                      <div style={{ color: '#14b8a6', fontSize: '11px', fontWeight: 500 }}>
-                        +{dayPosts.length - 2} more
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Status Filter Tabs */}
-        <div style={{ marginBottom: '16px' }}>
-          <h3 style={{
-            color: '#e5e5e5',
-            fontSize: '16px',
-            fontWeight: 600,
-            textAlign: 'center',
-            marginBottom: '12px'
-          }}>
-            Filter by Status
-          </h3>
-          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+        {/* Side-by-Side Filters */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '32px',
+          gap: '24px',
+          flexWrap: 'wrap'
+        }}>
+          {/* Status Filter - Left */}
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             {[
               { id: 'all', label: 'All', color: '#14b8a6' },
               { id: 'scheduled', label: 'Scheduled', color: '#14b8a6' },
@@ -471,20 +334,9 @@ export function Schedule() {
               </button>
             ))}
           </div>
-        </div>
 
-        {/* Platform Filter Tabs */}
-        <div style={{ marginBottom: '16px' }}>
-          <h3 style={{
-            color: '#e5e5e5',
-            fontSize: '16px',
-            fontWeight: 600,
-            textAlign: 'center',
-            marginBottom: '12px'
-          }}>
-            Filter by Platform
-          </h3>
-          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '32px' }}>
+          {/* Platform Filter - Right */}
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             {[
               { id: 'all', label: 'All', color: '#14b8a6' },
               { id: 'instagram', label: 'Instagram', color: '#E1306C' },
@@ -678,7 +530,7 @@ export function Schedule() {
                     </button>
 
                     <button
-                      onClick={() => handlePostNow(post.id)}
+                      onClick={() => setPostToConfirm(post.id)}
                       disabled={posting === post.id}
                       style={{
                         flex: 1,
@@ -737,9 +589,264 @@ export function Schedule() {
             ))}
           </div>
         )}
+
+        {/* Content Calendar Section - Moved to Bottom */}
+        <div style={{ marginTop: '64px' }}>
+          <h2 style={{
+            color: '#14b8a6',
+            fontSize: '24px',
+            fontWeight: 600,
+            marginBottom: '24px'
+          }}>
+            Content Calendar
+          </h2>
+
+          <div style={{ background: '#1a1a1a', padding: '32px', borderRadius: '12px' }}>
+            {/* Calendar Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <button
+                onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+                style={{
+                  background: '#0d0d0d',
+                  border: '1px solid #27272a',
+                  borderRadius: '8px',
+                  padding: '8px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <ChevronLeft style={{ width: '20px', height: '20px', color: '#e5e5e5' }} />
+              </button>
+
+              <h3 style={{ color: 'white', fontSize: '18px', fontWeight: 600 }}>
+                {format(currentMonth, 'MMMM yyyy')}
+              </h3>
+
+              <button
+                onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+                style={{
+                  background: '#0d0d0d',
+                  border: '1px solid #27272a',
+                  borderRadius: '8px',
+                  padding: '8px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <ChevronRight style={{ width: '20px', height: '20px', color: '#e5e5e5' }} />
+              </button>
+            </div>
+
+            {/* Days of Week */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px', marginBottom: '8px' }}>
+              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                <div key={day} style={{
+                  textAlign: 'center',
+                  color: '#888',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  padding: '8px 0'
+                }}>
+                  {day}
+                </div>
+              ))}
+            </div>
+
+            {/* Calendar Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px' }}>
+              {dateRange.map(date => {
+                const dateKey = format(date, 'yyyy-MM-dd')
+                const dayPosts = postsByDate[dateKey] || []
+                const isCurrentMonth = isSameMonth(date, currentMonth)
+
+                return (
+                  <div
+                    key={dateKey}
+                    style={{
+                      background: '#0d0d0d',
+                      border: '1px solid #27272a',
+                      borderRadius: '8px',
+                      padding: '12px',
+                      minHeight: '100px',
+                      opacity: isCurrentMonth ? 1 : 0.4
+                    }}
+                  >
+                    <div style={{ color: '#888', fontSize: '12px', marginBottom: '8px' }}>
+                      {format(date, 'd')}
+                    </div>
+
+                    {dayPosts.slice(0, 2).map((post: any) => (
+                      <div key={post.id} style={{ marginBottom: '8px' }}>
+                        <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginBottom: '4px' }}>
+                          <img
+                            src={post.media?.thumbnail_url || post.media?.cloudinary_url}
+                            alt=""
+                            style={{
+                              width: '40px',
+                              height: '40px',
+                              borderRadius: '6px',
+                              objectFit: 'cover'
+                            }}
+                          />
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ display: 'flex', gap: '4px', marginBottom: '2px' }}>
+                              {post.platforms?.slice(0, 2).map((platform: string) => (
+                                <div
+                                  key={platform}
+                                  style={{
+                                    width: '6px',
+                                    height: '6px',
+                                    borderRadius: '50%',
+                                    background: getPlatformColor(platform)
+                                  }}
+                                />
+                              ))}
+                            </div>
+                            <div style={{
+                              color: '#888',
+                              fontSize: '11px',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap'
+                            }}>
+                              {post.final_caption.split(' ').slice(0, 3).join(' ')}...
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    {dayPosts.length > 2 && (
+                      <div style={{ color: '#14b8a6', fontSize: '11px', fontWeight: 500 }}>
+                        +{dayPosts.length - 2} more
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Edit Modal */}
+      {/* Post Now Confirmation Modal */}
+      {postToConfirm && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.7)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: '24px'
+          }}
+          onClick={() => setPostToConfirm(null)}
+        >
+          <div
+            style={{
+              maxWidth: '450px',
+              background: '#1a1a1a',
+              border: '1px solid #27272a',
+              borderRadius: '16px',
+              padding: '40px',
+              boxShadow: '0 0 60px rgba(0, 0, 0, 0.8)',
+              textAlign: 'center'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Icon */}
+            <div style={{
+              width: '48px',
+              height: '48px',
+              margin: '0 auto 24px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '50%',
+              background: 'rgba(20, 184, 166, 0.1)'
+            }}>
+              <AlertCircle style={{ width: '28px', height: '28px', color: '#14b8a6' }} />
+            </div>
+
+            {/* Title */}
+            <h2 style={{
+              color: '#ffffff',
+              fontSize: '24px',
+              fontWeight: 700,
+              marginBottom: '16px'
+            }}>
+              Post Now?
+            </h2>
+
+            {/* Message */}
+            <p style={{
+              color: '#888',
+              fontSize: '15px',
+              lineHeight: 1.6,
+              marginBottom: '32px'
+            }}>
+              This will immediately post your content to the selected platforms. This action cannot be undone.
+            </p>
+
+            {/* Buttons */}
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+              <button
+                onClick={() => setPostToConfirm(null)}
+                style={{
+                  background: '#2a2a2a',
+                  color: '#e5e5e5',
+                  padding: '12px 32px',
+                  borderRadius: '20px',
+                  fontWeight: 500,
+                  fontSize: '15px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#333'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmPostNow}
+                style={{
+                  background: '#14b8a6',
+                  color: 'white',
+                  padding: '12px 32px',
+                  borderRadius: '20px',
+                  fontWeight: 600,
+                  fontSize: '15px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#10a896'
+                  e.currentTarget.style.transform = 'scale(1.02)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#14b8a6'
+                  e.currentTarget.style.transform = 'scale(1)'
+                }}
+              >
+                Yes, Post Now
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Modal - Cleaned Up Design */}
       {editingPost && (
         <div
           style={{
@@ -760,18 +867,19 @@ export function Schedule() {
           <div
             style={{
               background: '#1a1a1a',
-              borderRadius: '12px',
-              padding: '32px',
+              borderRadius: '16px',
+              padding: '40px',
               maxWidth: '600px',
               width: '100%',
               maxHeight: '90vh',
-              overflowY: 'auto'
+              overflowY: 'auto',
+              boxShadow: '0 0 60px rgba(0, 0, 0, 0.5)'
             }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-              <h2 style={{ color: '#14b8a6', fontSize: '24px', fontWeight: 600, margin: 0 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
+              <h2 style={{ color: '#14b8a6', fontSize: '28px', fontWeight: 700, margin: 0 }}>
                 Edit Scheduled Post
               </h2>
               <button
@@ -780,23 +888,26 @@ export function Schedule() {
                   background: 'transparent',
                   border: 'none',
                   cursor: 'pointer',
-                  padding: '4px'
+                  padding: '4px',
+                  transition: 'color 0.2s ease'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.color = '#fff'}
+                onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
               >
                 <X style={{ width: '24px', height: '24px', color: '#888' }} />
               </button>
             </div>
 
             {/* Thumbnail Preview */}
-            <div style={{ marginBottom: '24px' }}>
+            <div style={{ marginBottom: '32px', textAlign: 'center' }}>
               <img
                 src={editingPost.media?.thumbnail_url || editingPost.media?.cloudinary_url}
                 alt="Preview"
                 style={{
-                  width: '100%',
-                  maxHeight: '300px',
+                  maxWidth: '200px',
+                  maxHeight: '200px',
                   objectFit: 'cover',
-                  borderRadius: '8px'
+                  borderRadius: '12px'
                 }}
               />
             </div>
@@ -815,11 +926,12 @@ export function Schedule() {
                   background: '#0d0d0d',
                   border: '1px solid #27272a',
                   borderRadius: '8px',
-                  padding: '12px 16px',
+                  padding: '16px',
                   color: '#e5e5e5',
                   fontSize: '15px',
                   outline: 'none',
-                  resize: 'vertical'
+                  resize: 'vertical',
+                  transition: 'border-color 0.2s ease'
                 }}
                 onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
                 onBlur={(e) => e.target.style.borderColor = '#27272a'}
@@ -894,9 +1006,9 @@ export function Schedule() {
                       display: 'flex',
                       alignItems: 'center',
                       gap: '10px',
-                      padding: '12px',
-                      background: editFormData.platforms.includes(platform.id) ? '#1a1a1a' : 'transparent',
-                      border: editFormData.platforms.includes(platform.id) ? `2px solid ${platform.color}` : '2px solid #27272a',
+                      padding: '12px 16px',
+                      background: editFormData.platforms.includes(platform.id) ? '#0d0d0d' : '#0d0d0d',
+                      border: editFormData.platforms.includes(platform.id) ? `1px solid ${platform.color}` : '1px solid #27272a',
                       borderRadius: '8px',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease'
@@ -922,36 +1034,40 @@ export function Schedule() {
             </div>
 
             {/* Actions */}
-            <div style={{ display: 'flex', gap: '12px' }}>
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
               <button
                 onClick={() => setEditingPost(null)}
                 style={{
-                  flex: 1,
-                  padding: '12px',
+                  padding: '12px 24px',
                   background: '#2a2a2a',
                   color: 'white',
                   fontSize: '16px',
                   fontWeight: 600,
                   border: 'none',
                   borderRadius: '8px',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#333'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveEdit}
                 style={{
-                  flex: 1,
-                  padding: '12px',
+                  padding: '12px 32px',
                   background: '#14b8a6',
                   color: 'white',
                   fontSize: '16px',
                   fontWeight: 600,
                   border: 'none',
                   borderRadius: '8px',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#10a896'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#14b8a6'}
               >
                 Save Changes
               </button>
