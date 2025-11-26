@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
 import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import { Sparkles, Mail, Lock, ArrowRight } from 'lucide-react'
 
 export function LoginForm() {
   const [email, setEmail] = useState('')
@@ -27,85 +26,67 @@ export function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0d0d0d] py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full">
-        {/* Logo & Header */}
-        <div className="text-center mb-10">
-          <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 shadow-2xl mb-6">
-            <Sparkles className="h-8 w-8 text-white" />
-          </div>
-          <h2 className="text-4xl font-semibold text-white mb-2">
-            Welcome back
-          </h2>
-          <p className="text-[#a1a1aa]">
-            Sign in to continue to SocialAI
-          </p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center bg-[#0d0d0d] px-4">
+      <div className="w-full" style={{ maxWidth: '400px' }}>
+        {/* Logo */}
+        <h1 className="text-[32px] font-bold text-white text-center mb-12">
+          SocialAI
+        </h1>
 
-        {/* Form Card */}
-        <div className="bg-[#1a1a1a] border border-[#27272a] rounded-xl p-8">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="email-address" className="block text-sm font-medium text-white mb-2">
-                Email address
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#a1a1aa]" />
-                <input
-                  id="email-address"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="w-full pl-11 pr-4 py-3 border border-[#27272a] rounded-lg bg-[#0d0d0d] text-white placeholder:text-[#71717a] focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
+        {/* Form Container */}
+        <div className="bg-[#1a1a1a] border border-[#27272a] rounded-2xl px-8 py-12">
+          <form onSubmit={handleSubmit}>
+            {/* Email Input */}
+            <div className="mb-4">
+              <input
+                id="email-address"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                className="w-full h-11 px-4 py-3 border border-[#27272a] rounded-lg bg-[#0d0d0d] text-white placeholder:text-[#71717a] focus:outline-none focus:border-[#14b8a6] transition-colors"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#a1a1aa]" />
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  className="w-full pl-11 pr-4 py-3 border border-[#27272a] rounded-lg bg-[#0d0d0d] text-white placeholder:text-[#71717a] focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
+            {/* Password Input */}
+            <div className="mb-6">
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                required
+                className="w-full h-11 px-4 py-3 border border-[#27272a] rounded-lg bg-[#0d0d0d] text-white placeholder:text-[#71717a] focus:outline-none focus:border-[#14b8a6] transition-colors"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
 
+            {/* Sign In Button */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 py-3.5 px-4 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-3/5 h-11 mx-auto block bg-[#27272a] hover:bg-[#14b8a6] hover:scale-[1.02] text-white font-semibold rounded-full focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all duration-200"
+              style={{ maxWidth: '240px' }}
             >
-              <span>{loading ? 'Signing in...' : 'Sign in'}</span>
-              {!loading && <ArrowRight className="w-5 h-5" />}
+              {loading ? 'Signing in...' : 'Sign in'}
             </button>
+
+            {/* Sign Up Link */}
+            <div className="text-center mt-6">
+              <Link
+                to="/signup"
+                className="text-[#14b8a6] hover:underline text-sm transition-all"
+              >
+                Sign up
+              </Link>
+            </div>
           </form>
         </div>
-
-        {/* Sign up link */}
-        <p className="mt-6 text-center text-sm text-[#a1a1aa]">
-          Don't have an account?{' '}
-          <Link
-            to="/signup"
-            className="font-medium text-primary-400 hover:text-primary-300 transition-colors"
-          >
-            Sign up for free
-          </Link>
-        </p>
       </div>
     </div>
   )
