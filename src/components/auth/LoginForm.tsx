@@ -32,13 +32,21 @@ export function LoginForm() {
       style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}
     >
       <style>{`
+        /* Fix autofill white background */
+        input {
+          background-color: #0d0d0d !important;
+          background-image: none !important;
+        }
+
         input:-webkit-autofill,
         input:-webkit-autofill:hover,
         input:-webkit-autofill:focus,
         input:-webkit-autofill:active {
-          -webkit-box-shadow: 0 0 0 30px #0d0d0d inset !important;
+          -webkit-background-clip: text;
           -webkit-text-fill-color: #e5e5e5 !important;
           transition: background-color 5000s ease-in-out 0s;
+          box-shadow: inset 0 0 20px 20px #0d0d0d !important;
+          border: 1px solid #27272a !important;
         }
       `}</style>
 
@@ -72,11 +80,18 @@ export function LoginForm() {
             background: '#1a1a1a',
             border: '1px solid #27272a',
             borderRadius: '16px',
-            padding: '48px 32px',
+            padding: '48px 40px',
             boxShadow: '0 0 40px rgba(20, 184, 166, 0.15), 0 0 80px rgba(20, 184, 166, 0.08)'
           }}
         >
-          <form onSubmit={handleSubmit}>
+          <form
+            onSubmit={handleSubmit}
+            style={{
+              maxWidth: '320px',
+              margin: '0 auto',
+              width: '100%'
+            }}
+          >
             {/* Email Input */}
             <div style={{ marginBottom: '20px' }}>
               <input
@@ -91,7 +106,7 @@ export function LoginForm() {
                   padding: '12px 16px',
                   border: '1px solid #27272a',
                   borderRadius: '8px',
-                  background: '#0d0d0d',
+                  backgroundColor: '#0d0d0d',
                   color: '#e5e5e5',
                   fontSize: '15px',
                   outline: 'none',
@@ -119,7 +134,7 @@ export function LoginForm() {
                   padding: '12px 16px',
                   border: '1px solid #27272a',
                   borderRadius: '8px',
-                  background: '#0d0d0d',
+                  backgroundColor: '#0d0d0d',
                   color: '#e5e5e5',
                   fontSize: '15px',
                   outline: 'none',
