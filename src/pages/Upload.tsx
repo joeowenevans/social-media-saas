@@ -30,10 +30,10 @@ export function Upload() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-charcoal-50 via-gray-50 to-charcoal-100 dark:from-charcoal-950 dark:via-charcoal-900 dark:to-charcoal-950">
+      <div className="min-h-screen flex items-center justify-center bg-[#0d0d0d]">
         <div className="flex flex-col items-center gap-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-          <p className="text-charcoal-500 dark:text-charcoal-400 text-sm">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
+          <p className="text-[#a1a1aa] text-sm">Loading...</p>
         </div>
       </div>
     )
@@ -41,18 +41,18 @@ export function Upload() {
 
   if (!brand) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-charcoal-50 via-gray-50 to-charcoal-100 dark:from-charcoal-950 dark:via-charcoal-900 dark:to-charcoal-950">
-        <div className="max-w-md w-full card p-8 text-center animate-fade-in">
-          <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg mb-6">
+      <div className="min-h-screen flex items-center justify-center bg-[#0d0d0d]">
+        <div className="max-w-md w-full bg-[#1a1a1a] border border-[#27272a] rounded-xl p-8 text-center">
+          <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 mb-6">
             <Sparkles className="h-8 w-8 text-white" />
           </div>
-          <h2 className="text-2xl font-bold text-charcoal-900 dark:text-white mb-2">Brand Profile Required</h2>
-          <p className="text-charcoal-600 dark:text-charcoal-400 mb-6">
+          <h2 className="text-2xl font-semibold text-white mb-2">Brand Profile Required</h2>
+          <p className="text-[#a1a1aa] mb-6">
             Please create a brand profile first to use this feature.
           </p>
           <button
             onClick={() => navigate('/settings')}
-            className="btn-primary px-6 py-3 w-full"
+            className="bg-primary-500 hover:bg-primary-600 text-white font-medium px-6 py-3 rounded-lg w-full transition-colors"
           >
             Create Brand Profile
           </button>
@@ -157,24 +157,24 @@ export function Upload() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-charcoal-50 via-gray-50 to-charcoal-100 dark:from-charcoal-950 dark:via-charcoal-900 dark:to-charcoal-950 p-4 sm:p-8">
-      <div className="container mx-auto max-w-4xl animate-fade-in">
+    <div className="min-h-screen bg-[#0d0d0d] p-4 sm:p-8">
+      <div className="container mx-auto max-w-4xl">
         <button
           onClick={() => navigate('/dashboard')}
-          className="flex items-center gap-2 text-charcoal-600 dark:text-charcoal-400 hover:text-charcoal-900 dark:hover:text-charcoal-100 mb-6 transition-colors"
+          className="flex items-center gap-2 text-[#a1a1aa] hover:text-white mb-6 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
           <span>Back to Dashboard</span>
         </button>
 
-        <div className="card p-6 sm:p-8">
+        <div className="bg-[#1a1a1a] border border-[#27272a] rounded-xl p-6 sm:p-8">
           <div className="flex items-center gap-4 mb-8">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600">
               <Image className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-charcoal-900 dark:text-white">Upload Content</h1>
-              <p className="text-charcoal-600 dark:text-charcoal-400">Create AI-powered posts for your brand</p>
+              <h1 className="text-2xl sm:text-3xl font-semibold text-white">Upload Content</h1>
+              <p className="text-[#a1a1aa]">Create AI-powered posts for your brand</p>
             </div>
           </div>
 
@@ -182,8 +182,8 @@ export function Upload() {
             {/* Step 1: Media Upload */}
             <div className="relative">
               <div className="flex items-center gap-3 mb-4">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white text-sm font-bold">1</div>
-                <h2 className="text-lg font-semibold text-charcoal-900 dark:text-white">Upload Media</h2>
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white text-sm font-semibold">1</div>
+                <h2 className="text-lg font-semibold text-white">Upload Media</h2>
               </div>
               <div className="ml-11">
                 <MediaUploader brandId={brand.id} onUploadComplete={handleUploadComplete} />
@@ -192,16 +192,16 @@ export function Upload() {
 
             {/* Step 2: Caption Generation */}
             {uploadedMedia && (
-              <div className="relative border-t border-charcoal-100 dark:border-charcoal-800 pt-8">
+              <div className="relative border-t border-[#27272a] pt-8">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white text-sm font-bold">2</div>
-                    <h2 className="text-lg font-semibold text-charcoal-900 dark:text-white">Review & Edit Caption</h2>
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white text-sm font-semibold">2</div>
+                    <h2 className="text-lg font-semibold text-white">Review & Edit Caption</h2>
                   </div>
                   <button
                     onClick={() => generateCaption(uploadedMedia)}
                     disabled={generating}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-400 font-medium hover:bg-primary-100 dark:hover:bg-primary-900/30 disabled:opacity-50 transition-all duration-200"
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1a1a1a] border border-[#27272a] text-primary-400 font-medium hover:bg-[#222] disabled:opacity-50 transition-all duration-200"
                   >
                     <Wand2 className={`w-4 h-4 ${generating ? 'animate-spin' : ''}`} />
                     <span>{generating ? 'Generating...' : 'Regenerate'}</span>
@@ -210,19 +210,19 @@ export function Upload() {
 
                 <div className="ml-11">
                   {generating ? (
-                    <div className="flex flex-col items-center justify-center py-12 rounded-xl bg-gradient-to-br from-primary-50/50 to-cyan-50/30 dark:from-primary-900/10 dark:to-cyan-900/10 border border-primary-200 dark:border-primary-800">
-                      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg mb-4">
+                    <div className="flex flex-col items-center justify-center py-12 rounded-xl bg-[#0d0d0d] border border-[#27272a]">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 mb-4">
                         <Sparkles className="h-8 w-8 text-white animate-pulse" />
                       </div>
-                      <p className="text-charcoal-600 dark:text-charcoal-300 font-medium">AI is crafting your perfect caption...</p>
-                      <p className="text-charcoal-500 dark:text-charcoal-400 text-sm mt-1">This may take a few seconds</p>
+                      <p className="text-white font-medium">AI is crafting your perfect caption...</p>
+                      <p className="text-[#a1a1aa] text-sm mt-1">This may take a few seconds</p>
                     </div>
                   ) : (
                     <textarea
                       value={caption}
                       onChange={(e) => setCaption(e.target.value)}
                       rows={8}
-                      className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl input-focus resize-none text-charcoal-900 dark:text-charcoal-100"
+                      className="w-full px-4 py-3 border border-[#27272a] bg-[#0d0d0d] rounded-xl resize-none text-white placeholder:text-[#71717a] focus:outline-none focus:ring-2 focus:ring-primary-500"
                       placeholder="Your AI-generated caption will appear here..."
                     />
                   )}
@@ -232,23 +232,23 @@ export function Upload() {
 
             {/* Step 3: Schedule Time (Optional) */}
             {uploadedMedia && caption && !generating && (
-              <div className="relative border-t border-charcoal-100 dark:border-charcoal-800 pt-8">
+              <div className="relative border-t border-[#27272a] pt-8">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white text-sm font-bold">3</div>
-                  <h2 className="text-lg font-semibold text-charcoal-900 dark:text-white">Schedule Time (Optional)</h2>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white text-sm font-semibold">3</div>
+                  <h2 className="text-lg font-semibold text-white">Schedule Time (Optional)</h2>
                 </div>
                 <div className="ml-11">
                   <div className="relative">
-                    <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-charcoal-400 dark:text-charcoal-500 pointer-events-none" />
+                    <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#a1a1aa] pointer-events-none" />
                     <input
                       type="datetime-local"
                       value={scheduledTime}
                       onChange={(e) => setScheduledTime(e.target.value)}
-                      className="w-full pl-11 pr-4 py-3 border border-charcoal-300 dark:border-charcoal-700 rounded-xl bg-white dark:bg-charcoal-800 text-charcoal-900 dark:text-charcoal-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                      className="w-full pl-11 pr-4 py-3 border border-[#27272a] rounded-xl bg-[#0d0d0d] text-white focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all"
                       placeholder="Select date and time"
                     />
                   </div>
-                  <p className="mt-2 text-sm text-charcoal-500 dark:text-charcoal-400">
+                  <p className="mt-2 text-sm text-[#a1a1aa]">
                     {scheduledTime
                       ? 'Your post will be saved as scheduled'
                       : 'Leave empty to save as draft'}
@@ -259,16 +259,16 @@ export function Upload() {
 
             {/* Step 4: Actions */}
             {uploadedMedia && caption && !generating && (
-              <div className="relative border-t border-charcoal-100 dark:border-charcoal-800 pt-8">
+              <div className="relative border-t border-[#27272a] pt-8">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white text-sm font-bold">4</div>
-                  <h2 className="text-lg font-semibold text-charcoal-900 dark:text-white">Save or Continue</h2>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white text-sm font-semibold">4</div>
+                  <h2 className="text-lg font-semibold text-white">Save or Continue</h2>
                 </div>
                 <div className="ml-11 flex flex-col sm:flex-row gap-4">
                   <button
                     onClick={handleSaveDraft}
                     disabled={saving}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold hover:from-primary-600 hover:to-primary-700 disabled:opacity-50 transition-all duration-200 shadow-lg hover:shadow-xl"
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-primary-500 hover:bg-primary-600 text-white font-medium disabled:opacity-50 transition-colors"
                   >
                     {scheduledTime ? (
                       <>
@@ -284,7 +284,7 @@ export function Upload() {
                   </button>
                   <button
                     onClick={handleSchedule}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-charcoal-300 dark:border-charcoal-700 text-charcoal-700 dark:text-charcoal-300 font-medium hover:bg-charcoal-50 dark:hover:bg-charcoal-800 transition-all duration-200"
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-[#27272a] bg-[#1a1a1a] hover:bg-[#222] text-white font-medium transition-colors"
                   >
                     <Send className="w-5 h-5" />
                     <span>Advanced Schedule</span>
