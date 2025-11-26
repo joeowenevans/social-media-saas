@@ -1,21 +1,13 @@
 import type { ReactNode } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
 import {
-  Share2,
   LayoutDashboard,
   Upload,
   Calendar,
   Settings,
-  LogOut,
   CreditCard,
-  Menu,
-  X,
-  Twitter,
-  Facebook,
-  Instagram,
-  Linkedin
+  LogOut
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -27,7 +19,6 @@ export function AppLayout({ children }: AppLayoutProps) {
   const navigate = useNavigate()
   const location = useLocation()
   const { signOut } = useAuth()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const handleSignOut = async () => {
     await signOut()
@@ -47,114 +38,70 @@ export function AppLayout({ children }: AppLayoutProps) {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}>
-      {/* Header - Full Width Dark Bar */}
-      <header className="sticky top-0 z-50 border-b border-[#27272a]" style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}>
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
-          <div className="flex justify-between items-center h-16">
-            {/* Logo - Static, Non-Clickable */}
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-primary-600">
-                <Share2 className="h-4 w-4 text-white" />
-              </div>
-              <span className="text-lg font-semibold tracking-tight text-white">SocialAI</span>
-            </div>
-
-            {/* Desktop Navigation - Evenly Spaced */}
-            <nav className="hidden md:flex items-center justify-center flex-1 px-8">
-              <div className="flex items-center gap-8">
-                {navItems.map((item) => (
-                  <button
-                    key={item.path}
-                    onClick={() => navigate(item.path)}
-                    className={`unstyled relative text-sm font-medium transition-all duration-200 ease-in-out
-                      ${isActive(item.path)
-                        ? 'font-bold underline'
-                        : 'hover:text-[#14b8a6]'
-                      }
-                    `}
-                    style={{
-                      color: isActive(item.path) ? '#14b8a6' : '#e5e5e5',
-                      background: 'transparent',
-                      border: 'none',
-                      padding: '0'
-                    }}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </div>
-            </nav>
-
-            {/* Right Actions */}
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleSignOut}
-                className="hidden md:flex items-center gap-2 text-sm font-medium"
-                style={{
-                  color: '#e5e5e5',
-                  padding: '10px 20px',
-                  height: '40px',
-                  background: '#2a2a2a',
-                  borderRadius: '20px'
-                }}
-              >
-                <LogOut className="w-4 h-4" />
-                <span>Sign Out</span>
-              </button>
-
-              {/* Mobile Menu Button */}
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="unstyled md:hidden p-2"
-                style={{ color: '#e5e5e5', background: 'transparent' }}
-              >
-                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              </button>
-            </div>
+      {/* Header - New Design System */}
+      <header
+        className="sticky top-0 z-50"
+        style={{
+          background: '#0f0f0f',
+          borderBottom: '1px solid #1a1a1a',
+          height: '64px'
+        }}
+      >
+        <div className="mx-auto flex items-center justify-between h-full" style={{ maxWidth: '900px', padding: '0 32px' }}>
+          {/* Logo - Left Aligned */}
+          <div
+            style={{
+              color: '#14b8a6',
+              fontWeight: 700,
+              fontSize: '18px'
+            }}
+          >
+            SocialAI
           </div>
+
+          {/* Navigation - Always visible (no mobile menu) */}
+          <nav className="flex items-center gap-6">
+            {navItems.map((item) => (
+              <button
+                key={item.path}
+                onClick={() => navigate(item.path)}
+                className="unstyled transition-colors"
+                style={{
+                  color: isActive(item.path) ? '#14b8a6' : '#e5e5e5',
+                  fontSize: '15px',
+                  fontWeight: isActive(item.path) ? 600 : 500,
+                  background: 'transparent',
+                  border: 'none',
+                  padding: '0',
+                  cursor: 'pointer',
+                  transition: 'color 0.2s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
+                onMouseLeave={(e) => e.currentTarget.style.color = isActive(item.path) ? '#14b8a6' : '#e5e5e5'}
+              >
+                {item.label}
+              </button>
+            ))}
+            <button
+              onClick={handleSignOut}
+              className="unstyled transition-colors"
+              style={{
+                color: '#e5e5e5',
+                fontSize: '15px',
+                fontWeight: 500,
+                background: 'transparent',
+                border: 'none',
+                padding: '0',
+                cursor: 'pointer',
+                transition: 'color 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#e5e5e5'}
+            >
+              Sign Out
+            </button>
+          </nav>
         </div>
-
-        {/* Mobile Navigation - Slide Down Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t border-[#27272a]" style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}>
-            <div className="px-6 lg:px-12 py-3 space-y-2 max-w-[1400px] mx-auto">
-              {navItems.map((item) => (
-                <button
-                  key={item.path}
-                  onClick={() => {
-                    navigate(item.path)
-                    setMobileMenuOpen(false)
-                  }}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium"
-                  style={{
-                    color: isActive(item.path) ? '#14b8a6' : '#e5e5e5',
-                    background: '#1a1a1a',
-                    borderRadius: '12px',
-                    fontWeight: isActive(item.path) ? 'bold' : '500'
-                  }}
-                >
-                  <item.icon className="w-5 h-5" />
-                  <span>{item.label}</span>
-                </button>
-              ))}
-              <button
-                onClick={() => {
-                  handleSignOut()
-                  setMobileMenuOpen(false)
-                }}
-                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium"
-                style={{
-                  color: '#e5e5e5',
-                  background: '#2a2a2a',
-                  borderRadius: '12px'
-                }}
-              >
-                <LogOut className="w-5 h-5" />
-                <span>Sign Out</span>
-              </button>
-            </div>
-          </div>
-        )}
       </header>
 
       {/* Main Content */}
@@ -164,75 +111,102 @@ export function AppLayout({ children }: AppLayoutProps) {
         </div>
       </main>
 
-      {/* Footer - Dark Matching Theme */}
-      <footer className="border-t border-[#27272a] mt-auto">
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-            {/* Brand Section */}
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-2.5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-primary-600">
-                  <Share2 className="h-4 w-4 text-white" />
-                </div>
-                <span className="text-lg font-semibold tracking-tight text-white">SocialAI</span>
-              </div>
-              <p className="text-sm text-[#a1a1aa] leading-relaxed">
-                AI-powered social media management made simple. Create, schedule, and optimize your content effortlessly.
-              </p>
-            </div>
-
-            {/* Quick Links */}
-            <div className="flex flex-col gap-4">
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Quick Links</h3>
-              <div className="flex flex-col gap-2 text-sm">
-                <a href="#" className="text-[#a1a1aa] hover:text-primary-400 transition-colors duration-200">Privacy Policy</a>
-                <a href="#" className="text-[#a1a1aa] hover:text-primary-400 transition-colors duration-200">Terms of Service</a>
-                <a href="#" className="text-[#a1a1aa] hover:text-primary-400 transition-colors duration-200">Contact</a>
-                <a href="#" className="text-[#a1a1aa] hover:text-primary-400 transition-colors duration-200">Support</a>
-              </div>
-            </div>
-
-            {/* Social Media */}
-            <div className="flex flex-col gap-4">
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Follow Us</h3>
-              <div className="flex gap-3">
-                <a
-                  href="#"
-                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#1a1a1a] text-[#a1a1aa] hover:bg-primary-500 hover:text-white transition-all duration-200 border border-[#27272a]"
-                  aria-label="Twitter"
-                >
-                  <Twitter className="h-5 w-5" />
-                </a>
-                <a
-                  href="#"
-                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#1a1a1a] text-[#a1a1aa] hover:bg-primary-500 hover:text-white transition-all duration-200 border border-[#27272a]"
-                  aria-label="Facebook"
-                >
-                  <Facebook className="h-5 w-5" />
-                </a>
-                <a
-                  href="#"
-                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#1a1a1a] text-[#a1a1aa] hover:bg-primary-500 hover:text-white transition-all duration-200 border border-[#27272a]"
-                  aria-label="Instagram"
-                >
-                  <Instagram className="h-5 w-5" />
-                </a>
-                <a
-                  href="#"
-                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#1a1a1a] text-[#a1a1aa] hover:bg-primary-500 hover:text-white transition-all duration-200 border border-[#27272a]"
-                  aria-label="LinkedIn"
-                >
-                  <Linkedin className="h-5 w-5" />
-                </a>
-              </div>
-            </div>
+      {/* Footer - New Design System */}
+      <footer
+        style={{
+          background: '#0f0f0f',
+          borderTop: '1px solid #1a1a1a',
+          marginTop: '64px'
+        }}
+      >
+        <div
+          className="mx-auto text-center"
+          style={{
+            maxWidth: '900px',
+            padding: '32px'
+          }}
+        >
+          {/* Logo */}
+          <div
+            style={{
+              color: '#14b8a6',
+              fontWeight: 700,
+              fontSize: '18px',
+              marginBottom: '16px'
+            }}
+          >
+            SocialAI
           </div>
 
-          {/* Bottom Bar */}
-          <div className="pt-8 border-t border-[#27272a]">
-            <p className="text-center text-sm text-[#71717a]">
-              &copy; {new Date().getFullYear()} SocialAI. All rights reserved.
-            </p>
+          {/* Links - Stacked vertically, centered */}
+          <div className="flex flex-col items-center gap-4">
+            <a
+              href="#"
+              className="transition-colors"
+              style={{
+                color: '#888',
+                fontSize: '14px',
+                textDecoration: 'none',
+                transition: 'color 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
+            >
+              Privacy Policy
+            </a>
+            <a
+              href="#"
+              className="transition-colors"
+              style={{
+                color: '#888',
+                fontSize: '14px',
+                textDecoration: 'none',
+                transition: 'color 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
+            >
+              Terms of Service
+            </a>
+            <a
+              href="#"
+              className="transition-colors"
+              style={{
+                color: '#888',
+                fontSize: '14px',
+                textDecoration: 'none',
+                transition: 'color 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
+            >
+              Contact
+            </a>
+            <a
+              href="#"
+              className="transition-colors"
+              style={{
+                color: '#888',
+                fontSize: '14px',
+                textDecoration: 'none',
+                transition: 'color 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
+            >
+              Support
+            </a>
+          </div>
+
+          {/* Copyright */}
+          <div
+            style={{
+              color: '#888',
+              fontSize: '14px',
+              marginTop: '24px'
+            }}
+          >
+            &copy; {new Date().getFullYear()} SocialAI. All rights reserved.
           </div>
         </div>
       </footer>
