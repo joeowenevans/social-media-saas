@@ -16,10 +16,10 @@ export function Dashboard() {
 
   if (brandLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0d0d0d]">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}>
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 spinner border-primary-500"></div>
-          <p className="text-sm text-[#a1a1aa]">Loading your dashboard...</p>
+          <p className="text-sm" style={{ color: '#e5e5e5' }}>Loading your dashboard...</p>
         </div>
       </div>
     )
@@ -27,8 +27,8 @@ export function Dashboard() {
 
   if (!brand) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0d0d0d]">
-        <div className="max-w-md w-full bg-[#1a1a1a] border border-[#27272a] rounded-xl p-8 text-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}>
+        <div className="max-w-md w-full bg-[#1a1a1a] rounded-xl text-center" style={{ borderRadius: '12px', padding: '32px' }}>
           <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 mb-6">
             <Sparkles className="w-8 h-8 text-white" />
           </div>
@@ -98,7 +98,7 @@ export function Dashboard() {
         {/* Stats Overview - Compact 2x2 Grid */}
         <div className="grid grid-cols-2 gap-6 max-w-2xl">
           {stats.map((stat) => (
-            <div key={stat.label} className="bg-[#1a1a1a] border border-[#27272a] rounded-xl p-6 hover:border-[#3a3a3a] transition-all duration-200">
+            <div key={stat.label} className="bg-[#1a1a1a]" style={{ borderRadius: '12px', padding: '32px' }}>
               <div className="flex items-center gap-4">
                 <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${stat.colorClass}`}>
                   <stat.icon className="w-6 h-6 text-white" />
@@ -113,7 +113,7 @@ export function Dashboard() {
         </div>
 
         {/* AI Feature Card */}
-        <div className="bg-[#1a1a1a] border border-[#27272a] rounded-xl p-6">
+        <div className="bg-[#1a1a1a]" style={{ borderRadius: '12px', padding: '32px' }}>
           <div className="flex flex-col md:flex-row md:items-center gap-6">
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600">
               <Sparkles className="w-7 h-7 text-white" />
@@ -129,7 +129,7 @@ export function Dashboard() {
         </div>
 
         {/* Recent Posts Gallery */}
-        <div className="bg-[#1a1a1a] border border-[#27272a] rounded-xl p-6">
+        <div className="bg-[#1a1a1a]" style={{ borderRadius: '12px', padding: '32px' }}>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <h2 className="text-xl font-semibold text-white">Recent Posts</h2>
 
@@ -228,10 +228,11 @@ export function Dashboard() {
             onClick={() => setSelectedPost(null)}
           >
             <div
-              className="bg-[#1a1a1a] border border-[#27272a] rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
+              className="bg-[#1a1a1a] max-w-3xl w-full max-h-[90vh] overflow-y-auto"
+              style={{ borderRadius: '12px' }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="sticky top-0 bg-[#1a1a1a] border-b border-[#27272a] p-4 flex items-center justify-between z-10">
+              <div className="sticky top-0 bg-[#1a1a1a] border-b border-[#27272a] flex items-center justify-between z-10" style={{ padding: '32px' }}>
                 <h3 className="text-lg font-semibold text-white">Post Details</h3>
                 <button
                   onClick={() => setSelectedPost(null)}

@@ -26,15 +26,15 @@ export function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0d0d0d] px-4">
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}>
       <div className="w-full" style={{ maxWidth: '400px' }}>
         {/* Logo */}
-        <h1 className="text-[32px] font-bold text-white text-center mb-12">
+        <h1 style={{ color: '#14b8a6' }}>
           SocialAI
         </h1>
 
         {/* Form Container */}
-        <div className="bg-[#1a1a1a] border border-[#27272a] rounded-2xl px-8 py-12">
+        <div className="bg-[#1a1a1a] rounded-2xl px-8 py-12" style={{ borderRadius: '12px', padding: '32px' }}>
           <form onSubmit={handleSubmit}>
             {/* Email Input */}
             <div className="mb-4">
@@ -70,8 +70,11 @@ export function LoginForm() {
             <button
               type="submit"
               disabled={loading}
-              className="w-3/5 h-11 mx-auto block bg-[#27272a] hover:bg-[#14b8a6] hover:scale-[1.02] text-white font-semibold rounded-full focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all duration-200"
-              style={{ maxWidth: '240px' }}
+              className="mx-auto block"
+              style={{
+                maxWidth: '240px',
+                width: '60%'
+              }}
             >
               {loading ? 'Signing in...' : 'Sign in'}
             </button>
