@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { useBrand } from '../hooks/useBrand'
 import { usePosts } from '../hooks/usePosts'
@@ -71,9 +71,10 @@ export function Schedule() {
     : scheduledPosts.filter(p => p.platforms?.includes(selectedPlatform))
 
   // Sort by date (earliest first)
-  const sortedPosts = [...filteredPosts].sort((a, b) =>
-    new Date(a.scheduled_for).getTime() - new Date(b.scheduled_for).getTime()
-  )
+  const sortedPosts = [...filteredPosts].sort((a: any, b: any) => {
+    if (!a.scheduled_for || !b.scheduled_for) return 0
+    return new Date(a.scheduled_for).getTime() - new Date(b.scheduled_for).getTime()
+  })
 
   // Group posts by date for calendar
   const postsByDate = scheduledPosts.reduce((acc: any, post) => {
