@@ -1,8 +1,8 @@
 import { useAuth } from '../hooks/useAuth'
 import { useBrand } from '../hooks/useBrand'
 import { useNavigate } from 'react-router-dom'
+import { AppLayout } from '../components/layout/AppLayout'
 import { BrandSettings } from '../components/brand/BrandSettings'
-import { ArrowLeft, Settings as SettingsIcon } from 'lucide-react'
 
 export function Settings() {
   const { user } = useAuth()
@@ -11,12 +11,14 @@ export function Settings() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-charcoal-50 via-white to-primary-50/30 dark:bg-charcoal-950">
-        <div className="flex flex-col items-center gap-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-          <p className="text-charcoal-500 dark:text-charcoal-400 text-sm">Loading settings...</p>
+      <AppLayout>
+        <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 200px)' }}>
+          <div className="flex flex-col items-center gap-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#14b8a6]"></div>
+            <p style={{ color: '#a1a1aa', fontSize: '14px' }}>Loading settings...</p>
+          </div>
         </div>
-      </div>
+      </AppLayout>
     )
   }
 
@@ -33,30 +35,31 @@ export function Settings() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d] p-4 sm:p-8">
-      <div className="container mx-auto max-w-4xl">
-        <button
-          onClick={() => navigate('/dashboard')}
-          className="flex items-center gap-2 text-[#a1a1aa] hover:text-white mb-6 transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          <span>Back to Dashboard</span>
-        </button>
+    <AppLayout>
+      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 32px' }}>
+        {/* Page Title */}
+        <h1 style={{
+          color: '#14b8a6',
+          fontSize: '32px',
+          fontWeight: 700,
+          textAlign: 'center',
+          marginBottom: '16px'
+        }}>
+          Brand Settings
+        </h1>
 
-        <div className="flex items-center gap-4 mb-8">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600">
-            <SettingsIcon className="h-6 w-6 text-white" />
-          </div>
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-semibold text-white">Brand Settings</h1>
-            <p className="text-[#a1a1aa]">Configure your brand profile and AI preferences</p>
-          </div>
-        </div>
+        {/* Subtitle */}
+        <p style={{
+          color: '#888',
+          fontSize: '16px',
+          textAlign: 'center',
+          marginBottom: '64px'
+        }}>
+          Configure your brand profile and AI preferences
+        </p>
 
-        <div className="bg-[#1a1a1a] rounded-xl p-6 sm:p-8">
-          <BrandSettings brand={brand} onSave={handleSave} onComplete={handleComplete} />
-        </div>
+        <BrandSettings brand={brand} onSave={handleSave} onComplete={handleComplete} />
       </div>
-    </div>
+    </AppLayout>
   )
 }
