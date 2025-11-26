@@ -6,8 +6,7 @@ import {
   Upload,
   Calendar,
   Settings,
-  CreditCard,
-  LogOut
+  CreditCard
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
