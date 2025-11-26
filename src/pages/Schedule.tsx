@@ -1,63 +1,107 @@
+import { useState, useEffect } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { useBrand } from '../hooks/useBrand'
 import { usePosts } from '../hooks/usePosts'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { PostScheduler } from '../components/scheduling/PostScheduler'
-import { ArrowLeft, Calendar, Clock, Trash2, Sparkles, Upload, CalendarDays, Send } from 'lucide-react'
-import { format } from 'date-fns'
+import { useNavigate } from 'react-router-dom'
+import { AppLayout } from '../components/layout/AppLayout'
+import {
+  Calendar as CalendarIcon,
+  Clock,
+  Trash2,
+  Send,
+  Edit2,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  Sparkles
+} from 'lucide-react'
+import {
+  startOfMonth,
+  endOfMonth,
+  eachDayOfInterval,
+  format,
+  addMonths,
+  subMonths,
+  startOfWeek,
+  endOfWeek,
+  isSameMonth
+} from 'date-fns'
 import { supabase } from '../lib/supabase'
 import toast from 'react-hot-toast'
-import { useState } from 'react'
+
+type Platform = 'instagram' | 'facebook' | 'pinterest'
+
+interface Post {
+  id: string
+  final_caption: string
+  scheduled_for: string
+  platforms: string[]
+  status: string
+  media: {
+    id: string
+    cloudinary_url: string
+    thumbnail_url: string
+    media_type: string
+  }
+}
 
 export function Schedule() {
   const { user } = useAuth()
   const { brand, loading } = useBrand(user?.id)
-  const { posts, loading: postsloading, refetch } = usePosts(brand?.id)
+  const { posts, loading: postsLoading, refetch } = usePosts(brand?.id)
   const navigate = useNavigate()
-  const location = useLocation()
+
+  const [currentMonth, setCurrentMonth] = useState(new Date())
+  const [selectedPlatform, setSelectedPlatform] = useState<'all' | Platform>('all')
   const [posting, setPosting] = useState<string | null>(null)
+  const [editingPost, setEditingPost] = useState<Post | null>(null)
+  const [editFormData, setEditFormData] = useState({
+    caption: '',
+    scheduled_date: '',
+    scheduled_time: '',
+    platforms: [] as string[]
+  })
 
-  const { media, caption } = location.state || {}
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}>
-        <div className="flex flex-col items-center gap-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
-          <p className="text-[#a1a1aa] text-sm">Loading...</p>
-        </div>
-      </div>
-    )
-  }
-
-  if (!brand) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}>
-        <div className="max-w-md w-full bg-[#1a1a1a] rounded-xl p-8 text-center">
-          <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 mb-6">
-            <Sparkles className="h-8 w-8 text-white" />
-          </div>
-          <h2 className="text-2xl font-semibold text-white mb-2">Brand Profile Required</h2>
-          <p className="text-[#a1a1aa] mb-6">
-            Please create a brand profile first to use this feature.
-          </p>
-          <button
-            onClick={() => navigate('/settings')}
-            className="bg-primary-500 hover:bg-primary-600 text-white font-medium px-6 py-3 rounded-lg w-full transition-colors"
-          >
-            Create Brand Profile
-          </button>
-        </div>
-      </div>
-    )
-  }
-
+  // Filter scheduled posts
   const scheduledPosts = posts.filter((p) => p.status === 'scheduled')
+
+  // Apply platform filter
+  const filteredPosts = selectedPlatform === 'all'
+    ? scheduledPosts
+    : scheduledPosts.filter(p => p.platforms?.includes(selectedPlatform))
+
+  // Sort by date (earliest first)
+  const sortedPosts = [...filteredPosts].sort((a, b) =>
+    new Date(a.scheduled_for).getTime() - new Date(b.scheduled_for).getTime()
+  )
+
+  // Group posts by date for calendar
+  const postsByDate = scheduledPosts.reduce((acc: any, post) => {
+    if (post.scheduled_for) {
+      const dateKey = format(new Date(post.scheduled_for), 'yyyy-MM-dd')
+      if (!acc[dateKey]) acc[dateKey] = []
+      acc[dateKey].push(post)
+    }
+    return acc
+  }, {})
+
+  // Generate calendar grid
+  const monthStart = startOfMonth(currentMonth)
+  const monthEnd = endOfMonth(currentMonth)
+  const startDate = startOfWeek(monthStart)
+  const endDate = endOfWeek(monthEnd)
+  const dateRange = eachDayOfInterval({ start: startDate, end: endDate })
+
+  const getPlatformColor = (platform: string) => {
+    if (platform === 'instagram') return '#E1306C'
+    if (platform === 'facebook') return '#1877F2'
+    if (platform === 'pinterest') return '#E60023'
+    return '#14b8a6'
+  }
 
   const handlePostNow = async (postId: string) => {
     setPosting(postId)
     try {
-      // Get post data with media relation
       const { data: post, error } = await supabase
         .from('posts')
         .select('*, media(*)')
@@ -66,12 +110,9 @@ export function Schedule() {
 
       if (error) throw error
 
-      // Call n8n webhook
       const response = await fetch('https://n8n-latest-8yp2.onrender.com/webhook/instagram-post', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           caption: post.final_caption || post.generated_caption,
           media_url: post.media?.cloudinary_url,
@@ -80,9 +121,8 @@ export function Schedule() {
         })
       })
 
-      if (!response.ok) throw new Error('Failed to post to Instagram')
+      if (!response.ok) throw new Error('Failed to post')
 
-      // Update status in database
       await supabase
         .from('posts')
         .update({
@@ -95,7 +135,7 @@ export function Schedule() {
       refetch()
     } catch (error: any) {
       console.error('Error posting:', error)
-      toast.error(error.message || 'Failed to post. Please try again.')
+      toast.error(error.message || 'Failed to post')
     } finally {
       setPosting(null)
     }
@@ -107,7 +147,6 @@ export function Schedule() {
     try {
       const { error } = await supabase.from('posts').delete().eq('id', postId)
       if (error) throw error
-
       toast.success('Post deleted')
       refetch()
     } catch (error: any) {
@@ -115,156 +154,748 @@ export function Schedule() {
     }
   }
 
-  const handleComplete = () => {
-    refetch()
-    navigate('/dashboard')
+  const handleEdit = (post: Post) => {
+    const date = new Date(post.scheduled_for)
+    setEditFormData({
+      caption: post.final_caption,
+      scheduled_date: format(date, 'yyyy-MM-dd'),
+      scheduled_time: format(date, 'HH:mm'),
+      platforms: post.platforms || []
+    })
+    setEditingPost(post)
+  }
+
+  const handleSaveEdit = async () => {
+    if (!editingPost) return
+
+    try {
+      const scheduledDateTime = new Date(`${editFormData.scheduled_date}T${editFormData.scheduled_time}`)
+
+      const { error } = await supabase
+        .from('posts')
+        .update({
+          final_caption: editFormData.caption,
+          scheduled_for: scheduledDateTime.toISOString(),
+          platforms: editFormData.platforms
+        })
+        .eq('id', editingPost.id)
+
+      if (error) throw error
+
+      toast.success('Post updated successfully!')
+      setEditingPost(null)
+      refetch()
+    } catch (error: any) {
+      toast.error('Failed to update post')
+    }
+  }
+
+  const togglePlatform = (platform: string) => {
+    setEditFormData(prev => ({
+      ...prev,
+      platforms: prev.platforms.includes(platform)
+        ? prev.platforms.filter(p => p !== platform)
+        : [...prev.platforms, platform]
+    }))
+  }
+
+  if (loading) {
+    return (
+      <AppLayout>
+        <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 200px)' }}>
+          <div className="flex flex-col items-center gap-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#14b8a6]"></div>
+            <p style={{ color: '#a1a1aa', fontSize: '14px' }}>Loading...</p>
+          </div>
+        </div>
+      </AppLayout>
+    )
+  }
+
+  if (!brand) {
+    return (
+      <AppLayout>
+        <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 200px)' }}>
+          <div style={{ maxWidth: '500px', background: '#1a1a1a', borderRadius: '12px', padding: '48px', textAlign: 'center' }}>
+            <div style={{
+              width: '64px',
+              height: '64px',
+              margin: '0 auto 24px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '12px',
+              background: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)'
+            }}>
+              <Sparkles style={{ width: '32px', height: '32px', color: 'white' }} />
+            </div>
+            <h2 style={{ color: 'white', fontSize: '24px', fontWeight: 600, marginBottom: '16px' }}>Brand Profile Required</h2>
+            <p style={{ color: '#888', fontSize: '16px', marginBottom: '32px' }}>
+              Please create a brand profile first to use this feature.
+            </p>
+            <button
+              onClick={() => navigate('/settings')}
+              style={{
+                width: '100%',
+                padding: '12px 24px',
+                background: '#14b8a6',
+                color: 'white',
+                fontSize: '16px',
+                fontWeight: 600,
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer'
+              }}
+            >
+              Create Brand Profile
+            </button>
+          </div>
+        </div>
+      </AppLayout>
+    )
   }
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d] p-4 sm:p-8">
-      <div className="container mx-auto max-w-6xl">
-        <button
-          onClick={() => navigate('/dashboard')}
-          className="flex items-center gap-2 text-[#a1a1aa] hover:text-white mb-6 transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          <span>Back to Dashboard</span>
-        </button>
+    <AppLayout>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 32px' }}>
+        {/* Page Title */}
+        <h1 style={{
+          color: '#14b8a6',
+          fontSize: '32px',
+          fontWeight: 700,
+          textAlign: 'center',
+          marginBottom: '16px'
+        }}>
+          Scheduled Posts
+        </h1>
 
-        <div className="flex items-center gap-4 mb-8">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600">
-            <CalendarDays className="h-6 w-6 text-white" />
-          </div>
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-semibold text-white">Schedule Posts</h1>
-            <p className="text-[#a1a1aa]">Plan and schedule your content</p>
+        {/* Subtitle */}
+        <p style={{
+          color: '#888',
+          fontSize: '16px',
+          textAlign: 'center',
+          marginBottom: '64px'
+        }}>
+          Plan and edit your scheduled content
+        </p>
+
+        {/* Calendar View Section */}
+        <div style={{ marginBottom: '64px' }}>
+          <h2 style={{
+            color: '#14b8a6',
+            fontSize: '24px',
+            fontWeight: 600,
+            marginBottom: '24px'
+          }}>
+            Content Calendar
+          </h2>
+
+          <div style={{ background: '#1a1a1a', padding: '32px', borderRadius: '12px' }}>
+            {/* Calendar Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <button
+                onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+                style={{
+                  background: '#0d0d0d',
+                  border: '1px solid #27272a',
+                  borderRadius: '8px',
+                  padding: '8px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <ChevronLeft style={{ width: '20px', height: '20px', color: '#e5e5e5' }} />
+              </button>
+
+              <h3 style={{ color: 'white', fontSize: '18px', fontWeight: 600 }}>
+                {format(currentMonth, 'MMMM yyyy')}
+              </h3>
+
+              <button
+                onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+                style={{
+                  background: '#0d0d0d',
+                  border: '1px solid #27272a',
+                  borderRadius: '8px',
+                  padding: '8px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <ChevronRight style={{ width: '20px', height: '20px', color: '#e5e5e5' }} />
+              </button>
+            </div>
+
+            {/* Days of Week */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px', marginBottom: '8px' }}>
+              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                <div key={day} style={{
+                  textAlign: 'center',
+                  color: '#888',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  padding: '8px 0'
+                }}>
+                  {day}
+                </div>
+              ))}
+            </div>
+
+            {/* Calendar Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px' }}>
+              {dateRange.map(date => {
+                const dateKey = format(date, 'yyyy-MM-dd')
+                const dayPosts = postsByDate[dateKey] || []
+                const isCurrentMonth = isSameMonth(date, currentMonth)
+
+                return (
+                  <div
+                    key={dateKey}
+                    style={{
+                      background: '#0d0d0d',
+                      border: '1px solid #27272a',
+                      borderRadius: '8px',
+                      padding: '12px',
+                      minHeight: '100px',
+                      opacity: isCurrentMonth ? 1 : 0.4
+                    }}
+                  >
+                    <div style={{ color: '#888', fontSize: '12px', marginBottom: '8px' }}>
+                      {format(date, 'd')}
+                    </div>
+
+                    {dayPosts.slice(0, 2).map((post: any) => (
+                      <div key={post.id} style={{ marginBottom: '8px' }}>
+                        <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginBottom: '4px' }}>
+                          <img
+                            src={post.media?.thumbnail_url || post.media?.cloudinary_url}
+                            alt=""
+                            style={{
+                              width: '40px',
+                              height: '40px',
+                              borderRadius: '6px',
+                              objectFit: 'cover'
+                            }}
+                          />
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ display: 'flex', gap: '4px', marginBottom: '2px' }}>
+                              {post.platforms?.slice(0, 2).map((platform: string) => (
+                                <div
+                                  key={platform}
+                                  style={{
+                                    width: '6px',
+                                    height: '6px',
+                                    borderRadius: '50%',
+                                    background: getPlatformColor(platform)
+                                  }}
+                                />
+                              ))}
+                            </div>
+                            <div style={{
+                              color: '#888',
+                              fontSize: '11px',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap'
+                            }}>
+                              {post.final_caption.split(' ').slice(0, 3).join(' ')}...
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    {dayPosts.length > 2 && (
+                      <div style={{ color: '#14b8a6', fontSize: '11px', fontWeight: 500 }}>
+                        +{dayPosts.length - 2} more
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6">
-          {/* Schedule New Post */}
-          {media && caption ? (
-            <div className="bg-[#1a1a1a] rounded-xl p-6">
-              <h2 className="text-xl font-semibold text-white mb-6">Schedule New Post</h2>
-              <PostScheduler
-                media={media}
-                caption={caption}
-                brandId={brand.id}
-                onComplete={handleComplete}
-              />
-            </div>
-          ) : (
-            <div className="bg-[#1a1a1a] rounded-xl p-6">
-              <h2 className="text-xl font-semibold text-white mb-4">Schedule New Post</h2>
-              <div className="text-center py-8">
-                <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-xl bg-[#0d0d0d] mb-4">
-                  <Upload className="h-8 w-8 text-[#a1a1aa]" />
-                </div>
-                <p className="text-[#a1a1aa] mb-4">
-                  Upload content first to schedule a post.
-                </p>
-                <button
-                  onClick={() => navigate('/upload')}
-                  className="bg-primary-500 hover:bg-primary-600 text-white font-medium px-6 py-3 rounded-lg transition-colors"
-                >
-                  Upload Content
-                </button>
-              </div>
-            </div>
-          )}
+        {/* Platform Filter Tabs */}
+        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '32px' }}>
+          {[
+            { id: 'all', label: 'All', color: '#14b8a6' },
+            { id: 'instagram', label: 'Instagram', color: '#E1306C' },
+            { id: 'facebook', label: 'Facebook', color: '#1877F2' },
+            { id: 'pinterest', label: 'Pinterest', color: '#E60023' }
+          ].map(platform => (
+            <button
+              key={platform.id}
+              onClick={() => setSelectedPlatform(platform.id as any)}
+              style={{
+                background: selectedPlatform === platform.id ? platform.color : '#1a1a1a',
+                border: `1px solid ${selectedPlatform === platform.id ? platform.color : '#27272a'}`,
+                borderRadius: '20px',
+                padding: '10px 24px',
+                color: selectedPlatform === platform.id ? 'white' : '#888',
+                fontSize: '14px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              {platform.label}
+            </button>
+          ))}
+        </div>
 
-          {/* Scheduled Posts List */}
-          <div className="bg-[#1a1a1a] rounded-xl p-6">
-            <h2 className="text-xl font-semibold text-white mb-6">Scheduled Posts</h2>
+        {/* Scheduled Posts Section */}
+        <h2 style={{
+          color: '#14b8a6',
+          fontSize: '24px',
+          fontWeight: 600,
+          marginBottom: '32px',
+          textAlign: 'left'
+        }}>
+          Your Scheduled Posts
+        </h2>
 
-            {postsloading ? (
-              <div className="flex justify-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
-              </div>
-            ) : scheduledPosts.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-xl bg-[#0d0d0d] mb-4">
-                  <Calendar className="h-8 w-8 text-[#a1a1aa]" />
+        {/* Gallery Layout */}
+        {postsLoading ? (
+          <div className="flex justify-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#14b8a6]"></div>
+          </div>
+        ) : sortedPosts.length === 0 ? (
+          <div style={{
+            textAlign: 'center',
+            padding: '64px 32px',
+            background: '#1a1a1a',
+            borderRadius: '12px'
+          }}>
+            <CalendarIcon style={{ width: '48px', height: '48px', color: '#666', margin: '0 auto 16px' }} />
+            <p style={{ color: '#666', fontSize: '16px', marginBottom: '24px' }}>
+              No scheduled posts yet
+            </p>
+            <button
+              onClick={() => navigate('/upload')}
+              style={{
+                padding: '12px 32px',
+                background: '#14b8a6',
+                color: 'white',
+                fontSize: '16px',
+                fontWeight: 600,
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer'
+              }}
+            >
+              Schedule a Post
+            </button>
+          </div>
+        ) : (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
+            gap: '24px'
+          }}>
+            {sortedPosts.map((post: any) => (
+              <div key={post.id} style={{ borderRadius: '12px', overflow: 'hidden' }}>
+                {/* Image */}
+                <div style={{
+                  aspectRatio: '1 / 1',
+                  overflow: 'hidden',
+                  position: 'relative',
+                  background: '#1a1a1a'
+                }}>
+                  {post.media?.media_type === 'video' ? (
+                    <video
+                      src={post.media.cloudinary_url}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover'
+                      }}
+                    />
+                  ) : (
+                    <img
+                      src={post.media?.cloudinary_url}
+                      alt=""
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        transition: 'filter 0.2s ease'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.filter = 'brightness(1.1)'}
+                      onMouseLeave={(e) => e.currentTarget.style.filter = 'brightness(1)'}
+                    />
+                  )}
                 </div>
-                <p className="text-[#a1a1aa]">No scheduled posts yet</p>
-              </div>
-            ) : (
-              <div className="space-y-4 max-h-[500px] overflow-y-auto scrollbar-thin pr-2">
-                {scheduledPosts.map((post) => (
-                  <div
-                    key={post.id}
-                    className="group rounded-xl bg-[#0d0d0d] p-4 hover:border-[#3a3a3a] transition-all duration-200"
-                  >
-                    <div className="flex gap-4">
-                      {post.media && (
-                        <img
-                          src={post.media.thumbnail_url || post.media.cloudinary_url}
-                          alt="Post"
-                          className="w-20 h-20 object-cover rounded-lg"
-                        />
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm text-white line-clamp-2 mb-2">
-                          {post.final_caption}
-                        </p>
-                        <div className="flex items-center gap-4 text-xs text-[#a1a1aa]">
-                          <div className="flex items-center gap-1.5">
-                            <Calendar className="w-4 h-4 text-primary-400" />
-                            <span>
-                              {post.scheduled_for
-                                ? format(new Date(post.scheduled_for), 'MMM dd, yyyy')
-                                : 'N/A'}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-1.5">
-                            <Clock className="w-4 h-4 text-primary-400" />
-                            <span>
-                              {post.scheduled_for
-                                ? format(new Date(post.scheduled_for), 'HH:mm')
-                                : 'N/A'}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex gap-2 mt-2">
-                          {post.platforms?.map((platform) => (
-                            <span
-                              key={platform}
-                              className="text-xs px-2.5 py-1 bg-primary-500/20 text-primary-400 border border-primary-500/30 rounded-full font-medium"
-                            >
-                              {platform}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button
-                          onClick={() => handlePostNow(post.id)}
-                          disabled={posting === post.id}
-                          className="p-2 rounded-lg text-white bg-primary-500 hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                          title="Post Now"
-                        >
-                          {posting === post.id ? (
-                            <div className="w-5 h-5 spinner border-2 border-white border-t-transparent"></div>
-                          ) : (
-                            <Send className="w-5 h-5" />
-                          )}
-                        </button>
-                        <button
-                          onClick={() => handleDelete(post.id)}
-                          className="p-2 rounded-lg text-[#a1a1aa] hover:text-red-400 hover:bg-red-900/20 transition-colors"
-                          title="Delete"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </button>
-                      </div>
+
+                {/* Info Card */}
+                <div style={{
+                  background: '#1a1a1a',
+                  borderTop: '1px solid #27272a',
+                  padding: '20px'
+                }}>
+                  {/* Caption */}
+                  <p style={{
+                    color: '#e5e5e5',
+                    fontSize: '14px',
+                    lineHeight: 1.5,
+                    maxHeight: '60px',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    marginBottom: '16px'
+                  }}>
+                    {post.final_caption}
+                  </p>
+
+                  {/* Date & Time */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <CalendarIcon style={{ width: '14px', height: '14px', color: '#14b8a6' }} />
+                      <span style={{ color: '#14b8a6', fontSize: '13px' }}>
+                        {format(new Date(post.scheduled_for), 'MMM dd, yyyy')}
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <Clock style={{ width: '14px', height: '14px', color: '#888' }} />
+                      <span style={{ color: '#888', fontSize: '13px' }}>
+                        {format(new Date(post.scheduled_for), 'HH:mm')}
+                      </span>
                     </div>
                   </div>
+
+                  {/* Platform Badges */}
+                  <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>
+                    {post.platforms?.map((platform: string) => (
+                      <span
+                        key={platform}
+                        style={{
+                          background: getPlatformColor(platform),
+                          color: 'white',
+                          padding: '4px 10px',
+                          borderRadius: '12px',
+                          fontSize: '12px',
+                          fontWeight: 500,
+                          textTransform: 'capitalize'
+                        }}
+                      >
+                        {platform}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
+                    <button
+                      onClick={() => handleEdit(post)}
+                      style={{
+                        flex: 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '6px',
+                        padding: '10px',
+                        background: '#2a2a2a',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '8px',
+                        fontSize: '14px',
+                        fontWeight: 500,
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = '#14b8a6'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
+                    >
+                      <Edit2 style={{ width: '16px', height: '16px' }} />
+                      Edit
+                    </button>
+
+                    <button
+                      onClick={() => handlePostNow(post.id)}
+                      disabled={posting === post.id}
+                      style={{
+                        flex: 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '6px',
+                        padding: '10px',
+                        background: '#2a2a2a',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '8px',
+                        fontSize: '14px',
+                        fontWeight: 500,
+                        cursor: posting === post.id ? 'not-allowed' : 'pointer',
+                        opacity: posting === post.id ? 0.6 : 1,
+                        transition: 'all 0.2s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (posting !== post.id) e.currentTarget.style.background = '#14b8a6'
+                      }}
+                      onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
+                    >
+                      {posting === post.id ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                          Posting...
+                        </>
+                      ) : (
+                        <>
+                          <Send style={{ width: '16px', height: '16px' }} />
+                          Post Now
+                        </>
+                      )}
+                    </button>
+
+                    <button
+                      onClick={() => handleDelete(post.id)}
+                      style={{
+                        padding: '10px',
+                        background: '#2a2a2a',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = '#ef4444'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
+                    >
+                      <Trash2 style={{ width: '16px', height: '16px' }} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Edit Modal */}
+      {editingPost && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: '24px'
+          }}
+          onClick={() => setEditingPost(null)}
+        >
+          <div
+            style={{
+              background: '#1a1a1a',
+              borderRadius: '12px',
+              padding: '32px',
+              maxWidth: '600px',
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <h2 style={{ color: '#14b8a6', fontSize: '24px', fontWeight: 600, margin: 0 }}>
+                Edit Scheduled Post
+              </h2>
+              <button
+                onClick={() => setEditingPost(null)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '4px'
+                }}
+              >
+                <X style={{ width: '24px', height: '24px', color: '#888' }} />
+              </button>
+            </div>
+
+            {/* Thumbnail Preview */}
+            <div style={{ marginBottom: '24px' }}>
+              <img
+                src={editingPost.media?.thumbnail_url || editingPost.media?.cloudinary_url}
+                alt="Preview"
+                style={{
+                  width: '100%',
+                  maxHeight: '300px',
+                  objectFit: 'cover',
+                  borderRadius: '8px'
+                }}
+              />
+            </div>
+
+            {/* Caption */}
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{ color: '#e5e5e5', fontSize: '14px', fontWeight: 500, display: 'block', marginBottom: '8px' }}>
+                Caption
+              </label>
+              <textarea
+                value={editFormData.caption}
+                onChange={(e) => setEditFormData({ ...editFormData, caption: e.target.value })}
+                style={{
+                  width: '100%',
+                  minHeight: '120px',
+                  background: '#0d0d0d',
+                  border: '1px solid #27272a',
+                  borderRadius: '8px',
+                  padding: '12px 16px',
+                  color: '#e5e5e5',
+                  fontSize: '15px',
+                  outline: 'none',
+                  resize: 'vertical'
+                }}
+                onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+                onBlur={(e) => e.target.style.borderColor = '#27272a'}
+              />
+            </div>
+
+            {/* Date & Time */}
+            <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
+              <div style={{ flex: 1 }}>
+                <label style={{ color: '#e5e5e5', fontSize: '14px', fontWeight: 500, display: 'block', marginBottom: '8px' }}>
+                  Date
+                </label>
+                <input
+                  type="date"
+                  value={editFormData.scheduled_date}
+                  onChange={(e) => setEditFormData({ ...editFormData, scheduled_date: e.target.value })}
+                  style={{
+                    width: '100%',
+                    height: '44px',
+                    background: '#0d0d0d',
+                    border: '1px solid #27272a',
+                    borderRadius: '8px',
+                    padding: '12px 16px',
+                    color: '#e5e5e5',
+                    fontSize: '15px',
+                    outline: 'none'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+                  onBlur={(e) => e.target.style.borderColor = '#27272a'}
+                />
+              </div>
+              <div style={{ flex: 1 }}>
+                <label style={{ color: '#e5e5e5', fontSize: '14px', fontWeight: 500, display: 'block', marginBottom: '8px' }}>
+                  Time
+                </label>
+                <input
+                  type="time"
+                  value={editFormData.scheduled_time}
+                  onChange={(e) => setEditFormData({ ...editFormData, scheduled_time: e.target.value })}
+                  style={{
+                    width: '100%',
+                    height: '44px',
+                    background: '#0d0d0d',
+                    border: '1px solid #27272a',
+                    borderRadius: '8px',
+                    padding: '12px 16px',
+                    color: '#e5e5e5',
+                    fontSize: '15px',
+                    outline: 'none'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+                  onBlur={(e) => e.target.style.borderColor = '#27272a'}
+                />
+              </div>
+            </div>
+
+            {/* Platforms */}
+            <div style={{ marginBottom: '32px' }}>
+              <label style={{ color: '#e5e5e5', fontSize: '14px', fontWeight: 500, display: 'block', marginBottom: '12px' }}>
+                Platforms
+              </label>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                {[
+                  { id: 'instagram', label: 'Instagram', color: '#E1306C' },
+                  { id: 'facebook', label: 'Facebook', color: '#1877F2' },
+                  { id: 'pinterest', label: 'Pinterest', color: '#E60023' }
+                ].map(platform => (
+                  <label
+                    key={platform.id}
+                    style={{
+                      flex: 1,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      padding: '12px',
+                      background: editFormData.platforms.includes(platform.id) ? '#1a1a1a' : 'transparent',
+                      border: editFormData.platforms.includes(platform.id) ? `2px solid ${platform.color}` : '2px solid #27272a',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={editFormData.platforms.includes(platform.id)}
+                      onChange={() => togglePlatform(platform.id)}
+                      style={{
+                        width: '18px',
+                        height: '18px',
+                        accentColor: platform.color,
+                        cursor: 'pointer'
+                      }}
+                    />
+                    <span style={{ color: '#e5e5e5', fontSize: '14px', fontWeight: 500 }}>
+                      {platform.label}
+                    </span>
+                  </label>
                 ))}
               </div>
-            )}
+            </div>
+
+            {/* Actions */}
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button
+                onClick={() => setEditingPost(null)}
+                style={{
+                  flex: 1,
+                  padding: '12px',
+                  background: '#2a2a2a',
+                  color: 'white',
+                  fontSize: '16px',
+                  fontWeight: 600,
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer'
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveEdit}
+                style={{
+                  flex: 1,
+                  padding: '12px',
+                  background: '#14b8a6',
+                  color: 'white',
+                  fontSize: '16px',
+                  fontWeight: 600,
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer'
+                }}
+              >
+                Save Changes
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      )}
+    </AppLayout>
   )
 }

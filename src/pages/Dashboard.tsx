@@ -304,47 +304,59 @@ export function Dashboard() {
                       background: '#0d0d0d',
                       border: '1px solid #27272a',
                       borderRadius: '8px',
-                      padding: '8px',
-                      minHeight: '80px',
-                      opacity: isCurrentMonth ? 1 : 0.4,
-                      position: 'relative'
+                      padding: '12px',
+                      minHeight: '100px',
+                      opacity: isCurrentMonth ? 1 : 0.4
                     }}
                   >
-                    <div style={{
-                      color: isCurrentMonth ? 'white' : '#666',
-                      fontSize: '14px',
-                      fontWeight: 600,
-                      marginBottom: '4px'
-                    }}>
+                    <div style={{ color: '#888', fontSize: '12px', marginBottom: '8px' }}>
                       {format(date, 'd')}
                     </div>
-                    {dayPosts.length > 0 && (
-                      <div style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '2px',
-                        marginTop: '4px'
-                      }}>
-                        {dayPosts.slice(0, 3).map((post: any, postIdx: number) => (
-                          <div
-                            key={postIdx}
+
+                    {dayPosts.slice(0, 2).map((post: any) => (
+                      <div key={post.id} style={{ marginBottom: '8px' }}>
+                        <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginBottom: '4px' }}>
+                          <img
+                            src={post.media?.thumbnail_url || post.media?.cloudinary_url}
+                            alt=""
                             style={{
-                              width: '100%',
-                              height: '4px',
-                              borderRadius: '2px',
-                              background: getPlatformColor(post.platforms)
+                              width: '40px',
+                              height: '40px',
+                              borderRadius: '6px',
+                              objectFit: 'cover'
                             }}
                           />
-                        ))}
-                        {dayPosts.length > 3 && (
-                          <div style={{
-                            fontSize: '10px',
-                            color: '#14b8a6',
-                            marginTop: '2px'
-                          }}>
-                            +{dayPosts.length - 3}
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ display: 'flex', gap: '4px', marginBottom: '2px' }}>
+                              {post.platforms?.slice(0, 2).map((platform: string) => (
+                                <div
+                                  key={platform}
+                                  style={{
+                                    width: '6px',
+                                    height: '6px',
+                                    borderRadius: '50%',
+                                    background: getPlatformColor([platform])
+                                  }}
+                                />
+                              ))}
+                            </div>
+                            <div style={{
+                              color: '#888',
+                              fontSize: '11px',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap'
+                            }}>
+                              {post.final_caption.split(' ').slice(0, 3).join(' ')}...
+                            </div>
                           </div>
-                        )}
+                        </div>
+                      </div>
+                    ))}
+
+                    {dayPosts.length > 2 && (
+                      <div style={{ color: '#14b8a6', fontSize: '11px', fontWeight: 500 }}>
+                        +{dayPosts.length - 2} more
                       </div>
                     )}
                   </div>
