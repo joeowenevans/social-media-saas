@@ -13,21 +13,28 @@
 
   html {
     scroll-behavior: smooth;
+    margin: 0;
+    padding: 0;
+    border: none;
   }
 
   body {
-    background: linear-gradient(135deg, #fafafa 0%, #f4f4f5 100%);
-    color: #18181b;
+    background: #0d0d0d;
+    color: #fafafa;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    border: none;
   }
 
-  .dark body {
-    background: #09090b;
-    color: #fafafa;
+  #root {
+    margin: 0;
+    padding: 0;
+    border: none;
   }
 
   ::selection {
@@ -41,12 +48,8 @@
   h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
     line-height: 1.2;
-    color: #18181b;
-    letter-spacing: -0.02em;
-  }
-
-  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
     color: #fafafa;
+    letter-spacing: -0.02em;
   }
 }
 

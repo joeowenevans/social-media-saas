@@ -49,7 +49,7 @@ export function AppLayout({ children }: AppLayoutProps) {
     <div className="min-h-screen flex flex-col bg-[#0d0d0d]">
       {/* Header - Full Width Dark Bar */}
       <header className="sticky top-0 z-50 bg-[#0d0d0d] border-b border-[#27272a]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
           <div className="flex justify-between items-center h-16">
             {/* Logo - Static, Non-Clickable */}
             <div className="flex items-center gap-2.5">
@@ -106,7 +106,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         {/* Mobile Navigation - Slide Down Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-[#27272a] bg-[#0d0d0d]">
-            <div className="px-4 py-3 space-y-1 max-w-7xl mx-auto">
+            <div className="px-6 lg:px-12 py-3 space-y-1 max-w-[1400px] mx-auto">
               {navItems.map((item) => (
                 <button
                   key={item.path}
@@ -141,14 +141,14 @@ export function AppLayout({ children }: AppLayoutProps) {
 
       {/* Main Content */}
       <main className="flex-1 bg-[#0d0d0d]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-8">
           {children}
         </div>
       </main>
 
       {/* Footer - Dark Matching Theme */}
       <footer className="bg-[#0d0d0d] border-t border-[#27272a] mt-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             {/* Brand Section */}
             <div className="flex flex-col gap-4">
