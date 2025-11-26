@@ -53,53 +53,85 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
     }
   }
 
+  const inputStyle = {
+    width: '100%',
+    background: '#0d0d0d',
+    border: '1px solid #27272a',
+    borderRadius: '8px',
+    padding: '12px 16px',
+    color: '#e5e5e5',
+    fontSize: '15px',
+    outline: 'none',
+    transition: 'border-color 0.2s ease'
+  }
+
+  const labelStyle = {
+    color: '#e5e5e5',
+    fontSize: '14px',
+    fontWeight: 500,
+    marginBottom: '8px',
+    display: 'block'
+  }
+
+  const fieldContainerStyle = {
+    marginBottom: '24px'
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
-      <div>
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+    <form onSubmit={handleSubmit}>
+      {/* Brand Name */}
+      <div style={fieldContainerStyle}>
+        <label htmlFor="name" style={labelStyle}>
           Brand Name *
         </label>
         <input
           type="text"
           id="name"
           required
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          style={{ ...inputStyle, height: '44px' }}
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
         />
       </div>
 
-      <div>
-        <label htmlFor="brand_voice" className="block text-sm font-medium text-gray-700 mb-2">
+      {/* Brand Voice */}
+      <div style={fieldContainerStyle}>
+        <label htmlFor="brand_voice" style={labelStyle}>
           Brand Voice
         </label>
         <textarea
           id="brand_voice"
-          rows={3}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          style={{ ...inputStyle, minHeight: '100px', resize: 'vertical' }}
           placeholder="e.g., Friendly, professional, witty..."
           value={formData.brand_voice}
           onChange={(e) => setFormData({ ...formData, brand_voice: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
         />
       </div>
 
-      <div>
-        <label htmlFor="target_audience" className="block text-sm font-medium text-gray-700 mb-2">
+      {/* Target Audience */}
+      <div style={fieldContainerStyle}>
+        <label htmlFor="target_audience" style={labelStyle}>
           Target Audience
         </label>
         <textarea
           id="target_audience"
-          rows={3}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          style={{ ...inputStyle, minHeight: '80px', resize: 'vertical' }}
           placeholder="e.g., Young professionals aged 25-35 interested in technology..."
           value={formData.target_audience}
           onChange={(e) => setFormData({ ...formData, target_audience: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
         />
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
-        <div>
-          <label htmlFor="hashtag_count" className="block text-sm font-medium text-gray-700 mb-2">
+      {/* Number Inputs Row */}
+      <div style={{ display: 'flex', gap: '24px', marginBottom: '24px' }}>
+        <div style={{ flex: 1 }}>
+          <label htmlFor="hashtag_count" style={labelStyle}>
             Number of Hashtags
           </label>
           <input
@@ -107,14 +139,16 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
             id="hashtag_count"
             min="0"
             max="30"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            style={{ ...inputStyle, height: '44px', width: '100px' }}
             value={formData.hashtag_count}
             onChange={(e) => setFormData({ ...formData, hashtag_count: parseInt(e.target.value) })}
+            onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+            onBlur={(e) => e.target.style.borderColor = '#27272a'}
           />
         </div>
 
-        <div>
-          <label htmlFor="emoji_count" className="block text-sm font-medium text-gray-700 mb-2">
+        <div style={{ flex: 1 }}>
+          <label htmlFor="emoji_count" style={labelStyle}>
             Number of Emojis
           </label>
           <input
@@ -122,65 +156,107 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
             id="emoji_count"
             min="0"
             max="10"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            style={{ ...inputStyle, height: '44px', width: '100px' }}
             value={formData.emoji_count}
             onChange={(e) => setFormData({ ...formData, emoji_count: parseInt(e.target.value) })}
+            onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+            onBlur={(e) => e.target.style.borderColor = '#27272a'}
           />
         </div>
       </div>
 
-      <div>
-        <label htmlFor="hashtags_always_use" className="block text-sm font-medium text-gray-700 mb-2">
+      {/* Always Use Hashtags */}
+      <div style={fieldContainerStyle}>
+        <label htmlFor="hashtags_always_use" style={labelStyle}>
           Always Use These Hashtags
         </label>
         <input
           type="text"
           id="hashtags_always_use"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          style={{ ...inputStyle, height: '44px' }}
           placeholder="e.g., #brandname, #yourhashtag (comma-separated)"
           value={formData.hashtags_always_use}
           onChange={(e) => setFormData({ ...formData, hashtags_always_use: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
         />
       </div>
 
-      <div>
-        <label htmlFor="hashtags_avoid" className="block text-sm font-medium text-gray-700 mb-2">
+      {/* Avoid Hashtags */}
+      <div style={fieldContainerStyle}>
+        <label htmlFor="hashtags_avoid" style={labelStyle}>
           Avoid These Hashtags
         </label>
         <input
           type="text"
           id="hashtags_avoid"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          style={{ ...inputStyle, height: '44px' }}
           placeholder="e.g., #spam, #unwanted (comma-separated)"
           value={formData.hashtags_avoid}
           onChange={(e) => setFormData({ ...formData, hashtags_avoid: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
         />
       </div>
 
-      <div>
-        <label htmlFor="cta_preference" className="block text-sm font-medium text-gray-700 mb-2">
+      {/* Call-to-Action Dropdown */}
+      <div style={fieldContainerStyle}>
+        <label htmlFor="cta_preference" style={labelStyle}>
           Call-to-Action Preference
         </label>
         <select
           id="cta_preference"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          style={{
+            ...inputStyle,
+            height: '44px',
+            cursor: 'pointer',
+            appearance: 'none',
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23e5e5e5' d='M4.427 6.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 6H4.604a.25.25 0 00-.177.427z'/%3E%3C/svg%3E")`,
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'right 12px center',
+            paddingRight: '40px'
+          }}
           value={formData.cta_preference}
           onChange={(e) => setFormData({ ...formData, cta_preference: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
         >
-          <option value="visit_link">Visit Link in Bio</option>
-          <option value="comment">Leave a Comment</option>
-          <option value="like_follow">Like & Follow</option>
-          <option value="shop_now">Shop Now</option>
-          <option value="learn_more">Learn More</option>
-          <option value="custom">Custom</option>
+          <option value="visit_link" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Visit Link in Bio</option>
+          <option value="comment" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Leave a Comment</option>
+          <option value="like_follow" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Like & Follow</option>
+          <option value="shop_now" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Shop Now</option>
+          <option value="learn_more" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Learn More</option>
+          <option value="custom" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Custom</option>
         </select>
       </div>
 
-      <div className="flex justify-end space-x-4">
+      {/* Update Button */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '32px' }}>
         <button
           type="submit"
           disabled={loading}
-          className="px-6 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          style={{
+            padding: '12px 32px',
+            background: loading ? '#2a2a2a' : '#2a2a2a',
+            color: 'white',
+            fontSize: '16px',
+            fontWeight: 600,
+            border: 'none',
+            borderRadius: '20px',
+            cursor: loading ? 'not-allowed' : 'pointer',
+            opacity: loading ? 0.6 : 1,
+            transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            if (!loading) {
+              e.currentTarget.style.background = '#14b8a6'
+              e.currentTarget.style.transform = 'scale(1.05)'
+            }
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = '#2a2a2a'
+            e.currentTarget.style.transform = 'scale(1)'
+          }}
         >
           {loading ? 'Saving...' : initialData ? 'Update Brand' : 'Create Brand'}
         </button>
