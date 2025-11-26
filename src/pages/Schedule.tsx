@@ -73,9 +73,10 @@ export function Schedule() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          media_url: post.media?.cloudinary_url || post.media_url,
           caption: post.final_caption || post.generated_caption,
-          post_id: post.id
+          media_url: post.media?.cloudinary_url,
+          media_type: post.media?.media_type,
+          platforms: post.platforms || []
         })
       })
 
