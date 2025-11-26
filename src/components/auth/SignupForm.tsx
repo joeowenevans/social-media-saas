@@ -99,94 +99,92 @@ export function SignupForm() {
           <form
             onSubmit={handleSubmit}
             style={{
-              maxWidth: '320px',
-              margin: '0 auto',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
               width: '100%'
             }}
           >
             {/* Email Input */}
-            <div style={{ marginBottom: '20px' }}>
-              <input
-                id="email-address"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                style={{
-                  width: '100%',
-                  height: '44px',
-                  padding: '12px 16px',
-                  border: '1px solid #27272a',
-                  borderRadius: '8px',
-                  backgroundColor: '#0d0d0d',
-                  color: '#e5e5e5',
-                  fontSize: '15px',
-                  outline: 'none',
-                  transition: 'border-color 0.2s ease'
-                }}
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-                onBlur={(e) => e.target.style.borderColor = '#27272a'}
-              />
-            </div>
+            <input
+              id="email-address"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              style={{
+                width: '320px',
+                height: '44px',
+                padding: '12px 16px',
+                border: '1px solid #27272a',
+                borderRadius: '8px',
+                backgroundColor: '#0d0d0d',
+                color: '#e5e5e5',
+                fontSize: '15px',
+                outline: 'none',
+                transition: 'border-color 0.2s ease',
+                marginBottom: '20px'
+              }}
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+              onBlur={(e) => e.target.style.borderColor = '#27272a'}
+            />
 
             {/* Password Input */}
-            <div style={{ marginBottom: '20px' }}>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
-                required
-                style={{
-                  width: '100%',
-                  height: '44px',
-                  padding: '12px 16px',
-                  border: '1px solid #27272a',
-                  borderRadius: '8px',
-                  backgroundColor: '#0d0d0d',
-                  color: '#e5e5e5',
-                  fontSize: '15px',
-                  outline: 'none',
-                  transition: 'border-color 0.2s ease'
-                }}
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-                onBlur={(e) => e.target.style.borderColor = '#27272a'}
-              />
-            </div>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="new-password"
+              required
+              style={{
+                width: '320px',
+                height: '44px',
+                padding: '12px 16px',
+                border: '1px solid #27272a',
+                borderRadius: '8px',
+                backgroundColor: '#0d0d0d',
+                color: '#e5e5e5',
+                fontSize: '15px',
+                outline: 'none',
+                transition: 'border-color 0.2s ease',
+                marginBottom: '20px'
+              }}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+              onBlur={(e) => e.target.style.borderColor = '#27272a'}
+            />
 
             {/* Confirm Password Input */}
-            <div style={{ marginBottom: '32px' }}>
-              <input
-                id="confirm-password"
-                name="confirm-password"
-                type="password"
-                autoComplete="new-password"
-                required
-                style={{
-                  width: '100%',
-                  height: '44px',
-                  padding: '12px 16px',
-                  border: '1px solid #27272a',
-                  borderRadius: '8px',
-                  backgroundColor: '#0d0d0d',
-                  color: '#e5e5e5',
-                  fontSize: '15px',
-                  outline: 'none',
-                  transition: 'border-color 0.2s ease'
-                }}
-                placeholder="Confirm password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-                onBlur={(e) => e.target.style.borderColor = '#27272a'}
-              />
-            </div>
+            <input
+              id="confirm-password"
+              name="confirm-password"
+              type="password"
+              autoComplete="new-password"
+              required
+              style={{
+                width: '320px',
+                height: '44px',
+                padding: '12px 16px',
+                border: '1px solid #27272a',
+                borderRadius: '8px',
+                backgroundColor: '#0d0d0d',
+                color: '#e5e5e5',
+                fontSize: '15px',
+                outline: 'none',
+                transition: 'border-color 0.2s ease',
+                marginBottom: '32px'
+              }}
+              placeholder="Confirm password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+              onBlur={(e) => e.target.style.borderColor = '#27272a'}
+            />
 
             {/* Sign Up Button */}
             <button
