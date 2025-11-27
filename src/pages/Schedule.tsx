@@ -121,6 +121,7 @@ export function Schedule() {
     setPostToConfirm(null) // Close modal
 
     try {
+      console.log('Fetching post data for Post Now...')
       const { data: post, error } = await supabase
         .from('posts')
         .select('*, media(*)')
@@ -129,7 +130,15 @@ export function Schedule() {
 
       if (error) throw error
 
-      const response = await fetch('https://n8n-latest-8yp2.onrender.com/webhook/instagram-post', {
+      console.log('Calling n8n webhook:', {
+        caption: post.final_caption || post.generated_caption,
+        media_url: post.media?.cloudinary_url,
+        media_type: post.media?.media_type,
+        platforms: post.platforms || []
+      })
+
+      // Call n8n workflow to post instantly
+      const response = await fetch('https://n8n-latest-8yp2.onrender.com/webhook/post-instant', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -140,8 +149,16 @@ export function Schedule() {
         })
       })
 
-      if (!response.ok) throw new Error('Failed to post')
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('n8n webhook error:', errorText)
+        throw new Error(`Failed to post to social media: ${response.status}`)
+      }
 
+      const result = await response.json()
+      console.log('Post result:', result)
+
+      // Update post status in database
       await supabase
         .from('posts')
         .update({
@@ -153,7 +170,7 @@ export function Schedule() {
       toast.success('Posted successfully!')
       refetch()
     } catch (error: any) {
-      console.error('Error posting:', error)
+      console.error('Post now error:', error)
       toast.error(error.message || 'Failed to post')
     } finally {
       setPosting(null)
