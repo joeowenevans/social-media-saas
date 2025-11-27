@@ -122,50 +122,74 @@ export function Schedule() {
 
     try {
       console.log('Fetching post data for Post Now...')
-      const { data: post, error } = await supabase
+
+      // Fetch post with joined media data using proper foreign key syntax
+      const { data: postData, error: fetchError } = await supabase
         .from('posts')
-        .select('*, media(*)')
+        .select(`
+          *,
+          media:media_id (
+            cloudinary_url,
+            media_type,
+            cloudinary_public_id,
+            thumbnail_url
+          )
+        `)
         .eq('id', postToConfirm)
         .single()
 
-      if (error) throw error
+      if (fetchError) throw fetchError
+      if (!postData) throw new Error('Post not found')
 
-      console.log('Calling n8n webhook:', {
-        caption: post.final_caption || post.generated_caption,
-        media_url: post.media?.cloudinary_url,
-        media_type: post.media?.media_type,
-        platforms: post.platforms || []
-      })
+      console.log('Post data fetched:', postData)
+
+      // Prepare data for n8n webhook
+      const webhookPayload = {
+        caption: postData.final_caption || postData.generated_caption,
+        media_url: postData.media?.cloudinary_url,
+        media_type: postData.media?.media_type,
+        platforms: postData.platforms || []
+      }
+
+      console.log('Calling n8n webhook:', webhookPayload)
+
+      // Validate required fields before calling webhook
+      if (!webhookPayload.media_url) {
+        throw new Error('Media URL not found - post may be missing media')
+      }
+      if (!webhookPayload.caption) {
+        throw new Error('Caption not found - please add a caption to this post')
+      }
+      if (!webhookPayload.platforms || webhookPayload.platforms.length === 0) {
+        throw new Error('No platforms selected - please select at least one platform')
+      }
 
       // Call n8n workflow to post instantly
       const response = await fetch('https://n8n-latest-8yp2.onrender.com/webhook/post-instant', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          caption: post.final_caption || post.generated_caption,
-          media_url: post.media?.cloudinary_url,
-          media_type: post.media?.media_type,
-          platforms: post.platforms || []
-        })
+        body: JSON.stringify(webhookPayload)
       })
 
       if (!response.ok) {
         const errorText = await response.text()
         console.error('n8n webhook error:', errorText)
-        throw new Error(`Failed to post to social media: ${response.status}`)
+        throw new Error(`Webhook failed: ${response.status} - ${errorText}`)
       }
 
       const result = await response.json()
       console.log('Post result:', result)
 
       // Update post status in database
-      await supabase
+      const { error: updateError } = await supabase
         .from('posts')
         .update({
           status: 'posted',
           posted_at: new Date().toISOString()
         })
         .eq('id', postToConfirm)
+
+      if (updateError) throw updateError
 
       toast.success('Posted successfully!')
       refetch()
