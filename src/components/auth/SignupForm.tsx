@@ -35,8 +35,8 @@ export function SignupForm() {
       toast.error(error.message)
       setLoading(false)
     } else {
-      toast.success('Account created! Please check your email to verify.')
-      navigate('/login')
+      toast.success('Account created successfully! Welcome to SocialAI')
+      navigate('/dashboard')
     }
   }
 
