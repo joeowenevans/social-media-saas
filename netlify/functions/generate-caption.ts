@@ -6,6 +6,10 @@ const openai = new OpenAI({
 })
 
 export const handler: Handler = async (event) => {
+  console.log('=== CAPTION GENERATION API CALLED ===')
+  console.log('HTTP Method:', event.httpMethod)
+  console.log('Timestamp:', new Date().toISOString())
+
   // CORS headers
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -31,6 +35,10 @@ export const handler: Handler = async (event) => {
   }
 
   try {
+    console.log('Parsing request body...')
+    const requestBody = JSON.parse(event.body || '{}')
+    console.log('Request body keys:', Object.keys(requestBody))
+
     const {
       mediaUrl,
       mediaType,
@@ -56,11 +64,25 @@ export const handler: Handler = async (event) => {
       hashtagsAvoid,
       ctaPreference,
       emojiCount,
-    } = JSON.parse(event.body || '{}')
+    } = requestBody
 
-    console.log('Caption API called:', { mediaUrl, mediaType })
+    console.log('Media URL:', mediaUrl)
+    console.log('Media Type:', mediaType)
+    console.log('Brand Name:', brandName)
+
+    // Check if OpenAI API key exists
+    if (!process.env.OPENAI_API_KEY) {
+      console.error('ERROR: OpenAI API key not found in environment variables!')
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ error: 'OpenAI API key not configured' }),
+      }
+    }
+    console.log('OpenAI API key found:', process.env.OPENAI_API_KEY ? 'Yes (length: ' + process.env.OPENAI_API_KEY.length + ')' : 'No')
 
     if (!mediaUrl) {
+      console.error('ERROR: mediaUrl is required but not provided')
       return {
         statusCode: 400,
         headers,
@@ -72,13 +94,18 @@ export const handler: Handler = async (event) => {
     let imageUrlForAI = mediaUrl
 
     if (mediaType === 'video') {
+      console.log('Processing video - converting to thumbnail...')
+      console.log('Original video URL:', mediaUrl)
+
       // Cloudinary video thumbnail transformation
       // Extracts first frame (so_0) and resizes to 400x400
       imageUrlForAI = mediaUrl
         .replace('/video/upload/', '/video/upload/so_0,w_400,h_400,c_fill/')
         .replace(/\.(mp4|mov|avi)$/i, '.jpg')
 
-      console.log('Video detected - using thumbnail URL:', imageUrlForAI)
+      console.log('Thumbnail URL generated:', imageUrlForAI)
+    } else {
+      console.log('Processing image - using original URL')
     }
 
     // Use new fields if available, fallback to legacy fields
@@ -191,6 +218,10 @@ Format the caption as follows:
 
 Make it authentic, engaging, and optimized for social media engagement. Use ${emojis} emojis naturally throughout the caption. Match the brand voice and values described above.`
 
+    console.log('Prompt length:', prompt.length)
+    console.log('Image URL being sent to OpenAI:', imageUrlForAI)
+    console.log('Calling OpenAI API with model: gpt-4o-mini')
+
     const response = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
@@ -214,7 +245,14 @@ Make it authentic, engaging, and optimized for social media engagement. Use ${em
       temperature: 0.7,
     })
 
+    console.log('OpenAI API response received successfully')
+    console.log('Response choices length:', response.choices?.length)
+
     const caption = response.choices[0]?.message?.content || ''
+
+    console.log('Generated caption length:', caption.length)
+    console.log('Caption preview:', caption.substring(0, 100) + '...')
+    console.log('=== CAPTION GENERATION SUCCESSFUL ===')
 
     return {
       statusCode: 200,
@@ -222,16 +260,30 @@ Make it authentic, engaging, and optimized for social media engagement. Use ${em
       body: JSON.stringify({ caption }),
     }
   } catch (error: any) {
-    console.error('Caption generation API error:', error)
+    console.error('=== CAPTION GENERATION API ERROR ===')
+    console.error('Error type:', typeof error)
+    console.error('Error name:', error.name)
     console.error('Error message:', error.message)
     console.error('Error stack:', error.stack)
+    console.error('Full error object:', JSON.stringify(error, null, 2))
 
     if (error.response) {
-      console.error('OpenAI API response error:', {
-        status: error.response.status,
-        data: error.response.data,
-      })
+      console.error('OpenAI API response error details:')
+      console.error('  Status:', error.response.status)
+      console.error('  Status Text:', error.response.statusText)
+      console.error('  Headers:', error.response.headers)
+      console.error('  Data:', JSON.stringify(error.response.data, null, 2))
     }
+
+    if (error.cause) {
+      console.error('Error cause:', error.cause)
+    }
+
+    // Log additional context
+    console.error('Environment check:')
+    console.error('  Node version:', process.version)
+    console.error('  OpenAI key exists:', !!process.env.OPENAI_API_KEY)
+    console.error('  OpenAI key length:', process.env.OPENAI_API_KEY?.length || 0)
 
     return {
       statusCode: 500,
@@ -239,6 +291,8 @@ Make it authentic, engaging, and optimized for social media engagement. Use ${em
       body: JSON.stringify({
         error: 'Failed to generate caption',
         details: error.message,
+        errorName: error.name,
+        timestamp: new Date().toISOString(),
       }),
     }
   }
