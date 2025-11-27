@@ -11,13 +11,18 @@ interface BrandSetupProps {
 export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps) {
   const [formData, setFormData] = useState({
     name: initialData?.name || '',
-    brand_voice: initialData?.brand_voice || '',
-    target_audience: initialData?.target_audience || '',
-    hashtag_count: initialData?.hashtag_count || 7,
-    hashtags_always_use: initialData?.hashtags_always_use?.join(', ') || '',
-    hashtags_avoid: initialData?.hashtags_avoid?.join(', ') || '',
-    cta_preference: initialData?.cta_preference || 'visit_link',
-    emoji_count: initialData?.emoji_count || 2,
+    industry_niche: initialData?.industry_niche || '',
+    voice_description: initialData?.voice_description || '',
+    audience_priorities: initialData?.audience_priorities || '',
+    brand_values: initialData?.brand_values || '',
+    preferred_caption_length: initialData?.preferred_caption_length || 'medium',
+    hashtag_topics: initialData?.hashtag_topics || '',
+    cta_style: initialData?.cta_style || 'direct',
+    example_captions: initialData?.example_captions || '',
+    phrases_taglines: initialData?.phrases_taglines || '',
+    general_goals: initialData?.general_goals || '',
+    num_hashtags: initialData?.num_hashtags || 7,
+    num_emojis: initialData?.num_emojis || 2,
   })
   const [loading, setLoading] = useState(false)
 
@@ -25,24 +30,7 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
     e.preventDefault()
     setLoading(true)
 
-    const brandData = {
-      name: formData.name,
-      brand_voice: formData.brand_voice,
-      target_audience: formData.target_audience,
-      hashtag_count: formData.hashtag_count,
-      hashtags_always_use: formData.hashtags_always_use
-        .split(',')
-        .map(h => h.trim())
-        .filter(h => h.length > 0),
-      hashtags_avoid: formData.hashtags_avoid
-        .split(',')
-        .map(h => h.trim())
-        .filter(h => h.length > 0),
-      cta_preference: formData.cta_preference,
-      emoji_count: formData.emoji_count,
-    }
-
-    const { data, error } = await onSave(brandData)
+    const { data, error } = await onSave(formData)
 
     if (error) {
       toast.error(error)
@@ -71,15 +59,21 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
     fontWeight: 500,
     marginBottom: '8px',
     display: 'block'
+  } as const
+
+  const helperTextStyle = {
+    color: '#888',
+    fontSize: '12px',
+    marginTop: '4px'
   }
 
   const fieldContainerStyle = {
-    marginBottom: '24px'
+    marginBottom: '32px'
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* Brand Name */}
+      {/* 1. Brand Name */}
       <div style={fieldContainerStyle}>
         <label htmlFor="name" style={labelStyle}>
           Brand Name *
@@ -88,6 +82,7 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
           type="text"
           id="name"
           required
+          placeholder="e.g., Blue Pencil Gallery"
           style={{ ...inputStyle, height: '44px' }}
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -96,116 +91,82 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
         />
       </div>
 
-      {/* Brand Voice */}
+      {/* 2. Industry/Niche */}
       <div style={fieldContainerStyle}>
-        <label htmlFor="brand_voice" style={labelStyle}>
-          Brand Voice
+        <label htmlFor="industry_niche" style={labelStyle}>
+          Industry/Niche
         </label>
-        <textarea
-          id="brand_voice"
-          style={{ ...inputStyle, minHeight: '100px', resize: 'vertical' }}
-          placeholder="e.g., Friendly, professional, witty..."
-          value={formData.brand_voice}
-          onChange={(e) => setFormData({ ...formData, brand_voice: e.target.value })}
+        <input
+          type="text"
+          id="industry_niche"
+          placeholder="e.g., Pet Portrait Artist, Animation-Inspired Art"
+          style={{ ...inputStyle, height: '44px' }}
+          value={formData.industry_niche}
+          onChange={(e) => setFormData({ ...formData, industry_niche: e.target.value })}
           onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
           onBlur={(e) => e.target.style.borderColor = '#27272a'}
         />
+        <p style={helperTextStyle}>What industry or niche does your brand operate in?</p>
       </div>
 
-      {/* Target Audience */}
+      {/* 3. Voice Description */}
       <div style={fieldContainerStyle}>
-        <label htmlFor="target_audience" style={labelStyle}>
-          Target Audience
+        <label htmlFor="voice_description" style={labelStyle}>
+          Voice Description
         </label>
         <textarea
-          id="target_audience"
+          id="voice_description"
           style={{ ...inputStyle, minHeight: '80px', resize: 'vertical' }}
-          placeholder="e.g., Young professionals aged 25-35 interested in technology..."
-          value={formData.target_audience}
-          onChange={(e) => setFormData({ ...formData, target_audience: e.target.value })}
+          placeholder="e.g., Friendly, professional, enthusiastic about pets"
+          value={formData.voice_description}
+          onChange={(e) => setFormData({ ...formData, voice_description: e.target.value })}
           onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
           onBlur={(e) => e.target.style.borderColor = '#27272a'}
         />
+        <p style={helperTextStyle}>How should your brand sound? Describe the tone and personality.</p>
       </div>
 
-      {/* Number Inputs Row */}
-      <div style={{ display: 'flex', gap: '24px', marginBottom: '24px' }}>
-        <div style={{ flex: 1 }}>
-          <label htmlFor="hashtag_count" style={labelStyle}>
-            Number of Hashtags
-          </label>
-          <input
-            type="number"
-            id="hashtag_count"
-            min="0"
-            max="30"
-            style={{ ...inputStyle, height: '44px', width: '100px' }}
-            value={formData.hashtag_count}
-            onChange={(e) => setFormData({ ...formData, hashtag_count: parseInt(e.target.value) })}
-            onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-            onBlur={(e) => e.target.style.borderColor = '#27272a'}
-          />
-        </div>
-
-        <div style={{ flex: 1 }}>
-          <label htmlFor="emoji_count" style={labelStyle}>
-            Number of Emojis
-          </label>
-          <input
-            type="number"
-            id="emoji_count"
-            min="0"
-            max="10"
-            style={{ ...inputStyle, height: '44px', width: '100px' }}
-            value={formData.emoji_count}
-            onChange={(e) => setFormData({ ...formData, emoji_count: parseInt(e.target.value) })}
-            onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-            onBlur={(e) => e.target.style.borderColor = '#27272a'}
-          />
-        </div>
-      </div>
-
-      {/* Always Use Hashtags */}
+      {/* 4. Audience Priorities */}
       <div style={fieldContainerStyle}>
-        <label htmlFor="hashtags_always_use" style={labelStyle}>
-          Always Use These Hashtags
+        <label htmlFor="audience_priorities" style={labelStyle}>
+          Audience Priorities
         </label>
-        <input
-          type="text"
-          id="hashtags_always_use"
-          style={{ ...inputStyle, height: '44px' }}
-          placeholder="e.g., #brandname, #yourhashtag (comma-separated)"
-          value={formData.hashtags_always_use}
-          onChange={(e) => setFormData({ ...formData, hashtags_always_use: e.target.value })}
+        <textarea
+          id="audience_priorities"
+          style={{ ...inputStyle, minHeight: '80px', resize: 'vertical' }}
+          placeholder="e.g., Pet owners looking for custom artwork, fans of animation"
+          value={formData.audience_priorities}
+          onChange={(e) => setFormData({ ...formData, audience_priorities: e.target.value })}
           onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
           onBlur={(e) => e.target.style.borderColor = '#27272a'}
         />
+        <p style={helperTextStyle}>Who is your target audience? What do they care about?</p>
       </div>
 
-      {/* Avoid Hashtags */}
+      {/* 5. Brand Values */}
       <div style={fieldContainerStyle}>
-        <label htmlFor="hashtags_avoid" style={labelStyle}>
-          Avoid These Hashtags
+        <label htmlFor="brand_values" style={labelStyle}>
+          Brand Values
         </label>
-        <input
-          type="text"
-          id="hashtags_avoid"
-          style={{ ...inputStyle, height: '44px' }}
-          placeholder="e.g., #spam, #unwanted (comma-separated)"
-          value={formData.hashtags_avoid}
-          onChange={(e) => setFormData({ ...formData, hashtags_avoid: e.target.value })}
+        <textarea
+          id="brand_values"
+          style={{ ...inputStyle, minHeight: '80px', resize: 'vertical' }}
+          placeholder="e.g., Quality craftsmanship, customer satisfaction, creativity"
+          value={formData.brand_values}
+          onChange={(e) => setFormData({ ...formData, brand_values: e.target.value })}
           onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
           onBlur={(e) => e.target.style.borderColor = '#27272a'}
         />
+        <p style={helperTextStyle}>What values does your brand stand for?</p>
       </div>
 
-      {/* Call-to-Action Dropdown */}
+      {/* 6. Preferred Caption Length */}
       <div style={fieldContainerStyle}>
-        <label htmlFor="cta_preference" style={labelStyle}>
-          Call-to-Action Preference
+        <label htmlFor="preferred_caption_length" style={labelStyle}>
+          Preferred Caption Length
         </label>
         <select
-          id="cta_preference"
+          id="preferred_caption_length"
           style={{
             ...inputStyle,
             height: '44px',
@@ -216,21 +177,156 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
             backgroundPosition: 'right 12px center',
             paddingRight: '40px'
           }}
-          value={formData.cta_preference}
-          onChange={(e) => setFormData({ ...formData, cta_preference: e.target.value })}
+          value={formData.preferred_caption_length}
+          onChange={(e) => setFormData({ ...formData, preferred_caption_length: e.target.value })}
           onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
           onBlur={(e) => e.target.style.borderColor = '#27272a'}
         >
-          <option value="visit_link" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Visit Link in Bio</option>
-          <option value="comment" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Leave a Comment</option>
-          <option value="like_follow" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Like & Follow</option>
-          <option value="shop_now" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Shop Now</option>
-          <option value="learn_more" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Learn More</option>
-          <option value="custom" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Custom</option>
+          <option value="short" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Short (1-2 sentences)</option>
+          <option value="medium" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Medium (3-5 sentences)</option>
+          <option value="long" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Long (6+ sentences)</option>
         </select>
       </div>
 
-      {/* Update Button */}
+      {/* 7. Hashtag Topics/Branding */}
+      <div style={fieldContainerStyle}>
+        <label htmlFor="hashtag_topics" style={labelStyle}>
+          Hashtag Topics/Branding
+        </label>
+        <input
+          type="text"
+          id="hashtag_topics"
+          placeholder="e.g., petportrait, customart, animationstyle, brandname"
+          style={{ ...inputStyle, height: '44px' }}
+          value={formData.hashtag_topics}
+          onChange={(e) => setFormData({ ...formData, hashtag_topics: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
+        />
+        <p style={helperTextStyle}>Keywords for hashtag generation (comma-separated)</p>
+      </div>
+
+      {/* 8. CTA Style */}
+      <div style={fieldContainerStyle}>
+        <label htmlFor="cta_style" style={labelStyle}>
+          Call-to-Action Style
+        </label>
+        <select
+          id="cta_style"
+          style={{
+            ...inputStyle,
+            height: '44px',
+            cursor: 'pointer',
+            appearance: 'none',
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23e5e5e5' d='M4.427 6.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 6H4.604a.25.25 0 00-.177.427z'/%3E%3C/svg%3E")`,
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'right 12px center',
+            paddingRight: '40px'
+          }}
+          value={formData.cta_style}
+          onChange={(e) => setFormData({ ...formData, cta_style: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
+        >
+          <option value="direct" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Direct (e.g., 'Shop now', 'Book today')</option>
+          <option value="soft" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Soft (e.g., 'Learn more', 'Discover')</option>
+          <option value="question" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Question (e.g., 'Ready to transform your space?')</option>
+          <option value="none" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>None (No CTA)</option>
+        </select>
+      </div>
+
+      {/* 9. Example Captions */}
+      <div style={fieldContainerStyle}>
+        <label htmlFor="example_captions" style={labelStyle}>
+          Example Captions
+        </label>
+        <textarea
+          id="example_captions"
+          style={{ ...inputStyle, minHeight: '120px', resize: 'vertical' }}
+          placeholder="Paste 2-3 example captions that match your desired style..."
+          value={formData.example_captions}
+          onChange={(e) => setFormData({ ...formData, example_captions: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
+        />
+        <p style={helperTextStyle}>Provide examples of captions you love - AI will learn from these</p>
+      </div>
+
+      {/* 10. Signature Phrases/Taglines */}
+      <div style={fieldContainerStyle}>
+        <label htmlFor="phrases_taglines" style={labelStyle}>
+          Signature Phrases/Taglines
+        </label>
+        <input
+          type="text"
+          id="phrases_taglines"
+          placeholder="e.g., 'Art that captures the soul', 'Your pet, immortalized'"
+          style={{ ...inputStyle, height: '44px' }}
+          value={formData.phrases_taglines}
+          onChange={(e) => setFormData({ ...formData, phrases_taglines: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
+        />
+        <p style={helperTextStyle}>Phrases you want occasionally included in captions</p>
+      </div>
+
+      {/* 11. General Goals */}
+      <div style={fieldContainerStyle}>
+        <label htmlFor="general_goals" style={labelStyle}>
+          General Goals
+        </label>
+        <textarea
+          id="general_goals"
+          style={{ ...inputStyle, minHeight: '80px', resize: 'vertical' }}
+          placeholder="e.g., Increase bookings for custom portraits, build community of pet lovers"
+          value={formData.general_goals}
+          onChange={(e) => setFormData({ ...formData, general_goals: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
+        />
+        <p style={helperTextStyle}>What are your overall social media goals?</p>
+      </div>
+
+      {/* 12 & 13. Number Inputs Row */}
+      <div style={{ display: 'flex', gap: '24px', marginBottom: '32px' }}>
+        <div style={{ flex: 1 }}>
+          <label htmlFor="num_hashtags" style={labelStyle}>
+            Number of Hashtags
+          </label>
+          <input
+            type="number"
+            id="num_hashtags"
+            min="0"
+            max="30"
+            placeholder="7"
+            style={{ ...inputStyle, height: '44px' }}
+            value={formData.num_hashtags}
+            onChange={(e) => setFormData({ ...formData, num_hashtags: parseInt(e.target.value) || 0 })}
+            onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+            onBlur={(e) => e.target.style.borderColor = '#27272a'}
+          />
+        </div>
+
+        <div style={{ flex: 1 }}>
+          <label htmlFor="num_emojis" style={labelStyle}>
+            Number of Emojis
+          </label>
+          <input
+            type="number"
+            id="num_emojis"
+            min="0"
+            max="10"
+            placeholder="2"
+            style={{ ...inputStyle, height: '44px' }}
+            value={formData.num_emojis}
+            onChange={(e) => setFormData({ ...formData, num_emojis: parseInt(e.target.value) || 0 })}
+            onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+            onBlur={(e) => e.target.style.borderColor = '#27272a'}
+          />
+        </div>
+      </div>
+
+      {/* Save Button */}
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '32px' }}>
         <button
           type="submit"
