@@ -6,7 +6,6 @@ import { Dashboard } from './pages/Dashboard'
 import { Upload } from './pages/Upload'
 import { Schedule } from './pages/Schedule'
 import { Settings } from './pages/Settings'
-import { Billing } from './pages/Billing'
 import { ProtectedRoute } from './components/auth/ProtectedRoute'
 
 function App() {
@@ -46,14 +45,6 @@ function App() {
           element={
             <ProtectedRoute>
               <Settings />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/billing"
-          element={
-            <ProtectedRoute>
-              <Billing />
             </ProtectedRoute>
           }
         />
