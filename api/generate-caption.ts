@@ -9,6 +9,10 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ) {
+  console.log('=== CAPTION GENERATION API CALLED (Vercel) ===')
+  console.log('HTTP Method:', req.method)
+  console.log('Timestamp:', new Date().toISOString())
+
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
@@ -24,8 +28,27 @@ export default async function handler(
   }
 
   try {
+    console.log('Parsing request body...')
+    console.log('Request body keys:', Object.keys(req.body))
+
     const {
       mediaUrl,
+      mediaType,
+      // New comprehensive brand fields
+      brandName,
+      industryNiche,
+      voiceDescription,
+      audiencePriorities,
+      brandValues,
+      preferredCaptionLength,
+      hashtagTopics,
+      ctaStyle,
+      exampleCaptions,
+      phrasesTaglines,
+      generalGoals,
+      numHashtags,
+      numEmojis,
+      // Legacy fields (for backwards compatibility)
       brandVoice,
       targetAudience,
       hashtagCount,
@@ -35,13 +58,74 @@ export default async function handler(
       emojiCount,
     } = req.body
 
+    console.log('Media URL:', mediaUrl)
+    console.log('Media Type:', mediaType)
+    console.log('Brand Name:', brandName)
+
+    // Check if OpenAI API key exists
+    if (!process.env.OPENAI_API_KEY) {
+      console.error('ERROR: OpenAI API key not found in environment variables!')
+      return res.status(500).json({ error: 'OpenAI API key not configured' })
+    }
+    console.log('OpenAI API key found:', process.env.OPENAI_API_KEY ? 'Yes (length: ' + process.env.OPENAI_API_KEY.length + ')' : 'No')
+
     if (!mediaUrl) {
+      console.error('ERROR: mediaUrl is required but not provided')
       return res.status(400).json({ error: 'mediaUrl is required' })
     }
 
-    // Build the prompt
+    // Convert video URL to thumbnail URL for OpenAI vision API
+    let imageUrlForAI = mediaUrl
+
+    if (mediaType === 'video') {
+      console.log('Processing video - converting to thumbnail...')
+      console.log('Original video URL:', mediaUrl)
+
+      // Cloudinary video thumbnail transformation
+      // Extracts first frame (so_0) and resizes to 400x400
+      imageUrlForAI = mediaUrl
+        .replace('/video/upload/', '/video/upload/so_0,w_400,h_400,c_fill/')
+        .replace(/\.(mp4|mov|avi)$/i, '.jpg')
+
+      console.log('Thumbnail URL generated:', imageUrlForAI)
+    } else {
+      console.log('Processing image - using original URL')
+    }
+
+    // Use new fields if available, fallback to legacy fields
+    const voice = voiceDescription || brandVoice || 'professional and engaging'
+    const audience = audiencePriorities || targetAudience || 'general audience'
+    const hashtags = numHashtags !== undefined ? numHashtags : (hashtagCount || 7)
+    const emojis = numEmojis !== undefined ? numEmojis : (emojiCount || 2)
+    const captionLength = preferredCaptionLength || 'medium'
+
+    // Build comprehensive brand context
+    let brandContext = ''
+    if (brandName) brandContext += `Brand: ${brandName}\n`
+    if (industryNiche) brandContext += `Industry: ${industryNiche}\n`
+    if (voice) brandContext += `Voice: ${voice}\n`
+    if (audience) brandContext += `Audience: ${audience}\n`
+    if (brandValues) brandContext += `Values: ${brandValues}\n`
+    if (generalGoals) brandContext += `Goals: ${generalGoals}\n`
+
+    // Build CTA text based on style
     let ctaText = ''
-    switch (ctaPreference) {
+    const style = ctaStyle || ctaPreference || 'direct'
+
+    switch (style) {
+      case 'direct':
+        ctaText = 'Shop now / Book today / Get yours'
+        break
+      case 'soft':
+        ctaText = 'Learn more / Discover / Explore'
+        break
+      case 'question':
+        ctaText = 'Ready to transform your space? / Interested?'
+        break
+      case 'none':
+        ctaText = 'No call-to-action needed'
+        break
+      // Legacy values
       case 'visit_link':
         ctaText = 'Link in bio'
         break
@@ -61,29 +145,66 @@ export default async function handler(
         ctaText = 'Check it out'
     }
 
-    const alwaysUseHashtags = Array.isArray(hashtagsAlwaysUse) && hashtagsAlwaysUse.length > 0
-      ? `\nALWAYS include these hashtags: ${hashtagsAlwaysUse.join(' ')}`
-      : ''
+    // Caption length guidance
+    let lengthGuidance = ''
+    switch (captionLength) {
+      case 'short':
+        lengthGuidance = 'Keep it brief - 1-2 sentences maximum.'
+        break
+      case 'medium':
+        lengthGuidance = 'Use 3-5 sentences for moderate detail.'
+        break
+      case 'long':
+        lengthGuidance = 'Write 6 or more sentences with rich detail and storytelling.'
+        break
+      default:
+        lengthGuidance = 'Use 3-5 sentences.'
+    }
 
-    const avoidHashtags = Array.isArray(hashtagsAvoid) && hashtagsAvoid.length > 0
-      ? `\nNEVER use these hashtags: ${hashtagsAvoid.join(', ')}`
-      : ''
+    // Add example captions context
+    let examplesContext = ''
+    if (exampleCaptions && exampleCaptions.trim()) {
+      examplesContext = `\n\nEXAMPLE CAPTIONS TO LEARN FROM:\n${exampleCaptions}\n\nMatch the style, tone, and structure of these examples.`
+    }
+
+    // Add signature phrases
+    let phrasesContext = ''
+    if (phrasesTaglines && phrasesTaglines.trim()) {
+      phrasesContext = `\n\nOCCASIONALLY include these signature phrases naturally: ${phrasesTaglines}`
+    }
+
+    // Add hashtag topics
+    let hashtagContext = ''
+    if (hashtagTopics && hashtagTopics.trim()) {
+      hashtagContext = `\nUse these topics/keywords for hashtags: ${hashtagTopics}`
+    } else if (hashtagsAlwaysUse && Array.isArray(hashtagsAlwaysUse) && hashtagsAlwaysUse.length > 0) {
+      hashtagContext = `\nALWAYS include these hashtags: ${hashtagsAlwaysUse.join(' ')}`
+    }
+
+    // Add hashtags to avoid
+    if (hashtagsAvoid && Array.isArray(hashtagsAvoid) && hashtagsAvoid.length > 0) {
+      hashtagContext += `\nNEVER use these hashtags: ${hashtagsAvoid.join(', ')}`
+    }
 
     const prompt = `You are a social media caption expert. Create an engaging Instagram caption for this image/video.
 
-Brand Voice: ${brandVoice}
-Target Audience: ${targetAudience}
-Number of hashtags: ${hashtagCount || 7}${alwaysUseHashtags}${avoidHashtags}
-Call-to-action: ${ctaText}
-Number of emojis to use: ${emojiCount || 2}
+${brandContext}
+${lengthGuidance}
+Number of hashtags: ${hashtags}${hashtagContext}
+Call-to-action style: ${ctaText}
+Number of emojis to use: ${emojis}${examplesContext}${phrasesContext}
 
 Format the caption as follows:
-1. Start with 2-3 engaging sentences that describe the content and connect with the audience
+1. Start with engaging sentences that describe the content and connect with the audience (${lengthGuidance})
 2. Add a line break
-3. Include ${hashtagCount || 7} relevant hashtags
-4. End with a call-to-action: "${ctaText}"
+3. Include ${hashtags} relevant hashtags
+4. End with a call-to-action using the style: "${ctaText}"
 
-Make it authentic, engaging, and optimized for social media engagement. Use ${emojiCount || 2} emojis naturally throughout the caption.`
+Make it authentic, engaging, and optimized for social media engagement. Use ${emojis} emojis naturally throughout the caption. Match the brand voice and values described above.`
+
+    console.log('Prompt length:', prompt.length)
+    console.log('Image URL being sent to OpenAI:', imageUrlForAI)
+    console.log('Calling OpenAI API with model: gpt-4o-mini')
 
     const response = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
@@ -98,24 +219,57 @@ Make it authentic, engaging, and optimized for social media engagement. Use ${em
             {
               type: 'image_url',
               image_url: {
-                url: mediaUrl,
+                url: imageUrlForAI,
               },
             },
           ],
         },
       ],
-      max_tokens: 300,
+      max_tokens: 500,
       temperature: 0.7,
     })
 
+    console.log('OpenAI API response received successfully')
+    console.log('Response choices length:', response.choices?.length)
+
     const caption = response.choices[0]?.message?.content || ''
+
+    console.log('Generated caption length:', caption.length)
+    console.log('Caption preview:', caption.substring(0, 100) + '...')
+    console.log('=== CAPTION GENERATION SUCCESSFUL ===')
 
     return res.status(200).json({ caption })
   } catch (error: any) {
-    console.error('Caption generation error:', error)
+    console.error('=== CAPTION GENERATION API ERROR ===')
+    console.error('Error type:', typeof error)
+    console.error('Error name:', error.name)
+    console.error('Error message:', error.message)
+    console.error('Error stack:', error.stack)
+    console.error('Full error object:', JSON.stringify(error, null, 2))
+
+    if (error.response) {
+      console.error('OpenAI API response error details:')
+      console.error('  Status:', error.response.status)
+      console.error('  Status Text:', error.response.statusText)
+      console.error('  Headers:', error.response.headers)
+      console.error('  Data:', JSON.stringify(error.response.data, null, 2))
+    }
+
+    if (error.cause) {
+      console.error('Error cause:', error.cause)
+    }
+
+    // Log additional context
+    console.error('Environment check:')
+    console.error('  Node version:', process.version)
+    console.error('  OpenAI key exists:', !!process.env.OPENAI_API_KEY)
+    console.error('  OpenAI key length:', process.env.OPENAI_API_KEY?.length || 0)
+
     return res.status(500).json({
       error: 'Failed to generate caption',
       details: error.message,
+      errorName: error.name,
+      timestamp: new Date().toISOString(),
     })
   }
 }
