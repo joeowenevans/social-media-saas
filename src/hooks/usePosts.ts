@@ -21,7 +21,15 @@ export function usePosts(brandId: string | undefined) {
       setLoading(true)
       const { data, error } = await supabase
         .from('posts')
-        .select('*, media(*)')
+        .select(`
+          *,
+          media:media_id (
+            cloudinary_url,
+            media_type,
+            cloudinary_public_id,
+            thumbnail_url
+          )
+        `)
         .eq('brand_id', brandId)
         .order('created_at', { ascending: false })
 
@@ -40,7 +48,15 @@ export function usePosts(brandId: string | undefined) {
       const { data, error } = await supabase
         .from('posts')
         .insert([{ ...postData, brand_id: brandId }])
-        .select('*, media(*)')
+        .select(`
+          *,
+          media:media_id (
+            cloudinary_url,
+            media_type,
+            cloudinary_public_id,
+            thumbnail_url
+          )
+        `)
         .single()
 
       if (error) throw error
@@ -59,7 +75,15 @@ export function usePosts(brandId: string | undefined) {
         .from('posts')
         .update(postData)
         .eq('id', postId)
-        .select('*, media(*)')
+        .select(`
+          *,
+          media:media_id (
+            cloudinary_url,
+            media_type,
+            cloudinary_public_id,
+            thumbnail_url
+          )
+        `)
         .single()
 
       if (error) throw error
