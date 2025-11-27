@@ -117,7 +117,7 @@ export function Upload() {
             file_size: cloudinaryData.bytes,
             width: cloudinaryData.width,
             height: cloudinaryData.height,
-            duration: cloudinaryData.duration || null,
+            duration: cloudinaryData.duration ? Math.round(cloudinaryData.duration) : null,
           },
         ])
         .select()
