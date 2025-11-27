@@ -30,6 +30,26 @@ export function Upload() {
   const [fileType, setFileType] = useState<'image' | 'video' | null>(null)
   const progressIntervalRef = useRef<number | null>(null)
 
+  // Cleanup existing drafts with invalid dates on mount
+  useEffect(() => {
+    const cleanupDrafts = async () => {
+      if (!brand?.id) return
+
+      try {
+        await supabase
+          .from('posts')
+          .update({ scheduled_for: null })
+          .eq('brand_id', brand.id)
+          .eq('status', 'draft')
+          .not('scheduled_for', 'is', null)
+      } catch (error) {
+        console.error('Draft cleanup error:', error)
+      }
+    }
+
+    cleanupDrafts()
+  }, [brand?.id])
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -263,6 +283,17 @@ export function Upload() {
       return
     }
 
+    // Validate future date for scheduled posts
+    if (postType === 'scheduled' && scheduledTime) {
+      const selectedDate = new Date(scheduledTime)
+      const now = new Date()
+
+      if (selectedDate <= now) {
+        toast.error('Please select a future date and time')
+        return
+      }
+    }
+
     if (selectedPlatforms.length === 0) {
       toast.error('Please select at least one platform')
       return
@@ -277,10 +308,7 @@ export function Upload() {
         final_caption: caption,
         status: postType === 'scheduled' ? 'scheduled' : 'draft',
         platforms: selectedPlatforms,
-      }
-
-      if (postType === 'scheduled' && scheduledTime) {
-        postData.scheduled_for = new Date(scheduledTime).toISOString()
+        scheduled_for: postType === 'scheduled' ? new Date(scheduledTime).toISOString() : null,
       }
 
       const { error } = await supabase.from('posts').insert([postData])
@@ -671,6 +699,7 @@ export function Upload() {
                     type="datetime-local"
                     value={scheduledTime}
                     onChange={(e) => setScheduledTime(e.target.value)}
+                    min={new Date().toISOString().slice(0, 16)}
                     style={{
                       width: '100%',
                       padding: '16px',
