@@ -121,7 +121,8 @@ export function Dashboard() {
           padding: '32px',
           borderRadius: '12px',
           marginBottom: '64px',
-          textAlign: 'center'
+          textAlign: 'center',
+          boxShadow: '0 0 40px rgba(20, 184, 166, 0.2), 0 0 80px rgba(20, 184, 166, 0.1)'
         }}>
           <h2 style={{
             color: '#14b8a6',
