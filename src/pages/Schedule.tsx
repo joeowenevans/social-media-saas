@@ -187,9 +187,22 @@ export function Schedule() {
   const handleSaveEdit = async () => {
     if (!editingPost) return
 
-    try {
-      const scheduledDateTime = new Date(`${editFormData.scheduled_date}T${editFormData.scheduled_time}`)
+    // Validate date and time
+    if (!editFormData.scheduled_date || !editFormData.scheduled_time) {
+      toast.error('Please select both date and time')
+      return
+    }
 
+    const scheduledDateTime = new Date(`${editFormData.scheduled_date}T${editFormData.scheduled_time}`)
+    const now = new Date()
+
+    // Validate future date
+    if (scheduledDateTime <= now) {
+      toast.error('Please select a future date and time')
+      return
+    }
+
+    try {
       const { error } = await supabase
         .from('posts')
         .update({
@@ -466,21 +479,23 @@ export function Schedule() {
                     {post.final_caption}
                   </p>
 
-                  {/* Date & Time */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <CalendarIcon style={{ width: '14px', height: '14px', color: '#14b8a6' }} />
-                      <span style={{ color: '#14b8a6', fontSize: '13px' }}>
-                        {format(new Date(post.scheduled_for), 'MMM dd, yyyy')}
-                      </span>
+                  {/* Date & Time - Only show for scheduled and posted */}
+                  {post.status !== 'draft' && post.scheduled_for && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <CalendarIcon style={{ width: '14px', height: '14px', color: '#14b8a6' }} />
+                        <span style={{ color: '#14b8a6', fontSize: '13px' }}>
+                          {format(new Date(post.scheduled_for), 'MMM dd, yyyy')}
+                        </span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <Clock style={{ width: '14px', height: '14px', color: '#888' }} />
+                        <span style={{ color: '#888', fontSize: '13px' }}>
+                          {format(new Date(post.scheduled_for), 'HH:mm')}
+                        </span>
+                      </div>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <Clock style={{ width: '14px', height: '14px', color: '#888' }} />
-                      <span style={{ color: '#888', fontSize: '13px' }}>
-                        {format(new Date(post.scheduled_for), 'HH:mm')}
-                      </span>
-                    </div>
-                  </div>
+                  )}
 
                   {/* Platform Badges */}
                   <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>
@@ -948,6 +963,7 @@ export function Schedule() {
                   type="date"
                   value={editFormData.scheduled_date}
                   onChange={(e) => setEditFormData({ ...editFormData, scheduled_date: e.target.value })}
+                  min={new Date().toISOString().split('T')[0]}
                   style={{
                     width: '100%',
                     height: '44px',
