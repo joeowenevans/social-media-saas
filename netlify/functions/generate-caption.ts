@@ -33,6 +33,7 @@ export const handler: Handler = async (event) => {
   try {
     const {
       mediaUrl,
+      mediaType,
       // New comprehensive brand fields
       brandName,
       industryNiche,
@@ -57,12 +58,27 @@ export const handler: Handler = async (event) => {
       emojiCount,
     } = JSON.parse(event.body || '{}')
 
+    console.log('Caption API called:', { mediaUrl, mediaType })
+
     if (!mediaUrl) {
       return {
         statusCode: 400,
         headers,
         body: JSON.stringify({ error: 'mediaUrl is required' }),
       }
+    }
+
+    // Convert video URL to thumbnail URL for OpenAI vision API
+    let imageUrlForAI = mediaUrl
+
+    if (mediaType === 'video') {
+      // Cloudinary video thumbnail transformation
+      // Extracts first frame (so_0) and resizes to 400x400
+      imageUrlForAI = mediaUrl
+        .replace('/video/upload/', '/video/upload/so_0,w_400,h_400,c_fill/')
+        .replace(/\.(mp4|mov|avi)$/i, '.jpg')
+
+      console.log('Video detected - using thumbnail URL:', imageUrlForAI)
     }
 
     // Use new fields if available, fallback to legacy fields
@@ -188,7 +204,7 @@ Make it authentic, engaging, and optimized for social media engagement. Use ${em
             {
               type: 'image_url',
               image_url: {
-                url: mediaUrl,
+                url: imageUrlForAI,
               },
             },
           ],
@@ -206,7 +222,17 @@ Make it authentic, engaging, and optimized for social media engagement. Use ${em
       body: JSON.stringify({ caption }),
     }
   } catch (error: any) {
-    console.error('Caption generation error:', error)
+    console.error('Caption generation API error:', error)
+    console.error('Error message:', error.message)
+    console.error('Error stack:', error.stack)
+
+    if (error.response) {
+      console.error('OpenAI API response error:', {
+        status: error.response.status,
+        data: error.response.data,
+      })
+    }
+
     return {
       statusCode: 500,
       headers,

@@ -230,6 +230,7 @@ export function Upload() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           mediaUrl: media.cloudinary_url,
+          mediaType: media.media_type,
           // New comprehensive brand fields
           brandName: brand.name,
           industryNiche: brand.industry_niche,
