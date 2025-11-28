@@ -1,14 +1,13 @@
 import { useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
-import { Share2, Eye, EyeOff } from 'lucide-react'
+import { Share2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
   const { signIn } = useAuth()
   const navigate = useNavigate()
 
@@ -95,87 +94,58 @@ export function LoginForm() {
             }}
           >
             {/* Email Input */}
-            <div style={{ width: '320px', margin: '0 auto 20px' }}>
-              <input
-                id="email-address"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                style={{
-                  width: '100%',
-                  height: '44px',
-                  padding: '12px 16px',
-                  border: '1px solid #27272a',
-                  borderRadius: '8px',
-                  backgroundColor: '#0d0d0d',
-                  color: '#e5e5e5',
-                  fontSize: '15px',
-                  outline: 'none',
-                  transition: 'border-color 0.2s ease'
-                }}
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-                onBlur={(e) => e.target.style.borderColor = '#27272a'}
-              />
-            </div>
+            <input
+              id="email-address"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              style={{
+                width: '320px',
+                height: '44px',
+                padding: '12px 16px',
+                border: '1px solid #27272a',
+                borderRadius: '8px',
+                backgroundColor: '#0d0d0d',
+                color: '#e5e5e5',
+                fontSize: '15px',
+                outline: 'none',
+                transition: 'border-color 0.2s ease',
+                marginBottom: '20px'
+              }}
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+              onBlur={(e) => e.target.style.borderColor = '#27272a'}
+            />
 
             {/* Password Input */}
-            <div style={{ position: 'relative', width: '320px', margin: '0 auto 32px' }}>
-              <input
-                id="password"
-                name="password"
-                type={showPassword ? 'text' : 'password'}
-                autoComplete="current-password"
-                required
-                style={{
-                  width: '100%',
-                  height: '44px',
-                  padding: '12px 40px 12px 16px',
-                  border: '1px solid #27272a',
-                  borderRadius: '8px',
-                  backgroundColor: '#0d0d0d',
-                  color: '#e5e5e5',
-                  fontSize: '15px',
-                  outline: 'none',
-                  transition: 'border-color 0.2s ease'
-                }}
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-                onBlur={(e) => e.target.style.borderColor = '#27272a'}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                style={{
-                  position: 'absolute',
-                  right: '12px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  background: 'transparent',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: '4px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#9ca3af',
-                  transition: 'color 0.2s ease'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
-                onMouseLeave={(e) => e.currentTarget.style.color = '#9ca3af'}
-              >
-                {showPassword ? (
-                  <EyeOff style={{ width: '20px', height: '20px' }} />
-                ) : (
-                  <Eye style={{ width: '20px', height: '20px' }} />
-                )}
-              </button>
-            </div>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              required
+              style={{
+                width: '320px',
+                height: '44px',
+                padding: '12px 16px',
+                border: '1px solid #27272a',
+                borderRadius: '8px',
+                backgroundColor: '#0d0d0d',
+                color: '#e5e5e5',
+                fontSize: '15px',
+                outline: 'none',
+                transition: 'border-color 0.2s ease',
+                marginBottom: '32px'
+              }}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+              onBlur={(e) => e.target.style.borderColor = '#27272a'}
+            />
 
             {/* Sign In Button */}
             <button
