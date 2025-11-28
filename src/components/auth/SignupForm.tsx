@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
 import { Link, useNavigate } from 'react-router-dom'
-import { Share2 } from 'lucide-react'
+import { Share2, Eye, EyeOff } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export function SignupForm() {
@@ -11,6 +11,8 @@ export function SignupForm() {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const { signUp } = useAuth()
   const navigate = useNavigate()
 
@@ -189,58 +191,114 @@ export function SignupForm() {
             />
 
             {/* Password Input */}
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="new-password"
-              required
-              style={{
-                width: '320px',
-                height: '44px',
-                padding: '12px 16px',
-                border: '1px solid #27272a',
-                borderRadius: '8px',
-                backgroundColor: '#0d0d0d',
-                color: '#e5e5e5',
-                fontSize: '15px',
-                outline: 'none',
-                transition: 'border-color 0.2s ease',
-                marginBottom: '20px'
-              }}
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-              onBlur={(e) => e.target.style.borderColor = '#27272a'}
-            />
+            <div style={{ position: 'relative', marginBottom: '20px' }}>
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="new-password"
+                required
+                style={{
+                  width: '320px',
+                  height: '44px',
+                  padding: '12px 40px 12px 16px',
+                  border: '1px solid #27272a',
+                  borderRadius: '8px',
+                  backgroundColor: '#0d0d0d',
+                  color: '#e5e5e5',
+                  fontSize: '15px',
+                  outline: 'none',
+                  transition: 'border-color 0.2s ease'
+                }}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+                onBlur={(e) => e.target.style.borderColor = '#27272a'}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: 'absolute',
+                  right: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#9ca3af',
+                  transition: 'color 0.2s ease'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
+                onMouseLeave={(e) => e.currentTarget.style.color = '#9ca3af'}
+              >
+                {showPassword ? (
+                  <EyeOff style={{ width: '20px', height: '20px' }} />
+                ) : (
+                  <Eye style={{ width: '20px', height: '20px' }} />
+                )}
+              </button>
+            </div>
 
             {/* Confirm Password Input */}
-            <input
-              id="confirm-password"
-              name="confirm-password"
-              type="password"
-              autoComplete="new-password"
-              required
-              style={{
-                width: '320px',
-                height: '44px',
-                padding: '12px 16px',
-                border: '1px solid #27272a',
-                borderRadius: '8px',
-                backgroundColor: '#0d0d0d',
-                color: '#e5e5e5',
-                fontSize: '15px',
-                outline: 'none',
-                transition: 'border-color 0.2s ease',
-                marginBottom: '32px'
-              }}
-              placeholder="Confirm password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-              onBlur={(e) => e.target.style.borderColor = '#27272a'}
-            />
+            <div style={{ position: 'relative', marginBottom: '32px' }}>
+              <input
+                id="confirm-password"
+                name="confirm-password"
+                type={showConfirmPassword ? 'text' : 'password'}
+                autoComplete="new-password"
+                required
+                style={{
+                  width: '320px',
+                  height: '44px',
+                  padding: '12px 40px 12px 16px',
+                  border: '1px solid #27272a',
+                  borderRadius: '8px',
+                  backgroundColor: '#0d0d0d',
+                  color: '#e5e5e5',
+                  fontSize: '15px',
+                  outline: 'none',
+                  transition: 'border-color 0.2s ease'
+                }}
+                placeholder="Confirm password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+                onBlur={(e) => e.target.style.borderColor = '#27272a'}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                style={{
+                  position: 'absolute',
+                  right: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#9ca3af',
+                  transition: 'color 0.2s ease'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
+                onMouseLeave={(e) => e.currentTarget.style.color = '#9ca3af'}
+              >
+                {showConfirmPassword ? (
+                  <EyeOff style={{ width: '20px', height: '20px' }} />
+                ) : (
+                  <Eye style={{ width: '20px', height: '20px' }} />
+                )}
+              </button>
+            </div>
 
             {/* Sign Up Button */}
             <button
