@@ -340,27 +340,49 @@ export function Upload() {
 
   return (
     <AppLayout>
+      <style>{`
+        /* Custom scrollbar for caption textarea */
+        textarea::-webkit-scrollbar {
+          width: 8px;
+        }
+        textarea::-webkit-scrollbar-track {
+          background: #374151;
+          border-radius: 4px;
+        }
+        textarea::-webkit-scrollbar-thumb {
+          background: #6b7280;
+          border-radius: 4px;
+        }
+        textarea::-webkit-scrollbar-thumb:hover {
+          background: #14b8a6;
+        }
+      `}</style>
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 32px' }}>
-        {/* Page Title */}
-        <h1 style={{
-          color: '#14b8a6',
-          fontSize: '32px',
-          fontWeight: 700,
-          textAlign: 'center',
-          marginBottom: '16px'
+        {/* Page Title Card with Teal Glow */}
+        <div style={{
+          background: '#1a1a1a',
+          borderRadius: '12px',
+          padding: '32px',
+          marginBottom: '48px',
+          boxShadow: '0 0 30px rgba(20, 184, 166, 0.2), 0 0 60px rgba(20, 184, 166, 0.1)',
+          textAlign: 'center'
         }}>
-          Upload Content
-        </h1>
-
-        {/* Subtitle */}
-        <p style={{
-          color: '#888',
-          fontSize: '16px',
-          textAlign: 'center',
-          marginBottom: '48px'
-        }}>
-          Create AI-powered posts for your brand
-        </p>
+          <h1 style={{
+            color: '#14b8a6',
+            fontSize: '32px',
+            fontWeight: 700,
+            marginBottom: '12px'
+          }}>
+            Upload Content
+          </h1>
+          <p style={{
+            color: '#888',
+            fontSize: '16px',
+            margin: 0
+          }}>
+            Create AI-powered posts for your brand
+          </p>
+        </div>
 
         {/* Upload Media Section */}
         <div style={{ marginBottom: '64px' }}>
@@ -444,19 +466,21 @@ export function Upload() {
                   position: 'absolute',
                   top: '16px',
                   right: '16px',
-                  width: '40px',
-                  height: '40px',
+                  width: '36px',
+                  height: '36px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  background: 'white',
-                  borderRadius: '50%',
+                  background: 'transparent',
                   border: 'none',
                   cursor: 'pointer',
-                  zIndex: 10
+                  zIndex: 10,
+                  transition: 'transform 0.2s ease'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
               >
-                <X style={{ width: '20px', height: '20px', color: '#666' }} />
+                <X style={{ width: '32px', height: '32px', color: '#14b8a6' }} />
               </button>
               {fileType === 'video' ? (
                 <video
@@ -558,9 +582,10 @@ export function Upload() {
                     background: '#1a1a1a',
                     border: '1px solid #27272a',
                     borderRadius: '12px',
-                    color: 'white',
-                    fontSize: '14px',
+                    color: '#e5e5e5',
+                    fontSize: '15px',
                     lineHeight: '1.6',
+                    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
                     resize: 'none',
                     outline: 'none'
                   }}
