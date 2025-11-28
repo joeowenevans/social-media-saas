@@ -424,7 +424,7 @@ export function Dashboard() {
               {recentPosts.map((post) => (
                 <div
                   key={post.id}
-                  onClick={() => setSelectedPost(post)}
+                  onClick={() => navigate(`/schedule?post=${post.id}`)}
                   style={{
                     width: '18%',
                     margin: '0.5%',
@@ -432,13 +432,23 @@ export function Dashboard() {
                     overflow: 'hidden',
                     background: '#1a1a1a',
                     cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    boxShadow: '0 0 10px rgba(255, 255, 255, 0.05)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.02)'
+                    e.currentTarget.style.boxShadow = '0 0 20px rgba(20, 184, 166, 0.3), 0 0 40px rgba(20, 184, 166, 0.1)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)'
+                    e.currentTarget.style.boxShadow = '0 0 10px rgba(255, 255, 255, 0.05)'
                   }}
                 >
-                  {/* Image */}
+                  {/* Image/Video Thumbnail */}
                   <div style={{ aspectRatio: '1 / 1', position: 'relative', background: '#0d0d0d' }}>
                     {post.media ? (
                       <img
-                        src={post.media.thumbnail_url || `${post.media.cloudinary_url.split('/upload/')[0]}/upload/w_200,h_200,c_fill/${post.media.cloudinary_url.split('/upload/')[1]}`}
+                        src={post.media.thumbnail_url || post.media.cloudinary_url}
                         alt="Post media"
                         loading="lazy"
                         style={{
@@ -472,8 +482,8 @@ export function Dashboard() {
                       {post.final_caption || post.generated_caption || 'No caption'}
                     </p>
 
-                    {/* Status Badge */}
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    {/* Status and Platform */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
                       <span style={{
                         padding: '2px 8px',
                         borderRadius: '10px',
@@ -489,21 +499,21 @@ export function Dashboard() {
                         {post.status.charAt(0).toUpperCase() + post.status.slice(1)}
                       </span>
 
-                      {/* Platform Dots */}
+                      {/* Platform Names */}
                       {post.platforms && post.platforms.length > 0 && (
-                        <div style={{ display: 'flex', gap: '4px' }}>
-                          {post.platforms.slice(0, 3).map((platform: string, idx: number) => (
-                            <div
-                              key={idx}
-                              style={{
-                                width: '14px',
-                                height: '14px',
-                                borderRadius: '50%',
-                                background: getPlatformColor([platform])
-                              }}
-                            />
-                          ))}
-                        </div>
+                        <span style={{
+                          fontSize: '10px',
+                          color: '#888',
+                          fontWeight: 500,
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                          flex: 1,
+                          textAlign: 'right'
+                        }}>
+                          {post.platforms.slice(0, 2).map((p: string) => p.charAt(0).toUpperCase() + p.slice(1)).join(', ')}
+                          {post.platforms.length > 2 && ` +${post.platforms.length - 2}`}
+                        </span>
                       )}
                     </div>
                   </div>
