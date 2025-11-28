@@ -191,7 +191,7 @@ export function SignupForm() {
             />
 
             {/* Password Input */}
-            <div style={{ position: 'relative', marginBottom: '20px' }}>
+            <div style={{ position: 'relative', width: '320px', marginBottom: '20px' }}>
               <input
                 id="password"
                 name="password"
@@ -246,7 +246,7 @@ export function SignupForm() {
             </div>
 
             {/* Confirm Password Input */}
-            <div style={{ position: 'relative', marginBottom: '32px' }}>
+            <div style={{ position: 'relative', width: '320px', marginBottom: '32px' }}>
               <input
                 id="confirm-password"
                 name="confirm-password"
