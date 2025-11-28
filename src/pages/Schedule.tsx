@@ -131,13 +131,16 @@ export function Schedule() {
           <span>Back to Dashboard</span>
         </button>
 
-        <div className="flex items-center gap-4 mb-8">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 shadow-lg">
-            <CalendarDays className="h-6 w-6 text-white" />
-          </div>
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Schedule Posts</h1>
-            <p className="text-gray-500">Plan and schedule your content</p>
+        {/* Title Card with Teal Glow */}
+        <div className="card p-6 mb-8 shadow-[0_0_20px_rgba(20,184,166,0.15)] dark:shadow-[0_0_25px_rgba(20,184,166,0.25)] border-primary-200 dark:border-primary-800">
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 shadow-lg">
+              <CalendarDays className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Schedule Posts</h1>
+              <p className="text-gray-500">Plan and schedule your content</p>
+            </div>
           </div>
         </div>
 
@@ -189,54 +192,57 @@ export function Schedule() {
                 <p className="text-gray-500">No scheduled posts yet</p>
               </div>
             ) : (
-              <div className="space-y-4 max-h-[500px] overflow-y-auto scrollbar-thin pr-2">
+              <div className="space-y-4 max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-charcoal-400 dark:scrollbar-thumb-charcoal-600 scrollbar-track-charcoal-100 dark:scrollbar-track-charcoal-800 pr-2">
                 {scheduledPosts.map((post) => (
                   <div
                     key={post.id}
-                    className="group rounded-xl border border-gray-200 p-4 hover:border-primary-300 hover:shadow-soft transition-all duration-200"
+                    className="group rounded-xl border border-gray-200 dark:border-gray-700 p-4 hover:border-primary-300 dark:hover:border-primary-600 transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(255,255,255,0.3)] dark:hover:shadow-[0_0_15px_rgba(20,184,166,0.3)] min-h-[140px]"
                   >
-                    <div className="flex gap-4">
+                    <div className="flex gap-4 h-full">
                       {post.media && (
                         <img
                           src={post.media.thumbnail_url || post.media.cloudinary_url}
                           alt="Post"
-                          className="w-20 h-20 object-cover rounded-lg"
+                          className="w-24 h-24 object-cover rounded-lg flex-shrink-0"
                         />
                       )}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm text-gray-700 line-clamp-2 mb-2">
+                      <div className="flex-1 min-w-0 flex flex-col">
+                        <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-2 mb-2">
                           {post.final_caption}
                         </p>
-                        <div className="flex items-center gap-4 text-xs text-gray-500">
-                          <div className="flex items-center gap-1.5">
-                            <Calendar className="w-4 h-4 text-primary-500" />
-                            <span>
-                              {post.scheduled_for
-                                ? format(new Date(post.scheduled_for), 'MMM dd, yyyy')
-                                : 'N/A'}
+                        <div className="flex items-center justify-between mt-auto">
+                          <div className="flex items-center gap-3">
+                            <span className={`badge text-xs ${
+                              post.status === 'posted' ? 'badge-success' :
+                              post.status === 'scheduled' ? 'badge-primary' :
+                              'badge-gray'
+                            }`}>
+                              {post.status === 'posted' && <CheckCircle2 className="w-2.5 h-2.5" />}
+                              {post.status === 'scheduled' && <Clock className="w-2.5 h-2.5" />}
+                              {post.status.charAt(0).toUpperCase() + post.status.slice(1)}
                             </span>
+                            <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+                              <Calendar className="w-3.5 h-3.5 text-primary-500" />
+                              <span>
+                                {post.scheduled_for
+                                  ? format(new Date(post.scheduled_for), 'MMM dd, HH:mm')
+                                  : 'N/A'}
+                              </span>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-1.5">
-                            <Clock className="w-4 h-4 text-primary-500" />
-                            <span>
-                              {post.scheduled_for
-                                ? format(new Date(post.scheduled_for), 'HH:mm')
-                                : 'N/A'}
-                            </span>
+                          <div className="flex gap-2">
+                            {post.platforms?.map((platform) => (
+                              <span
+                                key={platform}
+                                className="text-xs px-2.5 py-1 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-400 rounded-full font-medium"
+                              >
+                                {platform}
+                              </span>
+                            ))}
                           </div>
-                        </div>
-                        <div className="flex gap-2 mt-2">
-                          {post.platforms?.map((platform) => (
-                            <span
-                              key={platform}
-                              className="text-xs px-2.5 py-1 bg-primary-50 text-primary-700 rounded-full font-medium"
-                            >
-                              {platform}
-                            </span>
-                          ))}
                         </div>
                       </div>
-                      <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
                         <button
                           onClick={() => handlePostNow(post.id)}
                           disabled={posting === post.id}
@@ -251,7 +257,7 @@ export function Schedule() {
                         </button>
                         <button
                           onClick={() => handleDelete(post.id)}
-                          className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                          className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                           title="Delete"
                         >
                           <Trash2 className="w-5 h-5" />

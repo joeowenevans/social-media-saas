@@ -167,8 +167,9 @@ export function Upload() {
           <span>Back to Dashboard</span>
         </button>
 
-        <div className="card p-6 sm:p-8">
-          <div className="flex items-center gap-4 mb-8">
+        {/* Title Card with Teal Glow */}
+        <div className="card p-6 mb-6 shadow-[0_0_20px_rgba(20,184,166,0.15)] dark:shadow-[0_0_25px_rgba(20,184,166,0.25)] border-primary-200 dark:border-primary-800">
+          <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg">
               <Image className="h-6 w-6 text-white" />
             </div>
@@ -177,6 +178,9 @@ export function Upload() {
               <p className="text-charcoal-600 dark:text-charcoal-400">Create AI-powered posts for your brand</p>
             </div>
           </div>
+        </div>
+
+        <div className="card p-6 sm:p-8">
 
           <div className="space-y-8">
             {/* Step 1: Media Upload */}
@@ -222,8 +226,12 @@ export function Upload() {
                       value={caption}
                       onChange={(e) => setCaption(e.target.value)}
                       rows={8}
-                      className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl input-focus resize-none text-charcoal-900 dark:text-charcoal-100"
+                      className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl resize-none text-charcoal-900 dark:text-charcoal-100 font-normal leading-relaxed focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all scrollbar-thin scrollbar-thumb-charcoal-400 dark:scrollbar-thumb-charcoal-600 scrollbar-track-charcoal-100 dark:scrollbar-track-charcoal-800"
                       placeholder="Your AI-generated caption will appear here..."
+                      style={{
+                        whiteSpace: 'pre-wrap',
+                        wordWrap: 'break-word',
+                      }}
                     />
                   )}
                 </div>
@@ -268,7 +276,7 @@ export function Upload() {
                   <button
                     onClick={handleSaveDraft}
                     disabled={saving}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold hover:from-primary-600 hover:to-primary-700 disabled:opacity-50 transition-all duration-200 shadow-lg hover:shadow-xl"
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold hover:from-primary-600 hover:to-primary-700 disabled:opacity-50 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-[1.02]"
                   >
                     {scheduledTime ? (
                       <>
@@ -284,7 +292,7 @@ export function Upload() {
                   </button>
                   <button
                     onClick={handleSchedule}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-charcoal-300 dark:border-charcoal-700 text-charcoal-700 dark:text-charcoal-300 font-medium hover:bg-charcoal-50 dark:hover:bg-charcoal-800 transition-all duration-200"
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl border-2 border-primary-500 dark:border-primary-600 bg-transparent text-primary-600 dark:text-primary-400 font-semibold hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all duration-200 hover:scale-[1.02]"
                   >
                     <Send className="w-5 h-5" />
                     <span>Advanced Schedule</span>

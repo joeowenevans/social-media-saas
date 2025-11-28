@@ -66,10 +66,10 @@ export function AppLayout({ children }: AppLayoutProps) {
                   <button
                     key={item.path}
                     onClick={() => navigate(item.path)}
-                    className={`relative text-sm font-medium transition-all duration-300 ease-in-out
+                    className={`relative text-sm font-medium transition-all duration-300 ease-in-out px-3 py-2 rounded-lg
                       ${isActive(item.path)
-                        ? 'text-primary-400 font-bold text-base scale-105'
-                        : 'text-charcoal-300 hover:text-primary-400'
+                        ? 'text-primary-400 font-bold text-base scale-105 bg-primary-500/10 shadow-[0_0_15px_rgba(20,184,166,0.3)]'
+                        : 'text-charcoal-300 hover:text-primary-400 hover:bg-primary-500/5 hover:shadow-[0_0_10px_rgba(20,184,166,0.2)]'
                       }
                     `}
                   >

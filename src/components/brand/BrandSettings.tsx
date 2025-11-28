@@ -10,7 +10,7 @@ interface BrandSettingsProps {
 export function BrandSettings({ brand, onSave, onComplete }: BrandSettingsProps) {
   return (
     <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">
+      <h2 className="text-2xl font-bold text-charcoal-900 dark:text-white mb-6">
         {brand ? 'Edit Brand Profile' : 'Create Brand Profile'}
       </h2>
       <BrandSetup onComplete={onComplete} onSave={onSave} initialData={brand || undefined} />

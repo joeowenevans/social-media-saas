@@ -3,7 +3,7 @@ import { usePosts } from '../hooks/usePosts'
 import { useAuth } from '../hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
 import { AppLayout } from '../components/layout/AppLayout'
-import { Upload, Calendar, Settings as SettingsIcon, FileText, Clock, CheckCircle2, Sparkles, X, Hash } from 'lucide-react'
+import { Upload, Calendar, Settings as SettingsIcon, FileText, Clock, CheckCircle2, Sparkles, X, Hash, Edit3, XCircle, Video } from 'lucide-react'
 import { useState } from 'react'
 
 export function Dashboard() {
@@ -47,12 +47,13 @@ export function Dashboard() {
   const scheduledPosts = posts.filter(p => p.status === 'scheduled')
   const postedPosts = posts.filter(p => p.status === 'posted')
   const draftPosts = posts.filter(p => p.status === 'draft')
+  const failedPosts = posts.filter(p => p.status === 'failed')
 
   const stats = [
-    { label: 'Total Posts', value: posts.length, icon: FileText, colorClass: 'from-primary-500 to-primary-600', bgColor: 'bg-primary-50/50 dark:bg-primary-900/10' },
-    { label: 'Scheduled', value: scheduledPosts.length, icon: Clock, colorClass: 'from-primary-400 to-primary-500', bgColor: 'bg-primary-50/30 dark:bg-primary-900/10' },
-    { label: 'Posted', value: postedPosts.length, icon: CheckCircle2, colorClass: 'from-primary-600 to-primary-700', bgColor: 'bg-primary-50/40 dark:bg-primary-900/10' },
-    { label: 'Drafts', value: draftPosts.length, icon: FileText, colorClass: 'from-primary-500 to-primary-600', bgColor: 'bg-primary-50/30 dark:bg-primary-900/10' },
+    { label: 'Scheduled', value: scheduledPosts.length, icon: Clock, colorClass: 'from-cyan-500 to-cyan-600', bgColor: 'bg-cyan-50/50 dark:bg-cyan-900/10', filter: 'scheduled' },
+    { label: 'Posted', value: postedPosts.length, icon: CheckCircle2, colorClass: 'from-emerald-500 to-emerald-600', bgColor: 'bg-emerald-50/50 dark:bg-emerald-900/10', filter: 'posted' },
+    { label: 'Drafts', value: draftPosts.length, icon: Edit3, colorClass: 'from-amber-500 to-amber-600', bgColor: 'bg-amber-50/50 dark:bg-amber-900/10', filter: 'draft' },
+    { label: 'Failed', value: failedPosts.length, icon: XCircle, colorClass: 'from-red-500 to-red-600', bgColor: 'bg-red-50/50 dark:bg-red-900/10', filter: 'failed' },
   ]
 
   const filteredPosts = statusFilter === 'all'
@@ -99,17 +100,25 @@ export function Dashboard() {
         {/* Stats Overview - Compact 2x2 Grid */}
         <div className="grid grid-cols-2 gap-4 max-w-2xl">
           {stats.map((stat) => (
-            <div key={stat.label} className={`${stat.bgColor} rounded-2xl p-4 border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all duration-200 hover:-translate-y-1`}>
+            <button
+              key={stat.label}
+              onClick={() => {
+                navigate('/schedule')
+                // Scroll to top after navigation
+                setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100)
+              }}
+              className={`${stat.bgColor} rounded-2xl p-4 border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all duration-200 hover:-translate-y-1 hover:scale-105 text-left cursor-pointer`}
+            >
               <div className="flex items-center gap-3">
-                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${stat.colorClass} shadow-sm`}>
-                  <stat.icon className="w-5 h-5 text-white" />
+                <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${stat.colorClass} shadow-md`}>
+                  <stat.icon className="w-6 h-6 text-white" />
                 </div>
-                <div>
+                <div className="flex flex-col justify-center">
                   <p className="text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">{stat.label}</p>
                   <p className="text-2xl font-bold mt-0.5">{stat.value}</p>
                 </div>
               </div>
-            </div>
+            </button>
           ))}
         </div>
 
@@ -183,17 +192,33 @@ export function Dashboard() {
               {filteredPosts.map((post) => (
                 <button
                   key={post.id}
-                  onClick={() => setSelectedPost(post)}
-                  className="group relative aspect-square rounded-xl overflow-hidden bg-gray-200 dark:bg-gray-700 hover:ring-4 hover:ring-primary-400 dark:hover:ring-primary-600 transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-primary-400"
+                  onClick={() => navigate('/schedule', { state: { scrollToPost: post.id } })}
+                  className="group relative aspect-square rounded-xl overflow-hidden bg-gray-200 dark:bg-gray-700 transition-all duration-200 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] dark:hover:shadow-[0_0_20px_rgba(20,184,166,0.4)] focus:outline-none focus:ring-4 focus:ring-primary-400"
                 >
                   {post.media ? (
                     <>
-                      <img
-                        src={post.media.thumbnail_url || `${post.media.cloudinary_url}?w=400&h=400&c=fill&q=80&f_auto`}
-                        alt="Post media"
-                        loading="lazy"
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                      />
+                      {post.media.media_type === 'video' ? (
+                        <div className="relative w-full h-full">
+                          <video
+                            src={post.media.cloudinary_url}
+                            className="w-full h-full object-cover"
+                            muted
+                            playsInline
+                          />
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                            <div className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center">
+                              <Video className="w-6 h-6 text-gray-800" />
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <img
+                          src={post.media.thumbnail_url || `${post.media.cloudinary_url}?w=400&h=400&c=fill&q=80&f_auto`}
+                          alt="Post media"
+                          loading="lazy"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                      )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         <div className="absolute bottom-2 left-2 right-2">
                           <p className="text-white text-xs line-clamp-2 font-medium">
@@ -207,7 +232,7 @@ export function Dashboard() {
                       <FileText className="w-8 h-8 text-gray-400" />
                     </div>
                   )}
-                  <div className="absolute top-2 right-2">
+                  <div className="absolute top-2 left-2 right-2 flex items-start justify-between gap-2">
                     <span className={`badge text-xs ${
                       post.status === 'posted' ? 'badge-success' :
                       post.status === 'scheduled' ? 'badge-primary' :
@@ -217,6 +242,18 @@ export function Dashboard() {
                       {post.status === 'scheduled' && <Clock className="w-2.5 h-2.5" />}
                       {post.status.charAt(0).toUpperCase() + post.status.slice(1)}
                     </span>
+                    {post.platforms && post.platforms.length > 0 && (
+                      <div className="flex flex-wrap gap-1">
+                        {post.platforms.map((platform: string) => (
+                          <span
+                            key={platform}
+                            className="px-2 py-0.5 bg-primary-500/90 text-white text-xs rounded-full font-medium shadow-lg"
+                          >
+                            {platform}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </button>
               ))}
