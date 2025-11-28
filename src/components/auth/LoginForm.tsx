@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { Sparkles, Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react'
 
@@ -108,12 +108,12 @@ export function LoginForm() {
         {/* Sign up link */}
         <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
           Don't have an account?{' '}
-          <Link
-            to="/signup"
+          <a
+            href="/signup"
             className="font-semibold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
           >
             Sign up for free
-          </Link>
+          </a>
         </p>
       </div>
     </div>

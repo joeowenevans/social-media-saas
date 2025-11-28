@@ -5,6 +5,8 @@ import toast from 'react-hot-toast'
 import { Sparkles, Mail, Lock, ArrowRight, CheckCircle2, Eye, EyeOff } from 'lucide-react'
 
 export function SignupForm() {
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -29,14 +31,14 @@ export function SignupForm() {
 
     setLoading(true)
 
-    const { error } = await signUp(email, password)
+    const { error } = await signUp(email, password, firstName, lastName)
 
     if (error) {
       toast.error(error.message)
       setLoading(false)
     } else {
-      toast.success('Account created! Please check your email to verify.')
-      navigate('/login')
+      toast.success('Account created successfully! Welcome to SocialAI')
+      navigate('/dashboard')
     }
   }
 
@@ -59,6 +61,41 @@ export function SignupForm() {
         {/* Form Card */}
         <div className="card p-8 shadow-2xl">
           <form className="space-y-6" onSubmit={handleSubmit}>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="first-name" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  First name *
+                </label>
+                <input
+                  id="first-name"
+                  name="firstName"
+                  type="text"
+                  autoComplete="given-name"
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                  placeholder="First name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+              </div>
+              <div>
+                <label htmlFor="last-name" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  Last name *
+                </label>
+                <input
+                  id="last-name"
+                  name="lastName"
+                  type="text"
+                  autoComplete="family-name"
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                  placeholder="Last name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+              </div>
+            </div>
+
             <div>
               <label htmlFor="email-address" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 Email address

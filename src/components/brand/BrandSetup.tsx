@@ -11,13 +11,18 @@ interface BrandSetupProps {
 export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps) {
   const [formData, setFormData] = useState({
     name: initialData?.name || '',
-    brand_voice: initialData?.brand_voice || '',
-    target_audience: initialData?.target_audience || '',
-    hashtag_count: initialData?.hashtag_count || 7,
-    hashtags_always_use: initialData?.hashtags_always_use?.join(', ') || '',
-    hashtags_avoid: initialData?.hashtags_avoid?.join(', ') || '',
-    cta_preference: initialData?.cta_preference || 'visit_link',
-    emoji_count: initialData?.emoji_count || 2,
+    industry_niche: initialData?.industry_niche || '',
+    voice_description: initialData?.voice_description || '',
+    audience_priorities: initialData?.audience_priorities || '',
+    brand_values: initialData?.brand_values || '',
+    preferred_caption_length: initialData?.preferred_caption_length || 'medium',
+    hashtag_topics: initialData?.hashtag_topics || '',
+    cta_style: initialData?.cta_style || 'direct',
+    example_captions: initialData?.example_captions || '',
+    phrases_taglines: initialData?.phrases_taglines || '',
+    general_goals: initialData?.general_goals || '',
+    num_hashtags: initialData?.num_hashtags || 7,
+    num_emojis: initialData?.num_emojis || 2,
   })
   const [loading, setLoading] = useState(false)
 
@@ -25,24 +30,7 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
     e.preventDefault()
     setLoading(true)
 
-    const brandData = {
-      name: formData.name,
-      brand_voice: formData.brand_voice,
-      target_audience: formData.target_audience,
-      hashtag_count: formData.hashtag_count,
-      hashtags_always_use: formData.hashtags_always_use
-        .split(',')
-        .map(h => h.trim())
-        .filter(h => h.length > 0),
-      hashtags_avoid: formData.hashtags_avoid
-        .split(',')
-        .map(h => h.trim())
-        .filter(h => h.length > 0),
-      cta_preference: formData.cta_preference,
-      emoji_count: formData.emoji_count,
-    }
-
-    const { data, error } = await onSave(brandData)
+    const { data, error } = await onSave(formData)
 
     if (error) {
       toast.error(error)
@@ -55,6 +43,7 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
+      {/* 1. Brand Name */}
       <div>
         <label htmlFor="name" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
           Brand Name *
@@ -63,119 +52,228 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
           type="text"
           id="name"
           required
+          placeholder="e.g., Blue Pencil Gallery"
           className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl text-charcoal-900 dark:text-charcoal-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
         />
       </div>
 
+      {/* 2. Industry/Niche */}
       <div>
-        <label htmlFor="brand_voice" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
-          Brand Voice
+        <label htmlFor="industry_niche" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+          Industry/Niche
         </label>
-        <textarea
-          id="brand_voice"
-          rows={3}
-          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl resize-none text-charcoal-900 dark:text-charcoal-100 font-normal leading-relaxed focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all scrollbar-thin scrollbar-thumb-charcoal-400 dark:scrollbar-thumb-charcoal-600 scrollbar-track-charcoal-100 dark:scrollbar-track-charcoal-800"
-          placeholder="e.g., Friendly, professional, witty..."
-          value={formData.brand_voice}
-          onChange={(e) => setFormData({ ...formData, brand_voice: e.target.value })}
+        <input
+          type="text"
+          id="industry_niche"
+          placeholder="e.g., Pet Portrait Artist, Animation-Inspired Art"
+          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl text-charcoal-900 dark:text-charcoal-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+          value={formData.industry_niche}
+          onChange={(e) => setFormData({ ...formData, industry_niche: e.target.value })}
         />
+        <p className="mt-2 text-xs text-charcoal-500 dark:text-charcoal-400">
+          What industry or niche does your brand operate in?
+        </p>
       </div>
 
+      {/* 3. Voice Description */}
       <div>
-        <label htmlFor="target_audience" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
-          Target Audience
+        <label htmlFor="voice_description" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+          Voice Description
         </label>
         <textarea
-          id="target_audience"
+          id="voice_description"
           rows={3}
+          placeholder="e.g., Friendly, professional, enthusiastic about pets"
           className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl resize-none text-charcoal-900 dark:text-charcoal-100 font-normal leading-relaxed focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all scrollbar-thin scrollbar-thumb-charcoal-400 dark:scrollbar-thumb-charcoal-600 scrollbar-track-charcoal-100 dark:scrollbar-track-charcoal-800"
-          placeholder="e.g., Young professionals aged 25-35 interested in technology..."
-          value={formData.target_audience}
-          onChange={(e) => setFormData({ ...formData, target_audience: e.target.value })}
+          value={formData.voice_description}
+          onChange={(e) => setFormData({ ...formData, voice_description: e.target.value })}
         />
+        <p className="mt-2 text-xs text-charcoal-500 dark:text-charcoal-400">
+          How should your brand sound? Describe the tone and personality.
+        </p>
       </div>
 
+      {/* 4. Audience Priorities */}
+      <div>
+        <label htmlFor="audience_priorities" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+          Audience Priorities
+        </label>
+        <textarea
+          id="audience_priorities"
+          rows={3}
+          placeholder="e.g., Pet owners looking for custom artwork, fans of animation"
+          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl resize-none text-charcoal-900 dark:text-charcoal-100 font-normal leading-relaxed focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all scrollbar-thin scrollbar-thumb-charcoal-400 dark:scrollbar-thumb-charcoal-600 scrollbar-track-charcoal-100 dark:scrollbar-track-charcoal-800"
+          value={formData.audience_priorities}
+          onChange={(e) => setFormData({ ...formData, audience_priorities: e.target.value })}
+        />
+        <p className="mt-2 text-xs text-charcoal-500 dark:text-charcoal-400">
+          Who is your target audience? What do they care about?
+        </p>
+      </div>
+
+      {/* 5. Brand Values */}
+      <div>
+        <label htmlFor="brand_values" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+          Brand Values
+        </label>
+        <textarea
+          id="brand_values"
+          rows={3}
+          placeholder="e.g., Quality craftsmanship, customer satisfaction, creativity"
+          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl resize-none text-charcoal-900 dark:text-charcoal-100 font-normal leading-relaxed focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all scrollbar-thin scrollbar-thumb-charcoal-400 dark:scrollbar-thumb-charcoal-600 scrollbar-track-charcoal-100 dark:scrollbar-track-charcoal-800"
+          value={formData.brand_values}
+          onChange={(e) => setFormData({ ...formData, brand_values: e.target.value })}
+        />
+        <p className="mt-2 text-xs text-charcoal-500 dark:text-charcoal-400">
+          What values does your brand stand for?
+        </p>
+      </div>
+
+      {/* 6. Preferred Caption Length */}
+      <div>
+        <label htmlFor="preferred_caption_length" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+          Preferred Caption Length
+        </label>
+        <select
+          id="preferred_caption_length"
+          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl text-charcoal-900 dark:text-charcoal-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+          value={formData.preferred_caption_length}
+          onChange={(e) => setFormData({ ...formData, preferred_caption_length: e.target.value })}
+        >
+          <option value="short">Short (1-2 sentences)</option>
+          <option value="medium">Medium (3-5 sentences)</option>
+          <option value="long">Long (6+ sentences)</option>
+        </select>
+      </div>
+
+      {/* 7. Hashtag Topics/Branding */}
+      <div>
+        <label htmlFor="hashtag_topics" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+          Hashtag Topics/Branding
+        </label>
+        <input
+          type="text"
+          id="hashtag_topics"
+          placeholder="e.g., petportrait, customart, animationstyle, brandname"
+          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl text-charcoal-900 dark:text-charcoal-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+          value={formData.hashtag_topics}
+          onChange={(e) => setFormData({ ...formData, hashtag_topics: e.target.value })}
+        />
+        <p className="mt-2 text-xs text-charcoal-500 dark:text-charcoal-400">
+          Keywords for hashtag generation (comma-separated)
+        </p>
+      </div>
+
+      {/* 8. CTA Style */}
+      <div>
+        <label htmlFor="cta_style" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+          Call-to-Action Style
+        </label>
+        <select
+          id="cta_style"
+          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl text-charcoal-900 dark:text-charcoal-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+          value={formData.cta_style}
+          onChange={(e) => setFormData({ ...formData, cta_style: e.target.value })}
+        >
+          <option value="direct">Direct (e.g., 'Shop now', 'Book today')</option>
+          <option value="soft">Soft (e.g., 'Learn more', 'Discover')</option>
+          <option value="question">Question (e.g., 'Ready to transform your space?')</option>
+          <option value="none">None (No CTA)</option>
+        </select>
+      </div>
+
+      {/* 9. Example Captions */}
+      <div>
+        <label htmlFor="example_captions" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+          Example Captions
+        </label>
+        <textarea
+          id="example_captions"
+          rows={5}
+          placeholder="Paste 2-3 example captions that match your desired style..."
+          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl resize-none text-charcoal-900 dark:text-charcoal-100 font-normal leading-relaxed focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all scrollbar-thin scrollbar-thumb-charcoal-400 dark:scrollbar-thumb-charcoal-600 scrollbar-track-charcoal-100 dark:scrollbar-track-charcoal-800"
+          value={formData.example_captions}
+          onChange={(e) => setFormData({ ...formData, example_captions: e.target.value })}
+        />
+        <p className="mt-2 text-xs text-charcoal-500 dark:text-charcoal-400">
+          Provide examples of captions you love - AI will learn from these
+        </p>
+      </div>
+
+      {/* 10. Signature Phrases/Taglines */}
+      <div>
+        <label htmlFor="phrases_taglines" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+          Signature Phrases/Taglines
+        </label>
+        <input
+          type="text"
+          id="phrases_taglines"
+          placeholder="e.g., 'Art that captures the soul', 'Your pet, immortalized'"
+          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl text-charcoal-900 dark:text-charcoal-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+          value={formData.phrases_taglines}
+          onChange={(e) => setFormData({ ...formData, phrases_taglines: e.target.value })}
+        />
+        <p className="mt-2 text-xs text-charcoal-500 dark:text-charcoal-400">
+          Phrases you want occasionally included in captions
+        </p>
+      </div>
+
+      {/* 11. General Goals */}
+      <div>
+        <label htmlFor="general_goals" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+          General Goals
+        </label>
+        <textarea
+          id="general_goals"
+          rows={3}
+          placeholder="e.g., Increase bookings for custom portraits, build community of pet lovers"
+          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl resize-none text-charcoal-900 dark:text-charcoal-100 font-normal leading-relaxed focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all scrollbar-thin scrollbar-thumb-charcoal-400 dark:scrollbar-thumb-charcoal-600 scrollbar-track-charcoal-100 dark:scrollbar-track-charcoal-800"
+          value={formData.general_goals}
+          onChange={(e) => setFormData({ ...formData, general_goals: e.target.value })}
+        />
+        <p className="mt-2 text-xs text-charcoal-500 dark:text-charcoal-400">
+          What are your overall social media goals?
+        </p>
+      </div>
+
+      {/* 12 & 13. Number Inputs Row */}
       <div className="grid md:grid-cols-2 gap-6">
         <div>
-          <label htmlFor="hashtag_count" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+          <label htmlFor="num_hashtags" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
             Number of Hashtags
           </label>
           <input
             type="number"
-            id="hashtag_count"
+            id="num_hashtags"
             min="0"
             max="30"
+            placeholder="7"
             className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl text-charcoal-900 dark:text-charcoal-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-            value={formData.hashtag_count}
-            onChange={(e) => setFormData({ ...formData, hashtag_count: parseInt(e.target.value) })}
+            value={formData.num_hashtags}
+            onChange={(e) => setFormData({ ...formData, num_hashtags: parseInt(e.target.value) || 0 })}
           />
         </div>
 
         <div>
-          <label htmlFor="emoji_count" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+          <label htmlFor="num_emojis" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
             Number of Emojis
           </label>
           <input
             type="number"
-            id="emoji_count"
+            id="num_emojis"
             min="0"
             max="10"
+            placeholder="2"
             className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl text-charcoal-900 dark:text-charcoal-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-            value={formData.emoji_count}
-            onChange={(e) => setFormData({ ...formData, emoji_count: parseInt(e.target.value) })}
+            value={formData.num_emojis}
+            onChange={(e) => setFormData({ ...formData, num_emojis: parseInt(e.target.value) || 0 })}
           />
         </div>
       </div>
 
-      <div>
-        <label htmlFor="hashtags_always_use" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
-          Always Use These Hashtags
-        </label>
-        <input
-          type="text"
-          id="hashtags_always_use"
-          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl text-charcoal-900 dark:text-charcoal-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-          placeholder="e.g., #brandname, #yourhashtag (comma-separated)"
-          value={formData.hashtags_always_use}
-          onChange={(e) => setFormData({ ...formData, hashtags_always_use: e.target.value })}
-        />
-      </div>
-
-      <div>
-        <label htmlFor="hashtags_avoid" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
-          Avoid These Hashtags
-        </label>
-        <input
-          type="text"
-          id="hashtags_avoid"
-          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl text-charcoal-900 dark:text-charcoal-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-          placeholder="e.g., #spam, #unwanted (comma-separated)"
-          value={formData.hashtags_avoid}
-          onChange={(e) => setFormData({ ...formData, hashtags_avoid: e.target.value })}
-        />
-      </div>
-
-      <div>
-        <label htmlFor="cta_preference" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
-          Call-to-Action Preference
-        </label>
-        <select
-          id="cta_preference"
-          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl text-charcoal-900 dark:text-charcoal-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-          value={formData.cta_preference}
-          onChange={(e) => setFormData({ ...formData, cta_preference: e.target.value })}
-        >
-          <option value="visit_link">Visit Link in Bio</option>
-          <option value="comment">Leave a Comment</option>
-          <option value="like_follow">Like & Follow</option>
-          <option value="shop_now">Shop Now</option>
-          <option value="learn_more">Learn More</option>
-          <option value="custom">Custom</option>
-        </select>
-      </div>
-
+      {/* Save Button */}
       <div className="flex justify-end space-x-4 pt-4">
         <button
           type="submit"

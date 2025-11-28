@@ -23,11 +23,28 @@ export function useAuth() {
     return () => subscription.unsubscribe()
   }, [])
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (email: string, password: string, firstName?: string, lastName?: string) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          first_name: firstName,
+          last_name: lastName
+        }
+      }
     })
+
+    // Also create profile record if signup successful
+    if (data.user && !error) {
+      await supabase.from('profiles').upsert({
+        user_id: data.user.id,
+        email,
+        first_name: firstName,
+        last_name: lastName
+      })
+    }
+
     return { data, error }
   }
 
