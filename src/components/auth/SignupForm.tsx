@@ -110,7 +110,7 @@ export function SignupForm() {
             }}
           >
             {/* First Name Input */}
-            <div style={{ width: '320px', marginBottom: '20px' }}>
+            <div style={{ width: '320px', margin: '0 auto 20px' }}>
               <input
                 id="first-name"
                 name="firstName"
@@ -138,7 +138,7 @@ export function SignupForm() {
             </div>
 
             {/* Last Name Input */}
-            <div style={{ width: '320px', marginBottom: '20px' }}>
+            <div style={{ width: '320px', margin: '0 auto 20px' }}>
               <input
                 id="last-name"
                 name="lastName"
@@ -166,7 +166,7 @@ export function SignupForm() {
             </div>
 
             {/* Email Input */}
-            <div style={{ width: '320px', marginBottom: '20px' }}>
+            <div style={{ width: '320px', margin: '0 auto 20px' }}>
               <input
                 id="email-address"
                 name="email"
@@ -194,7 +194,7 @@ export function SignupForm() {
             </div>
 
             {/* Password Input */}
-            <div style={{ position: 'relative', width: '320px', marginBottom: '20px' }}>
+            <div style={{ position: 'relative', width: '320px', margin: '0 auto 20px' }}>
               <input
                 id="password"
                 name="password"
@@ -249,7 +249,7 @@ export function SignupForm() {
             </div>
 
             {/* Confirm Password Input */}
-            <div style={{ position: 'relative', width: '320px', marginBottom: '32px' }}>
+            <div style={{ position: 'relative', width: '320px', margin: '0 auto 32px' }}>
               <input
                 id="confirm-password"
                 name="confirm-password"
