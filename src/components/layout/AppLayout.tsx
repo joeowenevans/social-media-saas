@@ -105,22 +105,21 @@ export function AppLayout({ children }: AppLayoutProps) {
                   fontWeight: 600,
                   background: 'transparent',
                   border: 'none',
-                  padding: '8px 16px',
+                  padding: '0',
                   cursor: 'pointer',
-                  borderRadius: '8px',
                   transition: 'all 0.3s ease',
-                  boxShadow: isActive(item.path)
-                    ? '0 0 12px rgba(20, 184, 166, 0.4), 0 0 24px rgba(20, 184, 166, 0.2)'
+                  textShadow: isActive(item.path)
+                    ? '0 0 12px rgba(20, 184, 166, 0.8), 0 0 24px rgba(20, 184, 166, 0.5)'
                     : 'none'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.color = '#14b8a6'
-                  e.currentTarget.style.boxShadow = '0 0 8px rgba(20, 184, 166, 0.3), 0 0 16px rgba(20, 184, 166, 0.15)'
+                  e.currentTarget.style.textShadow = '0 0 10px rgba(20, 184, 166, 0.8)'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.color = isActive(item.path) ? '#14b8a6' : '#e5e5e5'
-                  e.currentTarget.style.boxShadow = isActive(item.path)
-                    ? '0 0 12px rgba(20, 184, 166, 0.4), 0 0 24px rgba(20, 184, 166, 0.2)'
+                  e.currentTarget.style.textShadow = isActive(item.path)
+                    ? '0 0 12px rgba(20, 184, 166, 0.8), 0 0 24px rgba(20, 184, 166, 0.5)'
                     : 'none'
                 }}
               >
@@ -136,19 +135,18 @@ export function AppLayout({ children }: AppLayoutProps) {
                 fontWeight: 600,
                 background: 'transparent',
                 border: 'none',
-                padding: '8px 16px',
+                padding: '0',
                 cursor: 'pointer',
-                borderRadius: '8px',
                 transition: 'all 0.3s ease',
-                boxShadow: 'none'
+                textShadow: 'none'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.color = '#14b8a6'
-                e.currentTarget.style.boxShadow = '0 0 8px rgba(20, 184, 166, 0.3), 0 0 16px rgba(20, 184, 166, 0.15)'
+                e.currentTarget.style.textShadow = '0 0 10px rgba(20, 184, 166, 0.8)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.color = '#e5e5e5'
-                e.currentTarget.style.boxShadow = 'none'
+                e.currentTarget.style.textShadow = 'none'
               }}
             >
               Sign Out
