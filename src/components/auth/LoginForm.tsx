@@ -95,31 +95,32 @@ export function LoginForm() {
             }}
           >
             {/* Email Input */}
-            <input
-              id="email-address"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              style={{
-                width: '320px',
-                height: '44px',
-                padding: '12px 16px',
-                border: '1px solid #27272a',
-                borderRadius: '8px',
-                backgroundColor: '#0d0d0d',
-                color: '#e5e5e5',
-                fontSize: '15px',
-                outline: 'none',
-                transition: 'border-color 0.2s ease',
-                marginBottom: '20px'
-              }}
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-              onBlur={(e) => e.target.style.borderColor = '#27272a'}
-            />
+            <div style={{ width: '320px', marginBottom: '20px' }}>
+              <input
+                id="email-address"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                style={{
+                  width: '100%',
+                  height: '44px',
+                  padding: '12px 16px',
+                  border: '1px solid #27272a',
+                  borderRadius: '8px',
+                  backgroundColor: '#0d0d0d',
+                  color: '#e5e5e5',
+                  fontSize: '15px',
+                  outline: 'none',
+                  transition: 'border-color 0.2s ease'
+                }}
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+                onBlur={(e) => e.target.style.borderColor = '#27272a'}
+              />
+            </div>
 
             {/* Password Input */}
             <div style={{ position: 'relative', width: '320px', marginBottom: '32px' }}>
@@ -130,7 +131,7 @@ export function LoginForm() {
                 autoComplete="current-password"
                 required
                 style={{
-                  width: '320px',
+                  width: '100%',
                   height: '44px',
                   padding: '12px 40px 12px 16px',
                   border: '1px solid #27272a',
