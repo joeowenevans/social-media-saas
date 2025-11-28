@@ -65,9 +65,9 @@ export function Dashboard() {
 
   const stats = [
     { label: 'Scheduled', value: scheduledPosts.length, icon: Clock, filter: 'scheduled', color: '#14b8a6' },
-    { label: 'Posted', value: postedPosts.length, icon: CheckCircle2, filter: 'posted', color: '#10b981' },
-    { label: 'Drafts', value: draftPosts.length, icon: Edit3, filter: 'draft', color: '#6b7280' },
-    { label: 'Failed', value: failedPosts.length, icon: XCircle, filter: 'failed', color: '#ef4444' },
+    { label: 'Posted', value: postedPosts.length, icon: CheckCircle2, filter: 'posted', color: '#14b8a6' },
+    { label: 'Drafts', value: draftPosts.length, icon: Edit3, filter: 'draft', color: '#14b8a6' },
+    { label: 'Failed', value: failedPosts.length, icon: XCircle, filter: 'failed', color: '#14b8a6' },
   ]
 
   // Calendar generation
