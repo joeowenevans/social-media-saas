@@ -122,7 +122,7 @@ export function LoginForm() {
             />
 
             {/* Password Input */}
-            <div style={{ position: 'relative', marginBottom: '32px' }}>
+            <div style={{ position: 'relative', width: '320px', marginBottom: '32px' }}>
               <input
                 id="password"
                 name="password"
