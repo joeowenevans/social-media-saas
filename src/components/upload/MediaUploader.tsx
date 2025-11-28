@@ -132,9 +132,10 @@ export function MediaUploader({ brandId, onUploadComplete }: MediaUploaderProps)
       <div className="relative">
         <button
           onClick={clearPreview}
-          className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 z-10"
+          className="absolute top-2 right-2 p-2 bg-primary-500 hover:bg-primary-600 rounded-full shadow-lg transition-colors z-10 group"
+          aria-label="Remove media"
         >
-          <X className="w-5 h-5 text-gray-600" />
+          <X className="w-5 h-5 text-white" />
         </button>
         {fileType === 'video' ? (
           <video
@@ -180,11 +181,17 @@ export function MediaUploader({ brandId, onUploadComplete }: MediaUploaderProps)
           </div>
         ) : (
           <>
-            <div className="flex justify-center space-x-4 mb-4">
-              <Image className="w-12 h-12 text-indigo-600" />
-              <Video className="w-12 h-12 text-indigo-600" />
+            <div className="flex justify-center items-center space-x-6 mb-6">
+              <div className="flex flex-col items-center gap-2">
+                <Image className="w-16 h-16 text-primary-500" />
+                <span className="text-xs text-charcoal-500 dark:text-charcoal-400 font-medium">Images</span>
+              </div>
+              <div className="flex flex-col items-center gap-2">
+                <Video className="w-16 h-16 text-primary-500" />
+                <span className="text-xs text-charcoal-500 dark:text-charcoal-400 font-medium">Videos</span>
+              </div>
             </div>
-            <UploadIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <UploadIcon className="w-12 h-12 text-charcoal-400 dark:text-charcoal-500 mx-auto mb-4" />
             {isDragActive ? (
               <p className="text-lg text-indigo-600 font-medium">Drop your file here...</p>
             ) : (
