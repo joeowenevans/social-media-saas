@@ -105,12 +105,24 @@ export function AppLayout({ children }: AppLayoutProps) {
                   fontWeight: 600,
                   background: 'transparent',
                   border: 'none',
-                  padding: '0',
+                  padding: '8px 16px',
                   cursor: 'pointer',
-                  transition: 'color 0.2s ease'
+                  borderRadius: '8px',
+                  transition: 'all 0.3s ease',
+                  boxShadow: isActive(item.path)
+                    ? '0 0 12px rgba(20, 184, 166, 0.4), 0 0 24px rgba(20, 184, 166, 0.2)'
+                    : 'none'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
-                onMouseLeave={(e) => e.currentTarget.style.color = isActive(item.path) ? '#14b8a6' : '#e5e5e5'}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#14b8a6'
+                  e.currentTarget.style.boxShadow = '0 0 8px rgba(20, 184, 166, 0.3), 0 0 16px rgba(20, 184, 166, 0.15)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = isActive(item.path) ? '#14b8a6' : '#e5e5e5'
+                  e.currentTarget.style.boxShadow = isActive(item.path)
+                    ? '0 0 12px rgba(20, 184, 166, 0.4), 0 0 24px rgba(20, 184, 166, 0.2)'
+                    : 'none'
+                }}
               >
                 {item.label}
               </button>
@@ -124,12 +136,20 @@ export function AppLayout({ children }: AppLayoutProps) {
                 fontWeight: 600,
                 background: 'transparent',
                 border: 'none',
-                padding: '0',
+                padding: '8px 16px',
                 cursor: 'pointer',
-                transition: 'color 0.2s ease'
+                borderRadius: '8px',
+                transition: 'all 0.3s ease',
+                boxShadow: 'none'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
-              onMouseLeave={(e) => e.currentTarget.style.color = '#e5e5e5'}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#14b8a6'
+                e.currentTarget.style.boxShadow = '0 0 8px rgba(20, 184, 166, 0.3), 0 0 16px rgba(20, 184, 166, 0.15)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#e5e5e5'
+                e.currentTarget.style.boxShadow = 'none'
+              }}
             >
               Sign Out
             </button>
