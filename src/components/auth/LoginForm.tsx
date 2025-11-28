@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Share2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -181,27 +181,6 @@ export function LoginForm() {
             >
               {loading ? 'Signing in...' : 'Sign in'}
             </button>
-
-            {/* Sign Up Link - Centered */}
-            <div style={{ textAlign: 'center' }}>
-              <span style={{ color: '#888', fontSize: '14px' }}>
-                Don't have an account?{' '}
-              </span>
-              <Link
-                to="/signup"
-                style={{
-                  color: '#14b8a6',
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  textDecoration: 'none',
-                  transition: 'opacity 0.2s ease'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
-                onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-              >
-                Sign up for free
-              </Link>
-            </div>
           </form>
         </div>
       </div>
