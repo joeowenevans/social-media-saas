@@ -41,11 +41,41 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
     }
   }
 
+  const inputStyle = {
+    width: '100%',
+    background: '#0d0d0d',
+    border: '1px solid #27272a',
+    borderRadius: '8px',
+    padding: '12px 16px',
+    color: '#e5e5e5',
+    fontSize: '15px',
+    outline: 'none',
+    transition: 'border-color 0.2s ease'
+  }
+
+  const labelStyle = {
+    color: '#e5e5e5',
+    fontSize: '14px',
+    fontWeight: 500,
+    marginBottom: '8px',
+    display: 'block'
+  } as const
+
+  const helperTextStyle = {
+    color: '#888',
+    fontSize: '12px',
+    marginTop: '4px'
+  }
+
+  const fieldContainerStyle = {
+    marginBottom: '32px'
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
+    <form onSubmit={handleSubmit}>
       {/* 1. Brand Name */}
-      <div>
-        <label htmlFor="name" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+      <div style={fieldContainerStyle}>
+        <label htmlFor="name" style={labelStyle}>
           Brand Name *
         </label>
         <input
@@ -53,195 +83,214 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
           id="name"
           required
           placeholder="e.g., Blue Pencil Gallery"
-          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl text-charcoal-900 dark:text-charcoal-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+          style={{ ...inputStyle, height: '44px' }}
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
         />
       </div>
 
       {/* 2. Industry/Niche */}
-      <div>
-        <label htmlFor="industry_niche" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+      <div style={fieldContainerStyle}>
+        <label htmlFor="industry_niche" style={labelStyle}>
           Industry/Niche
         </label>
         <input
           type="text"
           id="industry_niche"
           placeholder="e.g., Pet Portrait Artist, Animation-Inspired Art"
-          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl text-charcoal-900 dark:text-charcoal-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+          style={{ ...inputStyle, height: '44px' }}
           value={formData.industry_niche}
           onChange={(e) => setFormData({ ...formData, industry_niche: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
         />
-        <p className="mt-2 text-xs text-charcoal-500 dark:text-charcoal-400">
-          What industry or niche does your brand operate in?
-        </p>
+        <p style={helperTextStyle}>What industry or niche does your brand operate in?</p>
       </div>
 
       {/* 3. Voice Description */}
-      <div>
-        <label htmlFor="voice_description" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+      <div style={fieldContainerStyle}>
+        <label htmlFor="voice_description" style={labelStyle}>
           Voice Description
         </label>
         <textarea
           id="voice_description"
-          rows={3}
+          style={{ ...inputStyle, minHeight: '80px', resize: 'vertical' }}
           placeholder="e.g., Friendly, professional, enthusiastic about pets"
-          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl resize-none text-charcoal-900 dark:text-charcoal-100 font-normal leading-relaxed focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all scrollbar-thin scrollbar-thumb-charcoal-400 dark:scrollbar-thumb-charcoal-600 scrollbar-track-charcoal-100 dark:scrollbar-track-charcoal-800"
           value={formData.voice_description}
           onChange={(e) => setFormData({ ...formData, voice_description: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
         />
-        <p className="mt-2 text-xs text-charcoal-500 dark:text-charcoal-400">
-          How should your brand sound? Describe the tone and personality.
-        </p>
+        <p style={helperTextStyle}>How should your brand sound? Describe the tone and personality.</p>
       </div>
 
       {/* 4. Audience Priorities */}
-      <div>
-        <label htmlFor="audience_priorities" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+      <div style={fieldContainerStyle}>
+        <label htmlFor="audience_priorities" style={labelStyle}>
           Audience Priorities
         </label>
         <textarea
           id="audience_priorities"
-          rows={3}
+          style={{ ...inputStyle, minHeight: '80px', resize: 'vertical' }}
           placeholder="e.g., Pet owners looking for custom artwork, fans of animation"
-          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl resize-none text-charcoal-900 dark:text-charcoal-100 font-normal leading-relaxed focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all scrollbar-thin scrollbar-thumb-charcoal-400 dark:scrollbar-thumb-charcoal-600 scrollbar-track-charcoal-100 dark:scrollbar-track-charcoal-800"
           value={formData.audience_priorities}
           onChange={(e) => setFormData({ ...formData, audience_priorities: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
         />
-        <p className="mt-2 text-xs text-charcoal-500 dark:text-charcoal-400">
-          Who is your target audience? What do they care about?
-        </p>
+        <p style={helperTextStyle}>Who is your target audience? What do they care about?</p>
       </div>
 
       {/* 5. Brand Values */}
-      <div>
-        <label htmlFor="brand_values" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+      <div style={fieldContainerStyle}>
+        <label htmlFor="brand_values" style={labelStyle}>
           Brand Values
         </label>
         <textarea
           id="brand_values"
-          rows={3}
+          style={{ ...inputStyle, minHeight: '80px', resize: 'vertical' }}
           placeholder="e.g., Quality craftsmanship, customer satisfaction, creativity"
-          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl resize-none text-charcoal-900 dark:text-charcoal-100 font-normal leading-relaxed focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all scrollbar-thin scrollbar-thumb-charcoal-400 dark:scrollbar-thumb-charcoal-600 scrollbar-track-charcoal-100 dark:scrollbar-track-charcoal-800"
           value={formData.brand_values}
           onChange={(e) => setFormData({ ...formData, brand_values: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
         />
-        <p className="mt-2 text-xs text-charcoal-500 dark:text-charcoal-400">
-          What values does your brand stand for?
-        </p>
+        <p style={helperTextStyle}>What values does your brand stand for?</p>
       </div>
 
       {/* 6. Preferred Caption Length */}
-      <div>
-        <label htmlFor="preferred_caption_length" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+      <div style={fieldContainerStyle}>
+        <label htmlFor="preferred_caption_length" style={labelStyle}>
           Preferred Caption Length
         </label>
         <select
           id="preferred_caption_length"
-          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl text-charcoal-900 dark:text-charcoal-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+          style={{
+            ...inputStyle,
+            height: '44px',
+            cursor: 'pointer',
+            appearance: 'none',
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23e5e5e5' d='M4.427 6.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 6H4.604a.25.25 0 00-.177.427z'/%3E%3C/svg%3E")`,
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'right 12px center',
+            paddingRight: '40px'
+          }}
           value={formData.preferred_caption_length}
           onChange={(e) => setFormData({ ...formData, preferred_caption_length: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
         >
-          <option value="short">Short (1-2 sentences)</option>
-          <option value="medium">Medium (3-5 sentences)</option>
-          <option value="long">Long (6+ sentences)</option>
+          <option value="short" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Short (1-2 sentences)</option>
+          <option value="medium" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Medium (3-5 sentences)</option>
+          <option value="long" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Long (6+ sentences)</option>
         </select>
       </div>
 
       {/* 7. Hashtag Topics/Branding */}
-      <div>
-        <label htmlFor="hashtag_topics" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+      <div style={fieldContainerStyle}>
+        <label htmlFor="hashtag_topics" style={labelStyle}>
           Hashtag Topics/Branding
         </label>
         <input
           type="text"
           id="hashtag_topics"
           placeholder="e.g., petportrait, customart, animationstyle, brandname"
-          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl text-charcoal-900 dark:text-charcoal-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+          style={{ ...inputStyle, height: '44px' }}
           value={formData.hashtag_topics}
           onChange={(e) => setFormData({ ...formData, hashtag_topics: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
         />
-        <p className="mt-2 text-xs text-charcoal-500 dark:text-charcoal-400">
-          Keywords for hashtag generation (comma-separated)
-        </p>
+        <p style={helperTextStyle}>Keywords for hashtag generation (comma-separated)</p>
       </div>
 
       {/* 8. CTA Style */}
-      <div>
-        <label htmlFor="cta_style" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+      <div style={fieldContainerStyle}>
+        <label htmlFor="cta_style" style={labelStyle}>
           Call-to-Action Style
         </label>
         <select
           id="cta_style"
-          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl text-charcoal-900 dark:text-charcoal-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+          style={{
+            ...inputStyle,
+            height: '44px',
+            cursor: 'pointer',
+            appearance: 'none',
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23e5e5e5' d='M4.427 6.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 6H4.604a.25.25 0 00-.177.427z'/%3E%3C/svg%3E")`,
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'right 12px center',
+            paddingRight: '40px'
+          }}
           value={formData.cta_style}
           onChange={(e) => setFormData({ ...formData, cta_style: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
         >
-          <option value="direct">Direct (e.g., 'Shop now', 'Book today')</option>
-          <option value="soft">Soft (e.g., 'Learn more', 'Discover')</option>
-          <option value="question">Question (e.g., 'Ready to transform your space?')</option>
-          <option value="none">None (No CTA)</option>
+          <option value="direct" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Direct (e.g., 'Shop now', 'Book today')</option>
+          <option value="soft" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Soft (e.g., 'Learn more', 'Discover')</option>
+          <option value="question" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Question (e.g., 'Ready to transform your space?')</option>
+          <option value="none" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>None (No CTA)</option>
         </select>
       </div>
 
       {/* 9. Example Captions */}
-      <div>
-        <label htmlFor="example_captions" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+      <div style={fieldContainerStyle}>
+        <label htmlFor="example_captions" style={labelStyle}>
           Example Captions
         </label>
         <textarea
           id="example_captions"
-          rows={5}
+          style={{ ...inputStyle, minHeight: '120px', resize: 'vertical' }}
           placeholder="Paste 2-3 example captions that match your desired style..."
-          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl resize-none text-charcoal-900 dark:text-charcoal-100 font-normal leading-relaxed focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all scrollbar-thin scrollbar-thumb-charcoal-400 dark:scrollbar-thumb-charcoal-600 scrollbar-track-charcoal-100 dark:scrollbar-track-charcoal-800"
           value={formData.example_captions}
           onChange={(e) => setFormData({ ...formData, example_captions: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
         />
-        <p className="mt-2 text-xs text-charcoal-500 dark:text-charcoal-400">
-          Provide examples of captions you love - AI will learn from these
-        </p>
+        <p style={helperTextStyle}>Provide examples of captions you love - AI will learn from these</p>
       </div>
 
       {/* 10. Signature Phrases/Taglines */}
-      <div>
-        <label htmlFor="phrases_taglines" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+      <div style={fieldContainerStyle}>
+        <label htmlFor="phrases_taglines" style={labelStyle}>
           Signature Phrases/Taglines
         </label>
         <input
           type="text"
           id="phrases_taglines"
           placeholder="e.g., 'Art that captures the soul', 'Your pet, immortalized'"
-          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl text-charcoal-900 dark:text-charcoal-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+          style={{ ...inputStyle, height: '44px' }}
           value={formData.phrases_taglines}
           onChange={(e) => setFormData({ ...formData, phrases_taglines: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
         />
-        <p className="mt-2 text-xs text-charcoal-500 dark:text-charcoal-400">
-          Phrases you want occasionally included in captions
-        </p>
+        <p style={helperTextStyle}>Phrases you want occasionally included in captions</p>
       </div>
 
       {/* 11. General Goals */}
-      <div>
-        <label htmlFor="general_goals" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+      <div style={fieldContainerStyle}>
+        <label htmlFor="general_goals" style={labelStyle}>
           General Goals
         </label>
         <textarea
           id="general_goals"
-          rows={3}
+          style={{ ...inputStyle, minHeight: '80px', resize: 'vertical' }}
           placeholder="e.g., Increase bookings for custom portraits, build community of pet lovers"
-          className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl resize-none text-charcoal-900 dark:text-charcoal-100 font-normal leading-relaxed focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all scrollbar-thin scrollbar-thumb-charcoal-400 dark:scrollbar-thumb-charcoal-600 scrollbar-track-charcoal-100 dark:scrollbar-track-charcoal-800"
           value={formData.general_goals}
           onChange={(e) => setFormData({ ...formData, general_goals: e.target.value })}
+          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+          onBlur={(e) => e.target.style.borderColor = '#27272a'}
         />
-        <p className="mt-2 text-xs text-charcoal-500 dark:text-charcoal-400">
-          What are your overall social media goals?
-        </p>
+        <p style={helperTextStyle}>What are your overall social media goals?</p>
       </div>
 
       {/* 12 & 13. Number Inputs Row */}
-      <div className="grid md:grid-cols-2 gap-6">
-        <div>
-          <label htmlFor="num_hashtags" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+      <div style={{ display: 'flex', gap: '24px', marginBottom: '32px' }}>
+        <div style={{ flex: 1 }}>
+          <label htmlFor="num_hashtags" style={labelStyle}>
             Number of Hashtags
           </label>
           <input
@@ -250,14 +299,16 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
             min="0"
             max="30"
             placeholder="7"
-            className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl text-charcoal-900 dark:text-charcoal-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+            style={{ ...inputStyle, height: '44px' }}
             value={formData.num_hashtags}
             onChange={(e) => setFormData({ ...formData, num_hashtags: parseInt(e.target.value) || 0 })}
+            onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+            onBlur={(e) => e.target.style.borderColor = '#27272a'}
           />
         </div>
 
-        <div>
-          <label htmlFor="num_emojis" className="block text-sm font-semibold text-charcoal-700 dark:text-charcoal-300 mb-2">
+        <div style={{ flex: 1 }}>
+          <label htmlFor="num_emojis" style={labelStyle}>
             Number of Emojis
           </label>
           <input
@@ -266,19 +317,42 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
             min="0"
             max="10"
             placeholder="2"
-            className="w-full px-4 py-3 border border-charcoal-300 dark:border-charcoal-700 bg-white dark:bg-charcoal-800 rounded-xl text-charcoal-900 dark:text-charcoal-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+            style={{ ...inputStyle, height: '44px' }}
             value={formData.num_emojis}
             onChange={(e) => setFormData({ ...formData, num_emojis: parseInt(e.target.value) || 0 })}
+            onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+            onBlur={(e) => e.target.style.borderColor = '#27272a'}
           />
         </div>
       </div>
 
       {/* Save Button */}
-      <div className="flex justify-end space-x-4 pt-4">
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '32px' }}>
         <button
           type="submit"
           disabled={loading}
-          className="px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold rounded-xl hover:from-primary-600 hover:to-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl hover:scale-[1.02]"
+          style={{
+            padding: '12px 32px',
+            background: loading ? '#2a2a2a' : '#2a2a2a',
+            color: 'white',
+            fontSize: '16px',
+            fontWeight: 600,
+            border: 'none',
+            borderRadius: '20px',
+            cursor: loading ? 'not-allowed' : 'pointer',
+            opacity: loading ? 0.6 : 1,
+            transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            if (!loading) {
+              e.currentTarget.style.background = '#14b8a6'
+              e.currentTarget.style.transform = 'scale(1.05)'
+            }
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = '#2a2a2a'
+            e.currentTarget.style.transform = 'scale(1)'
+          }}
         >
           {loading ? 'Saving...' : initialData ? 'Update Brand' : 'Create Brand'}
         </button>
