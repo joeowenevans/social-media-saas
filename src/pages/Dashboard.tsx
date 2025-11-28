@@ -3,7 +3,7 @@ import { usePosts } from '../hooks/usePosts'
 import { useAuth } from '../hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
 import { AppLayout } from '../components/layout/AppLayout'
-import { FileText, Clock, CheckCircle2, Sparkles, X, Hash, ChevronLeft, ChevronRight } from 'lucide-react'
+import { FileText, Clock, CheckCircle2, Sparkles, X, Hash, ChevronLeft, ChevronRight, Edit3, XCircle } from 'lucide-react'
 import { useState } from 'react'
 import {
   startOfMonth,
@@ -61,12 +61,13 @@ export function Dashboard() {
   const scheduledPosts = posts.filter(p => p.status === 'scheduled')
   const postedPosts = posts.filter(p => p.status === 'posted')
   const draftPosts = posts.filter(p => p.status === 'draft')
+  const failedPosts = posts.filter(p => p.status === 'failed')
 
   const stats = [
-    { label: 'Total Posts', value: posts.length, icon: FileText, filter: 'all' },
-    { label: 'Scheduled', value: scheduledPosts.length, icon: Clock, filter: 'scheduled' },
-    { label: 'Posted', value: postedPosts.length, icon: CheckCircle2, filter: 'posted' },
-    { label: 'Drafts', value: draftPosts.length, icon: FileText, filter: 'draft' },
+    { label: 'Scheduled', value: scheduledPosts.length, icon: Clock, filter: 'scheduled', color: '#14b8a6' },
+    { label: 'Posted', value: postedPosts.length, icon: CheckCircle2, filter: 'posted', color: '#10b981' },
+    { label: 'Drafts', value: draftPosts.length, icon: Edit3, filter: 'draft', color: '#6b7280' },
+    { label: 'Failed', value: failedPosts.length, icon: XCircle, filter: 'failed', color: '#ef4444' },
   ]
 
   // Calendar generation
@@ -182,7 +183,10 @@ export function Dashboard() {
           {stats.map((stat) => (
             <div
               key={stat.label}
-              onClick={() => navigate(`/schedule?status=${stat.filter}`)}
+              onClick={() => {
+                navigate(`/schedule?status=${stat.filter}`)
+                setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100)
+              }}
               style={{
                 background: '#1a1a1a',
                 borderRadius: '12px',
@@ -200,33 +204,22 @@ export function Dashboard() {
                 e.currentTarget.style.boxShadow = '0 0 20px rgba(255, 255, 255, 0.05)'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '10px',
-                  background: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)',
-                  flexShrink: 0
+              <div>
+                <p style={{
+                  fontSize: '11px',
+                  fontWeight: 500,
+                  color: '#a1a1aa',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  marginBottom: '12px'
                 }}>
-                  <stat.icon style={{ width: '20px', height: '20px', color: 'white' }} />
-                </div>
-                <div style={{ flex: 1 }}>
+                  {stat.label}
+                </p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <stat.icon style={{ width: '32px', height: '32px', color: stat.color, flexShrink: 0 }} />
                   <p style={{
-                    fontSize: '11px',
-                    fontWeight: 500,
-                    color: '#a1a1aa',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
-                    marginBottom: '4px'
-                  }}>
-                    {stat.label}
-                  </p>
-                  <p style={{
-                    fontSize: '28px',
-                    fontWeight: 600,
+                    fontSize: '32px',
+                    fontWeight: 700,
                     color: 'white',
                     lineHeight: 1
                   }}>
