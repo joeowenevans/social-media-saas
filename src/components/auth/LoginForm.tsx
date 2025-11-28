@@ -95,7 +95,7 @@ export function LoginForm() {
             }}
           >
             {/* Email Input */}
-            <div style={{ width: '320px', marginBottom: '20px' }}>
+            <div style={{ width: '320px', margin: '0 auto 20px' }}>
               <input
                 id="email-address"
                 name="email"
@@ -123,7 +123,7 @@ export function LoginForm() {
             </div>
 
             {/* Password Input */}
-            <div style={{ position: 'relative', width: '320px', marginBottom: '32px' }}>
+            <div style={{ position: 'relative', width: '320px', margin: '0 auto 32px' }}>
               <input
                 id="password"
                 name="password"
