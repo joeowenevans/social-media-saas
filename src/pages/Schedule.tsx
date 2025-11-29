@@ -154,6 +154,34 @@ export function Schedule() {
     return '#14b8a6'
   }
 
+  // Helper function to get proper thumbnail URL for videos
+  // Handles both new uploads (correct thumbnail_url) and legacy data (video URL in thumbnail_url)
+  const getMediaThumbnail = (media: any) => {
+    if (!media) return null
+
+    // Check if thumbnail_url exists and is actually an image (not a video file)
+    const videoExtensions = ['.mp4', '.mov', '.avi', '.webm', '.mkv']
+    const hasValidThumbnail = media.thumbnail_url &&
+      !videoExtensions.some(ext => media.thumbnail_url.toLowerCase().endsWith(ext))
+
+    if (hasValidThumbnail) {
+      return media.thumbnail_url
+    }
+
+    // For videos, generate thumbnail from Cloudinary URL
+    const videoUrl = media.thumbnail_url?.includes('/video/upload/')
+      ? media.thumbnail_url
+      : media.cloudinary_url
+
+    if (media.media_type === 'video' && videoUrl?.includes('/video/upload/')) {
+      return videoUrl
+        .replace('/video/upload/', '/video/upload/so_0,f_jpg,w_400,h_400,c_fill/')
+        .replace(/\.[^/.]+$/, '.jpg')
+    }
+
+    return media.cloudinary_url
+  }
+
   const confirmPostNow = async () => {
     if (!postToConfirm) return
 
@@ -858,7 +886,7 @@ export function Schedule() {
                       >
                         <div style={{ display: 'flex', gap: '6px', alignItems: 'flex-start', marginBottom: '4px' }}>
                           <img
-                            src={post.media?.thumbnail_url || post.media?.cloudinary_url}
+                            src={getMediaThumbnail(post.media)}
                             alt=""
                             style={{
                               width: calendarView === 'week' ? '48px' : '40px',
@@ -1125,7 +1153,7 @@ export function Schedule() {
                   />
                 ) : (
                   <img
-                    src={editingPost.media?.thumbnail_url || editingPost.media?.cloudinary_url}
+                    src={getMediaThumbnail(editingPost.media)}
                     alt="Preview"
                     style={{
                       maxWidth: '200px',
