@@ -43,12 +43,14 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
 
   const inputStyle = {
     width: '100%',
-    background: '#0d0d0d',
+    background: '#1a1a1a',
     border: '1px solid #27272a',
-    borderRadius: '8px',
-    padding: '12px 16px',
+    borderRadius: '12px',
+    padding: '16px',
     color: '#e5e5e5',
     fontSize: '15px',
+    lineHeight: '1.6',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     outline: 'none',
     transition: 'border-color 0.2s ease'
   }
