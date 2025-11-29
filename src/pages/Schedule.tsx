@@ -7,14 +7,14 @@ import { AppLayout } from '../components/layout/AppLayout'
 import {
   Calendar as CalendarIcon,
   Clock,
-  Trash2,
   Send,
-  Edit2,
   ChevronLeft,
   ChevronRight,
   X,
   Sparkles,
-  AlertCircle
+  AlertCircle,
+  Video,
+  Image as ImageIcon
 } from 'lucide-react'
 import {
   startOfMonth,
@@ -74,6 +74,11 @@ export function Schedule() {
   const [editCalendarMonth, setEditCalendarMonth] = useState(new Date())
   const [editSelectedDate, setEditSelectedDate] = useState<Date | null>(null)
   const [editSelectedTime, setEditSelectedTime] = useState<string>('12:00')
+
+  // Lightbox and delete confirmation state
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
+  const [postToDelete, setPostToDelete] = useState<string | null>(null)
 
   // Handle URL parameter for status filter
   useEffect(() => {
@@ -224,7 +229,19 @@ export function Schedule() {
   }
 
   const handleEdit = (post: Post) => {
-    const date = new Date(post.scheduled_for)
+    // Fix for drafts with invalid dates - default to today if scheduled_for is null or before year 2000
+    let date: Date
+    const scheduledDate = post.scheduled_for ? new Date(post.scheduled_for) : null
+    const isValidDate = scheduledDate && scheduledDate.getFullYear() >= 2000
+
+    if (isValidDate) {
+      date = scheduledDate
+    } else {
+      // Default to today at noon for drafts with invalid dates
+      date = new Date()
+      date.setHours(12, 0, 0, 0)
+    }
+
     const timeHour = date.getHours()
     const roundedTime = `${timeHour.toString().padStart(2, '0')}:00`
 
@@ -515,14 +532,16 @@ export function Schedule() {
             {sortedPosts.map((post: any) => (
               <div
                 key={post.id}
+                onClick={() => handleEdit(post)}
                 style={{
                   borderRadius: '12px',
                   overflow: 'hidden',
-                  minHeight: '600px',
+                  minHeight: '500px',
                   display: 'flex',
                   flexDirection: 'column',
                   transition: 'all 0.3s ease',
-                  boxShadow: '0 0 10px rgba(255, 255, 255, 0.05)'
+                  boxShadow: '0 0 10px rgba(255, 255, 255, 0.05)',
+                  cursor: 'pointer'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'scale(1.02)'
@@ -533,7 +552,7 @@ export function Schedule() {
                   e.currentTarget.style.boxShadow = '0 0 10px rgba(255, 255, 255, 0.05)'
                 }}
               >
-                {/* Image */}
+                {/* Image with Media Type Indicator */}
                 <div style={{
                   aspectRatio: '1 / 1',
                   overflow: 'hidden',
@@ -560,6 +579,24 @@ export function Schedule() {
                       }}
                     />
                   )}
+                  {/* Media Type Indicator */}
+                  <div style={{
+                    position: 'absolute',
+                    top: '12px',
+                    right: '12px',
+                    background: 'rgba(0, 0, 0, 0.7)',
+                    borderRadius: '6px',
+                    padding: '6px 8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}>
+                    {post.media?.media_type === 'video' ? (
+                      <Video style={{ width: '14px', height: '14px', color: '#14b8a6' }} />
+                    ) : (
+                      <ImageIcon style={{ width: '14px', height: '14px', color: '#14b8a6' }} />
+                    )}
+                  </div>
                 </div>
 
                 {/* Info Card */}
@@ -571,7 +608,7 @@ export function Schedule() {
                   display: 'flex',
                   flexDirection: 'column'
                 }}>
-                  {/* Status and Platform - Repositioned */}
+                  {/* Status and Platform */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                     <span style={{
                       padding: '4px 12px',
@@ -620,8 +657,8 @@ export function Schedule() {
                   </p>
 
                   {/* Date & Time - Only show for scheduled and posted */}
-                  {post.status !== 'draft' && post.scheduled_for && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
+                  {post.status !== 'draft' && post.scheduled_for && new Date(post.scheduled_for).getFullYear() >= 2000 && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: 'auto' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <CalendarIcon style={{ width: '14px', height: '14px', color: '#14b8a6' }} />
                         <span style={{ color: '#14b8a6', fontSize: '13px' }}>
@@ -631,94 +668,18 @@ export function Schedule() {
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <Clock style={{ width: '14px', height: '14px', color: '#888' }} />
                         <span style={{ color: '#888', fontSize: '13px' }}>
-                          {format(new Date(post.scheduled_for), 'HH:mm')}
+                          {format(new Date(post.scheduled_for), 'h:mm a')}
                         </span>
                       </div>
                     </div>
                   )}
 
-                  {/* Action Buttons */}
-                  <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                    <button
-                      onClick={() => handleEdit(post)}
-                      style={{
-                        flex: 1,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '6px',
-                        padding: '10px',
-                        background: '#2a2a2a',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '8px',
-                        fontSize: '14px',
-                        fontWeight: 500,
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.background = '#14b8a6'}
-                      onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
-                    >
-                      <Edit2 style={{ width: '16px', height: '16px' }} />
-                      Edit
-                    </button>
-
-                    <button
-                      onClick={() => setPostToConfirm(post.id)}
-                      disabled={posting === post.id}
-                      style={{
-                        flex: 1,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '6px',
-                        padding: '10px',
-                        background: '#2a2a2a',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '8px',
-                        fontSize: '14px',
-                        fontWeight: 500,
-                        cursor: posting === post.id ? 'not-allowed' : 'pointer',
-                        opacity: posting === post.id ? 0.6 : 1,
-                        transition: 'all 0.2s ease'
-                      }}
-                      onMouseEnter={(e) => {
-                        if (posting !== post.id) e.currentTarget.style.background = '#14b8a6'
-                      }}
-                      onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
-                    >
-                      {posting === post.id ? (
-                        <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                          Posting...
-                        </>
-                      ) : (
-                        <>
-                          <Send style={{ width: '16px', height: '16px' }} />
-                          Post Now
-                        </>
-                      )}
-                    </button>
-
-                    <button
-                      onClick={() => handleDelete(post.id)}
-                      style={{
-                        padding: '10px',
-                        background: '#2a2a2a',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.background = '#ef4444'}
-                      onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
-                    >
-                      <Trash2 style={{ width: '16px', height: '16px' }} />
-                    </button>
-                  </div>
+                  {/* Draft indicator */}
+                  {post.status === 'draft' && (
+                    <div style={{ marginTop: 'auto', color: '#666', fontSize: '12px' }}>
+                      Click to edit and schedule
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
@@ -981,7 +942,7 @@ export function Schedule() {
         </div>
       )}
 
-      {/* Edit Modal - Redesigned to Match Upload Page */}
+      {/* Edit Modal - Redesigned with View-only for Posted */}
       {editingPost && (
         <div
           style={{
@@ -997,7 +958,7 @@ export function Schedule() {
             zIndex: 1000,
             padding: '24px'
           }}
-          onClick={() => setEditingPost(null)}
+          onClick={() => { setEditingPost(null); setLightboxOpen(false); }}
         >
           <div
             style={{
@@ -1021,10 +982,10 @@ export function Schedule() {
                 margin: 0,
                 textShadow: '0 0 20px rgba(20, 184, 166, 0.6), 0 0 40px rgba(20, 184, 166, 0.4)'
               }}>
-                Edit Post
+                {editingPost.status === 'posted' ? 'View Post' : 'Edit Post'}
               </h2>
               <button
-                onClick={() => setEditingPost(null)}
+                onClick={() => { setEditingPost(null); setLightboxOpen(false); }}
                 style={{
                   background: 'transparent',
                   border: 'none',
@@ -1036,30 +997,73 @@ export function Schedule() {
               </button>
             </div>
 
-            {/* Thumbnail Preview */}
-            <div style={{ marginBottom: '32px', textAlign: 'center' }}>
-              {editingPost.media?.media_type === 'video' ? (
-                <video
-                  src={editingPost.media?.cloudinary_url}
-                  style={{
-                    maxWidth: '200px',
-                    maxHeight: '200px',
-                    objectFit: 'cover',
-                    borderRadius: '12px'
-                  }}
-                />
-              ) : (
-                <img
-                  src={editingPost.media?.thumbnail_url || editingPost.media?.cloudinary_url}
-                  alt="Preview"
-                  style={{
-                    maxWidth: '200px',
-                    maxHeight: '200px',
-                    objectFit: 'cover',
-                    borderRadius: '12px'
-                  }}
-                />
-              )}
+            {/* Posted Status Banner */}
+            {editingPost.status === 'posted' && (
+              <div style={{
+                background: 'rgba(16, 185, 129, 0.1)',
+                border: '1px solid #10b981',
+                borderRadius: '12px',
+                padding: '12px 16px',
+                marginBottom: '24px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                <Sparkles style={{ width: '16px', height: '16px', color: '#10b981' }} />
+                <span style={{ color: '#10b981', fontSize: '14px', fontWeight: 500 }}>
+                  This post has been published and cannot be edited
+                </span>
+              </div>
+            )}
+
+            {/* Thumbnail Preview with Media Type Indicator */}
+            <div style={{ marginBottom: '32px', textAlign: 'center', position: 'relative' }}>
+              <div
+                onClick={() => setLightboxOpen(true)}
+                style={{ cursor: 'pointer', display: 'inline-block', position: 'relative' }}
+              >
+                {editingPost.media?.media_type === 'video' ? (
+                  <video
+                    src={editingPost.media?.cloudinary_url}
+                    style={{
+                      maxWidth: '200px',
+                      maxHeight: '200px',
+                      objectFit: 'cover',
+                      borderRadius: '12px'
+                    }}
+                  />
+                ) : (
+                  <img
+                    src={editingPost.media?.thumbnail_url || editingPost.media?.cloudinary_url}
+                    alt="Preview"
+                    style={{
+                      maxWidth: '200px',
+                      maxHeight: '200px',
+                      objectFit: 'cover',
+                      borderRadius: '12px'
+                    }}
+                  />
+                )}
+                {/* Media Type Badge */}
+                <div style={{
+                  position: 'absolute',
+                  bottom: '8px',
+                  right: '8px',
+                  background: 'rgba(0, 0, 0, 0.7)',
+                  borderRadius: '6px',
+                  padding: '4px 8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}>
+                  {editingPost.media?.media_type === 'video' ? (
+                    <Video style={{ width: '12px', height: '12px', color: '#14b8a6' }} />
+                  ) : (
+                    <ImageIcon style={{ width: '12px', height: '12px', color: '#14b8a6' }} />
+                  )}
+                  <span style={{ color: '#888', fontSize: '10px' }}>Click to enlarge</span>
+                </div>
+              </div>
             </div>
 
             {/* Caption */}
@@ -1070,19 +1074,21 @@ export function Schedule() {
               <textarea
                 value={editFormData.caption}
                 onChange={(e) => setEditFormData({ ...editFormData, caption: e.target.value })}
+                disabled={editingPost.status === 'posted'}
                 style={{
                   width: '100%',
                   minHeight: '150px',
-                  background: '#0d0d0d',
+                  background: editingPost.status === 'posted' ? '#0a0a0a' : '#0d0d0d',
                   border: '1px solid #374151',
                   borderRadius: '12px',
                   padding: '16px',
-                  color: '#e5e5e5',
+                  color: editingPost.status === 'posted' ? '#888' : '#e5e5e5',
                   fontSize: '15px',
                   lineHeight: '1.6',
                   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
                   outline: 'none',
-                  resize: 'vertical'
+                  resize: 'vertical',
+                  cursor: editingPost.status === 'posted' ? 'not-allowed' : 'text'
                 }}
               />
             </div>
@@ -1090,7 +1096,7 @@ export function Schedule() {
             {/* Platforms */}
             <div style={{ marginBottom: '32px' }}>
               <label style={{ color: 'white', fontSize: '16px', fontWeight: 600, display: 'block', marginBottom: '12px' }}>
-                Select Platforms
+                {editingPost.status === 'posted' ? 'Posted To' : 'Select Platforms'}
               </label>
               <div style={{ display: 'flex', gap: '12px' }}>
                 {[
@@ -1103,7 +1109,8 @@ export function Schedule() {
                     <button
                       key={platform.id}
                       type="button"
-                      onClick={() => togglePlatform(platform.id)}
+                      onClick={() => editingPost.status !== 'posted' && togglePlatform(platform.id)}
+                      disabled={editingPost.status === 'posted'}
                       style={{
                         flex: 1,
                         display: 'flex',
@@ -1113,9 +1120,10 @@ export function Schedule() {
                         background: isSelected ? 'rgba(20, 184, 166, 0.1)' : 'transparent',
                         border: isSelected ? '2px solid #14b8a6' : '2px solid #27272a',
                         borderRadius: '12px',
-                        cursor: 'pointer',
+                        cursor: editingPost.status === 'posted' ? 'not-allowed' : 'pointer',
                         transition: 'all 0.2s ease',
-                        boxShadow: isSelected ? '0 0 20px rgba(20, 184, 166, 0.3)' : 'none'
+                        boxShadow: isSelected ? '0 0 20px rgba(20, 184, 166, 0.3)' : 'none',
+                        opacity: editingPost.status === 'posted' && !isSelected ? 0.5 : 1
                       }}
                     >
                       <span style={{
@@ -1131,232 +1139,225 @@ export function Schedule() {
               </div>
             </div>
 
-            {/* Scheduling Section */}
-            <div style={{ marginBottom: '32px' }}>
-              <label style={{ color: 'white', fontSize: '16px', fontWeight: 600, display: 'block', marginBottom: '12px' }}>
-                Schedule
-              </label>
+            {/* Scheduling Section - Only show for non-posted */}
+            {editingPost.status !== 'posted' && (
+              <div style={{ marginBottom: '32px' }}>
+                <label style={{ color: 'white', fontSize: '16px', fontWeight: 600, display: 'block', marginBottom: '12px' }}>
+                  Schedule
+                </label>
 
-              {/* Selected Date/Time Display */}
-              {editFormattedDateTime && (
+                {/* Selected Date/Time Display */}
+                {editFormattedDateTime && (
+                  <div style={{
+                    background: 'rgba(20, 184, 166, 0.1)',
+                    border: '1px solid #14b8a6',
+                    borderRadius: '12px',
+                    padding: '16px',
+                    marginBottom: '20px',
+                    textAlign: 'center'
+                  }}>
+                    <p style={{ color: '#f3f4f6', fontSize: '18px', fontWeight: 600, margin: 0 }}>
+                      {editFormattedDateTime}
+                    </p>
+                  </div>
+                )}
+
+                {/* Time Picker Dropdown */}
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{ color: '#888', fontSize: '14px', fontWeight: 500, display: 'block', marginBottom: '8px' }}>
+                    Select Time
+                  </label>
+                  <select
+                    value={editSelectedTime}
+                    onChange={(e) => setEditSelectedTime(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      background: '#1a1a1a',
+                      border: '1px solid #374151',
+                      borderRadius: '8px',
+                      color: 'white',
+                      fontSize: '14px',
+                      outline: 'none',
+                      cursor: 'pointer',
+                      appearance: 'none',
+                      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2314b8a6' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`,
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'right 16px center'
+                    }}
+                  >
+                    {editTimeOptions.map((option) => (
+                      <option key={option.value} value={option.value} style={{ background: '#1a1a1a', color: 'white' }}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Calendar View */}
+                <div style={{ background: '#0d0d0d', padding: '20px', borderRadius: '12px' }}>
+                  {/* Calendar Header */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setEditCalendarMonth(subMonths(editCalendarMonth, 1))}
+                      style={{
+                        background: '#1a1a1a',
+                        border: '1px solid #27272a',
+                        borderRadius: '8px',
+                        padding: '8px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}
+                    >
+                      <ChevronLeft style={{ width: '18px', height: '18px', color: '#e5e5e5' }} />
+                    </button>
+
+                    <h3 style={{ color: 'white', fontSize: '15px', fontWeight: 600, margin: 0 }}>
+                      {format(editCalendarMonth, 'MMMM yyyy')}
+                    </h3>
+
+                    <button
+                      type="button"
+                      onClick={() => setEditCalendarMonth(addMonths(editCalendarMonth, 1))}
+                      style={{
+                        background: '#1a1a1a',
+                        border: '1px solid #27272a',
+                        borderRadius: '8px',
+                        padding: '8px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}
+                    >
+                      <ChevronRight style={{ width: '18px', height: '18px', color: '#e5e5e5' }} />
+                    </button>
+                  </div>
+
+                  {/* Days of Week */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px', marginBottom: '8px' }}>
+                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                      <div key={day} style={{
+                        textAlign: 'center',
+                        color: '#888',
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        padding: '6px 0'
+                      }}>
+                        {day}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Calendar Grid */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
+                    {editDateRange.map(date => {
+                      const dateKey = format(date, 'yyyy-MM-dd')
+                      const dayPosts = postsByDate[dateKey] || []
+                      const isCurrentMonth = isSameMonth(date, editCalendarMonth)
+                      const isSelected = editSelectedDate && isSameDay(date, editSelectedDate)
+                      const isPast = isBefore(date, startOfDay(new Date()))
+                      const isTodayDate = isToday(date)
+
+                      return (
+                        <button
+                          key={dateKey}
+                          type="button"
+                          onClick={() => !isPast && setEditSelectedDate(date)}
+                          disabled={isPast}
+                          style={{
+                            background: isSelected ? '#14b8a6' : '#1a1a1a',
+                            border: isTodayDate && !isSelected ? '2px solid #14b8a6' : '1px solid #27272a',
+                            borderRadius: '6px',
+                            padding: '6px',
+                            minHeight: '50px',
+                            opacity: isCurrentMonth ? (isPast ? 0.3 : 1) : 0.3,
+                            cursor: isPast ? 'not-allowed' : 'pointer',
+                            transition: 'all 0.2s ease',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center'
+                          }}
+                        >
+                          <div style={{
+                            color: isSelected ? 'white' : (isTodayDate ? '#14b8a6' : '#888'),
+                            fontSize: '11px',
+                            fontWeight: isSelected || isTodayDate ? 600 : 400,
+                            marginBottom: '2px'
+                          }}>
+                            {format(date, 'd')}
+                          </div>
+
+                          {/* Post indicators */}
+                          {dayPosts.length > 0 && (
+                            <div style={{ display: 'flex', gap: '2px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                              {dayPosts.slice(0, 3).map((post: any) => (
+                                <div
+                                  key={post.id}
+                                  style={{
+                                    width: '5px',
+                                    height: '5px',
+                                    borderRadius: '50%',
+                                    background: getPlatformColor(post.platforms?.[0] || '')
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          )}
+                        </button>
+                      )
+                    })}
+                  </div>
+
+                  {/* Legend */}
+                  <div style={{ marginTop: '12px', display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#E1306C' }} />
+                      <span style={{ color: '#888', fontSize: '10px' }}>Instagram</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#1877F2' }} />
+                      <span style={{ color: '#888', fontSize: '10px' }}>Facebook</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#E60023' }} />
+                      <span style={{ color: '#888', fontSize: '10px' }}>Pinterest</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Posted Date/Time Display - Only for posted */}
+            {editingPost.status === 'posted' && editingPost.scheduled_for && (
+              <div style={{ marginBottom: '32px' }}>
+                <label style={{ color: 'white', fontSize: '16px', fontWeight: 600, display: 'block', marginBottom: '12px' }}>
+                  Posted On
+                </label>
                 <div style={{
-                  background: 'rgba(20, 184, 166, 0.1)',
-                  border: '1px solid #14b8a6',
+                  background: 'rgba(16, 185, 129, 0.1)',
+                  border: '1px solid #10b981',
                   borderRadius: '12px',
                   padding: '16px',
-                  marginBottom: '20px',
                   textAlign: 'center'
                 }}>
-                  <p style={{ color: '#f3f4f6', fontSize: '18px', fontWeight: 600, margin: 0 }}>
-                    {editFormattedDateTime}
+                  <p style={{ color: '#10b981', fontSize: '18px', fontWeight: 600, margin: 0 }}>
+                    {format(new Date(editingPost.scheduled_for), 'MMM d, yyyy')} at {format(new Date(editingPost.scheduled_for), 'h:mm a')}
                   </p>
                 </div>
-              )}
-
-              {/* Time Picker Dropdown */}
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{ color: '#888', fontSize: '14px', fontWeight: 500, display: 'block', marginBottom: '8px' }}>
-                  Select Time
-                </label>
-                <select
-                  value={editSelectedTime}
-                  onChange={(e) => setEditSelectedTime(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '12px 16px',
-                    background: '#1a1a1a',
-                    border: '1px solid #374151',
-                    borderRadius: '8px',
-                    color: 'white',
-                    fontSize: '14px',
-                    outline: 'none',
-                    cursor: 'pointer',
-                    appearance: 'none',
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2314b8a6' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`,
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'right 16px center'
-                  }}
-                >
-                  {editTimeOptions.map((option) => (
-                    <option key={option.value} value={option.value} style={{ background: '#1a1a1a', color: 'white' }}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
               </div>
+            )}
 
-              {/* Calendar View */}
-              <div style={{ background: '#0d0d0d', padding: '20px', borderRadius: '12px' }}>
-                {/* Calendar Header */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                  <button
-                    type="button"
-                    onClick={() => setEditCalendarMonth(subMonths(editCalendarMonth, 1))}
-                    style={{
-                      background: '#1a1a1a',
-                      border: '1px solid #27272a',
-                      borderRadius: '8px',
-                      padding: '8px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    <ChevronLeft style={{ width: '18px', height: '18px', color: '#e5e5e5' }} />
-                  </button>
-
-                  <h3 style={{ color: 'white', fontSize: '15px', fontWeight: 600, margin: 0 }}>
-                    {format(editCalendarMonth, 'MMMM yyyy')}
-                  </h3>
-
-                  <button
-                    type="button"
-                    onClick={() => setEditCalendarMonth(addMonths(editCalendarMonth, 1))}
-                    style={{
-                      background: '#1a1a1a',
-                      border: '1px solid #27272a',
-                      borderRadius: '8px',
-                      padding: '8px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    <ChevronRight style={{ width: '18px', height: '18px', color: '#e5e5e5' }} />
-                  </button>
-                </div>
-
-                {/* Days of Week */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px', marginBottom: '8px' }}>
-                  {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                    <div key={day} style={{
-                      textAlign: 'center',
-                      color: '#888',
-                      fontSize: '11px',
-                      fontWeight: 600,
-                      padding: '6px 0'
-                    }}>
-                      {day}
-                    </div>
-                  ))}
-                </div>
-
-                {/* Calendar Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
-                  {editDateRange.map(date => {
-                    const dateKey = format(date, 'yyyy-MM-dd')
-                    const dayPosts = postsByDate[dateKey] || []
-                    const isCurrentMonth = isSameMonth(date, editCalendarMonth)
-                    const isSelected = editSelectedDate && isSameDay(date, editSelectedDate)
-                    const isPast = isBefore(date, startOfDay(new Date()))
-                    const isTodayDate = isToday(date)
-
-                    return (
-                      <button
-                        key={dateKey}
-                        type="button"
-                        onClick={() => !isPast && setEditSelectedDate(date)}
-                        disabled={isPast}
-                        style={{
-                          background: isSelected ? '#14b8a6' : '#1a1a1a',
-                          border: isTodayDate && !isSelected ? '2px solid #14b8a6' : '1px solid #27272a',
-                          borderRadius: '6px',
-                          padding: '6px',
-                          minHeight: '50px',
-                          opacity: isCurrentMonth ? (isPast ? 0.3 : 1) : 0.3,
-                          cursor: isPast ? 'not-allowed' : 'pointer',
-                          transition: 'all 0.2s ease',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center'
-                        }}
-                      >
-                        <div style={{
-                          color: isSelected ? 'white' : (isTodayDate ? '#14b8a6' : '#888'),
-                          fontSize: '11px',
-                          fontWeight: isSelected || isTodayDate ? 600 : 400,
-                          marginBottom: '2px'
-                        }}>
-                          {format(date, 'd')}
-                        </div>
-
-                        {/* Post indicators */}
-                        {dayPosts.length > 0 && (
-                          <div style={{ display: 'flex', gap: '2px', flexWrap: 'wrap', justifyContent: 'center' }}>
-                            {dayPosts.slice(0, 3).map((post: any) => (
-                              <div
-                                key={post.id}
-                                style={{
-                                  width: '5px',
-                                  height: '5px',
-                                  borderRadius: '50%',
-                                  background: getPlatformColor(post.platforms?.[0] || '')
-                                }}
-                              />
-                            ))}
-                          </div>
-                        )}
-                      </button>
-                    )
-                  })}
-                </div>
-
-                {/* Legend */}
-                <div style={{ marginTop: '12px', display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#E1306C' }} />
-                    <span style={{ color: '#888', fontSize: '10px' }}>Instagram</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#1877F2' }} />
-                    <span style={{ color: '#888', fontSize: '10px' }}>Facebook</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#E60023' }} />
-                    <span style={{ color: '#888', fontSize: '10px' }}>Pinterest</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'space-between' }}>
-              <button
-                onClick={() => {
-                  if (confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
-                    handleDelete(editingPost.id)
-                    setEditingPost(null)
-                  }
-                }}
-                style={{
-                  padding: '12px 24px',
-                  background: 'transparent',
-                  color: '#ef4444',
-                  fontSize: '15px',
-                  fontWeight: 600,
-                  border: '2px solid #ef4444',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#ef4444'
-                  e.currentTarget.style.color = 'white'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#ef4444'
-                }}
-              >
-                Delete
-              </button>
-              <div style={{ display: 'flex', gap: '12px' }}>
+            {/* Actions - Different for posted vs editable */}
+            {editingPost.status === 'posted' ? (
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <button
                   onClick={() => setEditingPost(null)}
                   style={{
-                    padding: '12px 24px',
+                    padding: '12px 32px',
                     background: '#2a2a2a',
                     color: 'white',
                     fontSize: '15px',
@@ -1369,27 +1370,273 @@ export function Schedule() {
                   onMouseEnter={(e) => e.currentTarget.style.background = '#333'}
                   onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
                 >
-                  Cancel
+                  Close
                 </button>
+              </div>
+            ) : (
+              <>
+                {/* Action Buttons Row */}
+                <div style={{ display: 'flex', gap: '12px', justifyContent: 'space-between', marginBottom: '16px' }}>
+                  <button
+                    onClick={() => {
+                      setPostToDelete(editingPost.id)
+                      setDeleteConfirmOpen(true)
+                    }}
+                    style={{
+                      padding: '12px 24px',
+                      background: 'transparent',
+                      color: '#ef4444',
+                      fontSize: '15px',
+                      fontWeight: 600,
+                      border: '2px solid #ef4444',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = '#ef4444'
+                      e.currentTarget.style.color = 'white'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'transparent'
+                      e.currentTarget.style.color = '#ef4444'
+                    }}
+                  >
+                    Delete
+                  </button>
+                  <div style={{ display: 'flex', gap: '12px' }}>
+                    <button
+                      onClick={() => setEditingPost(null)}
+                      style={{
+                        padding: '12px 24px',
+                        background: '#2a2a2a',
+                        color: 'white',
+                        fontSize: '15px',
+                        fontWeight: 600,
+                        border: 'none',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = '#333'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleSaveEdit}
+                      style={{
+                        padding: '12px 32px',
+                        background: '#14b8a6',
+                        color: 'white',
+                        fontSize: '15px',
+                        fontWeight: 600,
+                        border: 'none',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = '#10a896'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = '#14b8a6'}
+                    >
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
+
+                {/* Post Now Button - At Bottom */}
                 <button
-                  onClick={handleSaveEdit}
+                  onClick={() => {
+                    setPostToConfirm(editingPost.id)
+                  }}
+                  disabled={posting === editingPost.id}
                   style={{
-                    padding: '12px 32px',
-                    background: '#14b8a6',
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    padding: '14px',
+                    background: '#2a2a2a',
                     color: 'white',
                     fontSize: '15px',
                     fontWeight: 600,
-                    border: 'none',
+                    border: '2px solid #27272a',
                     borderRadius: '8px',
-                    cursor: 'pointer',
+                    cursor: posting === editingPost.id ? 'not-allowed' : 'pointer',
+                    opacity: posting === editingPost.id ? 0.6 : 1,
                     transition: 'all 0.2s ease'
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = '#10a896'}
-                  onMouseLeave={(e) => e.currentTarget.style.background = '#14b8a6'}
+                  onMouseEnter={(e) => {
+                    if (posting !== editingPost.id) {
+                      e.currentTarget.style.background = '#14b8a6'
+                      e.currentTarget.style.borderColor = '#14b8a6'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = '#2a2a2a'
+                    e.currentTarget.style.borderColor = '#27272a'
+                  }}
                 >
-                  Save Changes
+                  {posting === editingPost.id ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      Posting...
+                    </>
+                  ) : (
+                    <>
+                      <Send style={{ width: '18px', height: '18px' }} />
+                      Post Now
+                    </>
+                  )}
                 </button>
-              </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Lightbox Modal */}
+      {lightboxOpen && editingPost && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.95)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1100,
+            cursor: 'pointer'
+          }}
+          onClick={() => setLightboxOpen(false)}
+        >
+          <button
+            onClick={() => setLightboxOpen(false)}
+            style={{
+              position: 'absolute',
+              top: '24px',
+              right: '24px',
+              background: 'rgba(255, 255, 255, 0.1)',
+              border: 'none',
+              borderRadius: '50%',
+              padding: '12px',
+              cursor: 'pointer'
+            }}
+          >
+            <X style={{ width: '24px', height: '24px', color: 'white' }} />
+          </button>
+          {editingPost.media?.media_type === 'video' ? (
+            <video
+              src={editingPost.media?.cloudinary_url}
+              controls
+              autoPlay
+              style={{
+                maxWidth: '90vw',
+                maxHeight: '90vh',
+                borderRadius: '12px'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            />
+          ) : (
+            <img
+              src={editingPost.media?.cloudinary_url}
+              alt="Full size preview"
+              style={{
+                maxWidth: '90vw',
+                maxHeight: '90vh',
+                objectFit: 'contain',
+                borderRadius: '12px'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            />
+          )}
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirmOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1200,
+            padding: '24px'
+          }}
+          onClick={() => setDeleteConfirmOpen(false)}
+        >
+          <div
+            style={{
+              background: '#1a1a1a',
+              borderRadius: '16px',
+              padding: '32px',
+              maxWidth: '400px',
+              width: '100%',
+              textAlign: 'center',
+              boxShadow: '0 0 60px rgba(0, 0, 0, 0.5)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <AlertCircle style={{ width: '48px', height: '48px', color: '#ef4444', margin: '0 auto 16px' }} />
+            <h3 style={{ color: 'white', fontSize: '20px', fontWeight: 600, marginBottom: '12px' }}>
+              Delete Post?
+            </h3>
+            <p style={{ color: '#888', fontSize: '14px', marginBottom: '24px' }}>
+              Are you sure you want to delete this post? This action cannot be undone.
+            </p>
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+              <button
+                onClick={() => setDeleteConfirmOpen(false)}
+                style={{
+                  padding: '12px 24px',
+                  background: '#2a2a2a',
+                  color: 'white',
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#333'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  if (postToDelete) {
+                    handleDelete(postToDelete)
+                    setDeleteConfirmOpen(false)
+                    setEditingPost(null)
+                  }
+                }}
+                style={{
+                  padding: '12px 24px',
+                  background: '#ef4444',
+                  color: 'white',
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#dc2626'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#ef4444'}
+              >
+                Confirm Delete
+              </button>
             </div>
           </div>
         </div>
