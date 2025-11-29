@@ -31,18 +31,30 @@ export function Dashboard() {
   const [currentWeek, setCurrentWeek] = useState(new Date())
 
   // Helper function to get proper thumbnail URL for videos
+  // Handles both new uploads (correct thumbnail_url) and legacy data (video URL in thumbnail_url)
   const getMediaThumbnail = (media: any) => {
     if (!media) return null
 
-    // If thumbnail_url exists, use it
-    if (media.thumbnail_url) return media.thumbnail_url
+    // Check if thumbnail_url exists and is actually an image (not a video file)
+    // Legacy data has video URLs stored in thumbnail_url which won't display in <img> tags
+    const videoExtensions = ['.mp4', '.mov', '.avi', '.webm', '.mkv']
+    const hasValidThumbnail = media.thumbnail_url &&
+      !videoExtensions.some(ext => media.thumbnail_url.toLowerCase().endsWith(ext))
 
-    // For videos, generate a thumbnail from Cloudinary by transforming the URL
-    if (media.media_type === 'video' && media.cloudinary_url) {
-      // Insert video thumbnail transformation before the file name
-      // This creates a still image from the first frame of the video
-      return media.cloudinary_url
-        .replace('/video/upload/', '/video/upload/so_0,f_jpg,w_200,h_200,c_fill/')
+    if (hasValidThumbnail) {
+      return media.thumbnail_url
+    }
+
+    // For videos (or videos incorrectly stored in thumbnail_url), generate thumbnail from Cloudinary
+    // Use thumbnail_url if it's a Cloudinary video URL, otherwise use cloudinary_url
+    const videoUrl = media.thumbnail_url?.includes('/video/upload/')
+      ? media.thumbnail_url
+      : media.cloudinary_url
+
+    if (media.media_type === 'video' && videoUrl?.includes('/video/upload/')) {
+      // Transform: get first frame (so_0), convert to jpg, resize with fill
+      return videoUrl
+        .replace('/video/upload/', '/video/upload/so_0,f_jpg,w_400,h_400,c_fill/')
         .replace(/\.[^/.]+$/, '.jpg')
     }
 

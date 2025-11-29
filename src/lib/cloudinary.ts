@@ -21,6 +21,16 @@ export async function uploadToCloudinary(file: File): Promise<CloudinaryUploadRe
 
   const data = await response.json()
 
+  // For videos, generate a thumbnail URL using Cloudinary transformations
+  // Cloudinary doesn't return thumbnail_url for videos, so we create one
+  let thumbnailUrl = data.secure_url
+  if (resourceType === 'video' && data.secure_url) {
+    // Transform: get first frame (so_0), convert to jpg, resize to 400x400 with fill
+    thumbnailUrl = data.secure_url
+      .replace('/video/upload/', '/video/upload/so_0,f_jpg,w_400,h_400,c_fill/')
+      .replace(/\.[^/.]+$/, '.jpg')
+  }
+
   return {
     public_id: data.public_id,
     secure_url: data.secure_url,
@@ -31,6 +41,6 @@ export async function uploadToCloudinary(file: File): Promise<CloudinaryUploadRe
     height: data.height,
     bytes: data.bytes,
     duration: data.duration,
-    thumbnail_url: data.thumbnail_url || data.secure_url
+    thumbnail_url: thumbnailUrl
   }
 }
