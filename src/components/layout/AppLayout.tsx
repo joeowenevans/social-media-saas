@@ -65,18 +65,19 @@ export function AppLayout({ children }: AppLayoutProps) {
         }}
       >
         <div
-          className="px-4 md:px-8 lg:px-12"
           style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             height: '100%',
+            padding: '0 48px',
             width: '100%'
           }}
         >
-          {/* Left Side - Logo Section */}
+          {/* Left Side - Logo Section (1/3) */}
           <div
             style={{
+              flex: 1,
               display: 'flex',
               alignItems: 'center',
               gap: '12px'
@@ -100,11 +101,12 @@ export function AppLayout({ children }: AppLayoutProps) {
             </span>
           </div>
 
-          {/* Desktop Navigation - Hidden on mobile */}
+          {/* Right Side - Navigation (2/3) - Desktop only */}
           <nav
-            className="hidden sm:flex"
+            className="desktop-nav"
             style={{
               flex: 2,
+              display: 'flex',
               justifyContent: 'space-evenly',
               alignItems: 'center'
             }}
@@ -112,7 +114,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             {navItems.map((item) => (
               <button
                 key={item.path}
-                onClick={() => handleNavClick(item.path)}
+                onClick={() => navigate(item.path)}
                 className="unstyled"
                 style={{
                   color: isActive(item.path) ? '#14b8a6' : '#e5e5e5',
@@ -120,7 +122,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                   fontWeight: 600,
                   background: 'transparent',
                   border: 'none',
-                  padding: '12px 8px',
+                  padding: '0',
                   cursor: 'pointer',
                   transition: 'all 0.3s ease',
                   textShadow: isActive(item.path)
@@ -150,7 +152,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                 fontWeight: 600,
                 background: 'transparent',
                 border: 'none',
-                padding: '12px 8px',
+                padding: '0',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
                 textShadow: 'none'
@@ -168,16 +170,16 @@ export function AppLayout({ children }: AppLayoutProps) {
             </button>
           </nav>
 
-          {/* Mobile Hamburger Button - Visible only on mobile */}
+          {/* Mobile Hamburger Button - Hidden on desktop */}
           <button
-            className="sm:hidden"
+            className="mobile-menu-btn"
             onClick={() => setMobileMenuOpen(true)}
             style={{
               background: 'transparent',
               border: 'none',
               padding: '10px',
               cursor: 'pointer',
-              display: 'flex',
+              display: 'none',
               alignItems: 'center',
               justifyContent: 'center',
               minWidth: '44px',
@@ -190,10 +192,10 @@ export function AppLayout({ children }: AppLayoutProps) {
         </div>
       </header>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu Overlay - Only renders on mobile */}
       {mobileMenuOpen && (
         <div
-          className="sm:hidden"
+          className="mobile-menu-overlay"
           style={{
             position: 'fixed',
             top: 0,
@@ -201,7 +203,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             right: 0,
             bottom: 0,
             zIndex: 100,
-            display: 'flex'
+            display: 'none'
           }}
         >
           {/* Backdrop */}
@@ -332,38 +334,40 @@ export function AppLayout({ children }: AppLayoutProps) {
         </div>
       )}
 
-      {/* CSS Animation for Mobile Menu */}
+      {/* Mobile-only CSS - does not affect desktop */}
       <style>{`
         @keyframes slideInRight {
-          from {
-            transform: translateX(100%);
-          }
-          to {
-            transform: translateX(0);
-          }
+          from { transform: translateX(100%); }
+          to { transform: translateX(0); }
+        }
+
+        @media (max-width: 639px) {
+          .desktop-nav { display: none !important; }
+          .mobile-menu-btn { display: flex !important; }
+          .mobile-menu-overlay { display: flex !important; }
         }
       `}</style>
 
       {/* Main Content */}
       <main className="flex-1">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-6 sm:py-8">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-8">
           {children}
         </div>
       </main>
 
-      {/* Footer */}
+      {/* Footer - New Design System */}
       <footer
         style={{
           background: '#0f0f0f',
           borderTop: '1px solid #1a1a1a',
-          marginTop: '48px'
+          marginTop: '64px'
         }}
       >
         <div
-          className="mx-auto text-center px-4"
+          className="mx-auto text-center"
           style={{
             maxWidth: '900px',
-            padding: '24px 16px'
+            padding: '32px'
           }}
         >
           {/* Logo */}
@@ -378,8 +382,8 @@ export function AppLayout({ children }: AppLayoutProps) {
             SocialAI
           </div>
 
-          {/* Links - Responsive: row on mobile, still centered */}
-          <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6">
+          {/* Links - Stacked vertically, centered */}
+          <div className="flex flex-col items-center gap-4">
             <a
               href="#"
               className="transition-colors"
@@ -387,13 +391,12 @@ export function AppLayout({ children }: AppLayoutProps) {
                 color: '#888',
                 fontSize: '14px',
                 textDecoration: 'none',
-                transition: 'color 0.2s',
-                padding: '8px'
+                transition: 'color 0.2s'
               }}
               onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
               onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
             >
-              Privacy
+              Privacy Policy
             </a>
             <a
               href="#"
@@ -402,13 +405,12 @@ export function AppLayout({ children }: AppLayoutProps) {
                 color: '#888',
                 fontSize: '14px',
                 textDecoration: 'none',
-                transition: 'color 0.2s',
-                padding: '8px'
+                transition: 'color 0.2s'
               }}
               onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
               onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
             >
-              Terms
+              Terms of Service
             </a>
             <a
               href="#"
@@ -417,8 +419,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                 color: '#888',
                 fontSize: '14px',
                 textDecoration: 'none',
-                transition: 'color 0.2s',
-                padding: '8px'
+                transition: 'color 0.2s'
               }}
               onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
               onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
@@ -432,8 +433,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                 color: '#888',
                 fontSize: '14px',
                 textDecoration: 'none',
-                transition: 'color 0.2s',
-                padding: '8px'
+                transition: 'color 0.2s'
               }}
               onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
               onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
@@ -446,8 +446,8 @@ export function AppLayout({ children }: AppLayoutProps) {
           <div
             style={{
               color: '#888',
-              fontSize: '13px',
-              marginTop: '20px'
+              fontSize: '14px',
+              marginTop: '24px'
             }}
           >
             &copy; {new Date().getFullYear()} SocialAI. All rights reserved.
