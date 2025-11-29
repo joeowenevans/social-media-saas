@@ -40,20 +40,9 @@ export function SignupForm() {
     }
   }
 
-  const inputStyle = {
-    padding: '12px 16px',
-    border: '1px solid #27272a',
-    borderRadius: '8px',
-    backgroundColor: '#0d0d0d',
-    color: '#e5e5e5',
-    fontSize: '15px',
-    outline: 'none',
-    transition: 'border-color 0.2s ease'
-  }
-
   return (
     <div
-      className="min-h-screen flex items-center justify-center px-4 py-8"
+      className="min-h-screen flex items-center justify-center px-4"
       style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}
     >
       <style>{`
@@ -75,63 +64,102 @@ export function SignupForm() {
         }
       `}</style>
 
-      <div className="w-full max-w-[400px]">
+      <div className="w-full" style={{ maxWidth: '400px' }}>
         {/* Logo with Icon */}
-        <div className="flex items-center justify-center gap-3 mb-6 sm:mb-8">
-          <Share2 className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
-          <h1 className="text-2xl sm:text-3xl font-bold text-teal-400 m-0">
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '12px',
+          marginBottom: '32px'
+        }}>
+          <Share2 style={{
+            color: 'white',
+            width: '32px',
+            height: '32px'
+          }} />
+          <h1 style={{
+            color: '#14b8a6',
+            fontSize: '32px',
+            fontWeight: 700,
+            margin: 0
+          }}>
             SocialAI
           </h1>
         </div>
 
         {/* Form Container with Teal Glow */}
         <div
-          className="p-5 sm:p-10"
           style={{
             background: '#1a1a1a',
             border: '1px solid #27272a',
             borderRadius: '16px',
+            padding: '48px 40px',
             boxShadow: '0 0 40px rgba(20, 184, 166, 0.15), 0 0 80px rgba(20, 184, 166, 0.08)'
           }}
         >
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col w-full"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              width: '100%'
+            }}
           >
-            {/* Name inputs row on larger screens */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-3 sm:mb-4">
-              {/* First Name Input */}
-              <input
-                id="first-name"
-                name="firstName"
-                type="text"
-                autoComplete="given-name"
-                required
-                className="w-full h-11 sm:h-12"
-                style={inputStyle}
-                placeholder="First name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-                onBlur={(e) => e.target.style.borderColor = '#27272a'}
-              />
+            {/* First Name Input */}
+            <input
+              id="first-name"
+              name="firstName"
+              type="text"
+              autoComplete="given-name"
+              required
+              style={{
+                width: '320px',
+                height: '44px',
+                padding: '12px 16px',
+                border: '1px solid #27272a',
+                borderRadius: '8px',
+                backgroundColor: '#0d0d0d',
+                color: '#e5e5e5',
+                fontSize: '15px',
+                outline: 'none',
+                transition: 'border-color 0.2s ease',
+                marginBottom: '20px'
+              }}
+              placeholder="First name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+              onBlur={(e) => e.target.style.borderColor = '#27272a'}
+            />
 
-              {/* Last Name Input */}
-              <input
-                id="last-name"
-                name="lastName"
-                type="text"
-                autoComplete="family-name"
-                required
-                className="w-full h-11 sm:h-12"
-                style={inputStyle}
-                placeholder="Last name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-                onBlur={(e) => e.target.style.borderColor = '#27272a'}
-              />
-            </div>
+            {/* Last Name Input */}
+            <input
+              id="last-name"
+              name="lastName"
+              type="text"
+              autoComplete="family-name"
+              required
+              style={{
+                width: '320px',
+                height: '44px',
+                padding: '12px 16px',
+                border: '1px solid #27272a',
+                borderRadius: '8px',
+                backgroundColor: '#0d0d0d',
+                color: '#e5e5e5',
+                fontSize: '15px',
+                outline: 'none',
+                transition: 'border-color 0.2s ease',
+                marginBottom: '20px'
+              }}
+              placeholder="Last name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
+              onBlur={(e) => e.target.style.borderColor = '#27272a'}
+            />
 
             {/* Email Input */}
             <input
@@ -140,8 +168,19 @@ export function SignupForm() {
               type="email"
               autoComplete="email"
               required
-              className="w-full h-11 sm:h-12 mb-3 sm:mb-4"
-              style={inputStyle}
+              style={{
+                width: '320px',
+                height: '44px',
+                padding: '12px 16px',
+                border: '1px solid #27272a',
+                borderRadius: '8px',
+                backgroundColor: '#0d0d0d',
+                color: '#e5e5e5',
+                fontSize: '15px',
+                outline: 'none',
+                transition: 'border-color 0.2s ease',
+                marginBottom: '20px'
+              }}
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -156,8 +195,19 @@ export function SignupForm() {
               type="password"
               autoComplete="new-password"
               required
-              className="w-full h-11 sm:h-12 mb-3 sm:mb-4"
-              style={inputStyle}
+              style={{
+                width: '320px',
+                height: '44px',
+                padding: '12px 16px',
+                border: '1px solid #27272a',
+                borderRadius: '8px',
+                backgroundColor: '#0d0d0d',
+                color: '#e5e5e5',
+                fontSize: '15px',
+                outline: 'none',
+                transition: 'border-color 0.2s ease',
+                marginBottom: '20px'
+              }}
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -172,8 +222,19 @@ export function SignupForm() {
               type="password"
               autoComplete="new-password"
               required
-              className="w-full h-11 sm:h-12 mb-5 sm:mb-8"
-              style={inputStyle}
+              style={{
+                width: '320px',
+                height: '44px',
+                padding: '12px 16px',
+                border: '1px solid #27272a',
+                borderRadius: '8px',
+                backgroundColor: '#0d0d0d',
+                color: '#e5e5e5',
+                fontSize: '15px',
+                outline: 'none',
+                transition: 'border-color 0.2s ease',
+                marginBottom: '32px'
+              }}
               placeholder="Confirm password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -185,14 +246,19 @@ export function SignupForm() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full sm:w-auto sm:mx-auto sm:px-16 h-11 sm:h-12 mb-5"
               style={{
+                display: 'block',
+                margin: '0 auto 32px',
+                maxWidth: '240px',
+                width: '60%',
+                padding: '12px 20px',
+                height: '44px',
                 background: loading ? '#2a2a2a' : '#2a2a2a',
                 color: 'white',
                 fontSize: '16px',
                 fontWeight: 600,
                 border: 'none',
-                borderRadius: '24px',
+                borderRadius: '20px',
                 cursor: loading ? 'not-allowed' : 'pointer',
                 opacity: loading ? 0.6 : 1,
                 transition: 'all 0.2s ease'
@@ -200,7 +266,7 @@ export function SignupForm() {
               onMouseEnter={(e) => {
                 if (!loading) {
                   e.currentTarget.style.background = '#14b8a6'
-                  e.currentTarget.style.transform = 'scale(1.02)'
+                  e.currentTarget.style.transform = 'scale(1.05)'
                 }
               }}
               onMouseLeave={(e) => {
@@ -212,13 +278,21 @@ export function SignupForm() {
             </button>
 
             {/* Sign In Link - Centered */}
-            <div className="text-center">
-              <span className="text-gray-500 text-sm">
+            <div style={{ textAlign: 'center' }}>
+              <span style={{ color: '#888', fontSize: '14px' }}>
                 Already have an account?{' '}
               </span>
               <Link
                 to="/login"
-                className="text-teal-400 text-sm font-medium hover:opacity-80 transition-opacity"
+                style={{
+                  color: '#14b8a6',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  textDecoration: 'none',
+                  transition: 'opacity 0.2s ease'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
+                onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
               >
                 Sign in
               </Link>
