@@ -156,17 +156,7 @@ export function Dashboard() {
 
   return (
     <AppLayout>
-      {/* Mobile-only styles - does not affect desktop */}
-      <style>{`
-        @media (max-width: 639px) {
-          .dashboard-container { padding: 24px 16px !important; }
-          .stats-grid { grid-template-columns: 1fr !important; }
-          .posts-gallery { display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; }
-          .posts-gallery > div { width: 100% !important; margin: 0 !important; }
-          .calendar-container { padding: 16px !important; overflow-x: auto; }
-        }
-      `}</style>
-      <div className="dashboard-container" style={{ padding: '48px 32px' }}>
+      <div style={{ padding: '48px 32px' }}>
         {/* Welcome Title */}
         <h1 style={{
           color: '#ffffff',
@@ -234,7 +224,7 @@ export function Dashboard() {
         </div>
 
         {/* Stats Grid - 1x3 with white glow */}
-        <div className="stats-grid" style={{
+        <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
           gap: '16px',
@@ -339,7 +329,7 @@ export function Dashboard() {
             </div>
           </div>
 
-          <div className="calendar-container" style={{ background: '#1a1a1a', padding: '32px', borderRadius: '12px' }}>
+          <div style={{ background: '#1a1a1a', padding: '32px', borderRadius: '12px' }}>
             {/* Calendar Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <button
@@ -544,7 +534,7 @@ export function Dashboard() {
               </button>
             </div>
           ) : (
-            <div className="posts-gallery" style={{
+            <div style={{
               display: 'flex',
               flexWrap: 'wrap',
               gap: '1%'
