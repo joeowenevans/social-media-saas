@@ -87,6 +87,16 @@ export function Upload() {
     ? `${format(selectedDate, 'MMM d, yyyy')} at ${format(new Date(`2000-01-01T${selectedTime}`), 'h:mm a')}`
     : null
 
+  // Generate time options in 30-minute intervals
+  const timeOptions = Array.from({ length: 48 }, (_, i) => {
+    const hours = Math.floor(i / 2)
+    const minutes = (i % 2) * 30
+    const time24 = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
+    const date = new Date(`2000-01-01T${time24}`)
+    const time12 = format(date, 'h:mm a')
+    return { value: time24, label: time12 }
+  })
+
   // Upload states
   const [uploading, setUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
@@ -422,22 +432,14 @@ export function Upload() {
         }
       `}</style>
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 32px' }}>
-        {/* Page Title Card with Teal Glow */}
-        <div style={{
-          background: '#1a1a1a',
-          borderRadius: '12px',
-          padding: '32px',
-          marginBottom: '48px',
-          maxWidth: '512px',
-          margin: '0 auto 48px',
-          boxShadow: '0 0 30px rgba(20, 184, 166, 0.2), 0 0 60px rgba(20, 184, 166, 0.1)',
-          textAlign: 'center'
-        }}>
+        {/* Page Title with Teal Text Glow */}
+        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
           <h1 style={{
             color: '#14b8a6',
             fontSize: '32px',
             fontWeight: 700,
-            marginBottom: '12px'
+            marginBottom: '12px',
+            textShadow: '0 0 20px rgba(20, 184, 166, 0.6), 0 0 40px rgba(20, 184, 166, 0.4), 0 0 60px rgba(20, 184, 166, 0.2)'
           }}>
             Upload Content
           </h1>
@@ -791,26 +793,36 @@ export function Upload() {
                       </div>
                     )}
 
-                    {/* Time Picker */}
+                    {/* Time Picker Dropdown */}
                     <div style={{ marginBottom: '24px' }}>
                       <label style={{ color: '#888', fontSize: '14px', fontWeight: 500, display: 'block', marginBottom: '8px' }}>
                         Select Time
                       </label>
-                      <input
-                        type="time"
+                      <select
                         value={selectedTime}
                         onChange={(e) => setSelectedTime(e.target.value)}
                         style={{
                           width: '100%',
                           padding: '12px 16px',
-                          background: '#1a1a1a',
+                          background: '#1f2937',
                           border: '1px solid #27272a',
                           borderRadius: '8px',
                           color: 'white',
                           fontSize: '14px',
-                          outline: 'none'
+                          outline: 'none',
+                          cursor: 'pointer',
+                          appearance: 'none',
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2314b8a6' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`,
+                          backgroundRepeat: 'no-repeat',
+                          backgroundPosition: 'right 16px center'
                         }}
-                      />
+                      >
+                        {timeOptions.map((option) => (
+                          <option key={option.value} value={option.value} style={{ background: '#1f2937', color: 'white' }}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
                     </div>
 
                     {/* Calendar View */}
