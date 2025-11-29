@@ -210,6 +210,7 @@ export function AppLayout({ children }: AppLayoutProps) {
 
           {/* Hamburger Button */}
           <button
+            className="sm:hidden"
             onClick={() => setMobileMenuOpen(true)}
             style={{
               background: 'transparent',
