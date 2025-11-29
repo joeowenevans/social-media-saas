@@ -30,6 +30,26 @@ export function Dashboard() {
   const [calendarView, setCalendarView] = useState<'week' | 'month'>('month')
   const [currentWeek, setCurrentWeek] = useState(new Date())
 
+  // Helper function to get proper thumbnail URL for videos
+  const getMediaThumbnail = (media: any) => {
+    if (!media) return null
+
+    // If thumbnail_url exists, use it
+    if (media.thumbnail_url) return media.thumbnail_url
+
+    // For videos, generate a thumbnail from Cloudinary by transforming the URL
+    if (media.media_type === 'video' && media.cloudinary_url) {
+      // Insert video thumbnail transformation before the file name
+      // This creates a still image from the first frame of the video
+      return media.cloudinary_url
+        .replace('/video/upload/', '/video/upload/so_0,f_jpg,w_200,h_200,c_fill/')
+        .replace(/\.[^/.]+$/, '.jpg')
+    }
+
+    // For images, just return the cloudinary_url
+    return media.cloudinary_url
+  }
+
   // Get user's first name from metadata
   const firstName = user?.user_metadata?.first_name || user?.email?.split('@')[0] || 'there'
 
@@ -87,8 +107,8 @@ export function Dashboard() {
   const weekEnd = endOfWeek(currentWeek)
   const weekDateRange = eachDayOfInterval({ start: weekStart, end: weekEnd })
 
-  // Group scheduled posts by date
-  const postsByDate = scheduledPosts.reduce((acc: any, post) => {
+  // Group all posts by date (not just scheduled - includes posted too)
+  const postsByDate = posts.reduce((acc: any, post: any) => {
     if (post.scheduled_for) {
       const dateKey = format(new Date(post.scheduled_for), 'yyyy-MM-dd')
       if (!acc[dateKey]) acc[dateKey] = []
@@ -239,7 +259,7 @@ export function Dashboard() {
               fontSize: '24px',
               fontWeight: 600
             }}>
-              Scheduled Posts Calendar
+              Content Calendar
             </h2>
 
             {/* View Toggle */}
@@ -380,17 +400,31 @@ export function Dashboard() {
                         onClick={() => navigate(`/schedule?edit=${post.id}`)}
                       >
                         <div style={{ display: 'flex', gap: '6px', alignItems: 'flex-start', marginBottom: '4px' }}>
-                          <img
-                            src={post.media?.thumbnail_url || post.media?.cloudinary_url}
-                            alt=""
-                            style={{
-                              width: calendarView === 'week' ? '48px' : '40px',
-                              height: calendarView === 'week' ? '48px' : '40px',
-                              borderRadius: '6px',
-                              objectFit: 'cover',
-                              flexShrink: 0
-                            }}
-                          />
+                          <div style={{ position: 'relative', flexShrink: 0 }}>
+                            <img
+                              src={getMediaThumbnail(post.media)}
+                              alt=""
+                              style={{
+                                width: calendarView === 'week' ? '48px' : '40px',
+                                height: calendarView === 'week' ? '48px' : '40px',
+                                borderRadius: '6px',
+                                objectFit: 'cover'
+                              }}
+                            />
+                            {/* Status indicator dot */}
+                            <div style={{
+                              position: 'absolute',
+                              top: '-3px',
+                              right: '-3px',
+                              width: '10px',
+                              height: '10px',
+                              borderRadius: '50%',
+                              background: post.status === 'posted' ? '#10b981' :
+                                         post.status === 'scheduled' ? '#14b8a6' :
+                                         '#6b7280',
+                              border: '2px solid #0d0d0d'
+                            }} />
+                          </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
                             {/* Platform names as text */}
                             <div style={{
@@ -502,7 +536,7 @@ export function Dashboard() {
                   <div style={{ aspectRatio: '1 / 1', position: 'relative', background: '#0d0d0d' }}>
                     {post.media ? (
                       <img
-                        src={post.media.thumbnail_url || post.media.cloudinary_url}
+                        src={getMediaThumbnail(post.media)}
                         alt="Post media"
                         loading="lazy"
                         style={{
@@ -514,6 +548,22 @@ export function Dashboard() {
                     ) : (
                       <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <FileText style={{ width: '32px', height: '32px', color: '#666' }} />
+                      </div>
+                    )}
+                    {/* Media type badge for videos */}
+                    {post.media?.media_type === 'video' && (
+                      <div style={{
+                        position: 'absolute',
+                        top: '8px',
+                        right: '8px',
+                        background: 'rgba(0, 0, 0, 0.7)',
+                        borderRadius: '4px',
+                        padding: '4px 8px',
+                        fontSize: '10px',
+                        color: '#14b8a6',
+                        fontWeight: 500
+                      }}>
+                        VIDEO
                       </div>
                     )}
                   </div>
