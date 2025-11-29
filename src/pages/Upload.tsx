@@ -2,26 +2,90 @@ import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { useBrand } from '../hooks/useBrand'
+import { usePosts } from '../hooks/usePosts'
 import { AppLayout } from '../components/layout/AppLayout'
 import { useDropzone } from 'react-dropzone'
-import { Upload as UploadIcon, Wand2, Sparkles, Image as ImageIcon, Video, X } from 'lucide-react'
+import { Upload as UploadIcon, Wand2, Sparkles, Image as ImageIcon, Video, X, Send, Clock, ChevronLeft, ChevronRight } from 'lucide-react'
 import type { Media } from '../types'
 import toast from 'react-hot-toast'
 import { supabase } from '../lib/supabase'
 import { uploadToCloudinary } from '../lib/cloudinary'
+import {
+  startOfMonth,
+  endOfMonth,
+  eachDayOfInterval,
+  format,
+  addMonths,
+  subMonths,
+  startOfWeek,
+  endOfWeek,
+  isSameMonth,
+  isSameDay,
+  isToday,
+  isBefore,
+  startOfDay
+} from 'date-fns'
 
 export function Upload() {
   const { user } = useAuth()
   const { brand, loading } = useBrand(user?.id)
+  const { posts } = usePosts(brand?.id)
   const navigate = useNavigate()
   const [uploadedMedia, setUploadedMedia] = useState<Media | null>(null)
   const [caption, setCaption] = useState('')
   const [generating, setGenerating] = useState(false)
   const [saving, setSaving] = useState(false)
   const [scheduledTime, setScheduledTime] = useState<string>('')
-  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>(['instagram'])
+  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([])
   const [postType, setPostType] = useState<'now' | 'scheduled'>('now')
   const abortControllerRef = useRef<AbortController | null>(null)
+
+  // Calendar state
+  const [currentMonth, setCurrentMonth] = useState(new Date())
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+  const [selectedTime, setSelectedTime] = useState<string>('12:00')
+
+  // Sync selectedDate and selectedTime with scheduledTime
+  useEffect(() => {
+    if (selectedDate && selectedTime) {
+      const [hours, minutes] = selectedTime.split(':').map(Number)
+      const dateTime = new Date(selectedDate)
+      dateTime.setHours(hours, minutes, 0, 0)
+      setScheduledTime(dateTime.toISOString().slice(0, 16))
+    }
+  }, [selectedDate, selectedTime])
+
+  // Get scheduled posts grouped by date for calendar display
+  const scheduledPosts = posts.filter(p => p.status === 'scheduled')
+  const postsByDate = scheduledPosts.reduce((acc: Record<string, typeof scheduledPosts>, post) => {
+    if (post.scheduled_for) {
+      const dateKey = format(new Date(post.scheduled_for), 'yyyy-MM-dd')
+      if (!acc[dateKey]) acc[dateKey] = []
+      acc[dateKey].push(post)
+    }
+    return acc
+  }, {})
+
+  // Generate calendar grid
+  const monthStart = startOfMonth(currentMonth)
+  const monthEnd = endOfMonth(currentMonth)
+  const calendarStart = startOfWeek(monthStart)
+  const calendarEnd = endOfWeek(monthEnd)
+  const dateRange = eachDayOfInterval({ start: calendarStart, end: calendarEnd })
+
+  // Get platform color
+  const getPlatformColor = (platforms: string[]) => {
+    if (!platforms || platforms.length === 0) return '#14b8a6'
+    if (platforms.includes('instagram')) return '#E1306C'
+    if (platforms.includes('facebook')) return '#1877F2'
+    if (platforms.includes('pinterest')) return '#E60023'
+    return '#14b8a6'
+  }
+
+  // Format the selected date/time for display
+  const formattedDateTime = selectedDate
+    ? `${format(selectedDate, 'MMM d, yyyy')} at ${format(new Date(`2000-01-01T${selectedTime}`), 'h:mm a')}`
+    : null
 
   // Upload states
   const [uploading, setUploading] = useState(false)
@@ -364,7 +428,7 @@ export function Upload() {
           borderRadius: '12px',
           padding: '32px',
           marginBottom: '48px',
-          maxWidth: '768px',
+          maxWidth: '512px',
           margin: '0 auto 48px',
           boxShadow: '0 0 30px rgba(20, 184, 166, 0.2), 0 0 60px rgba(20, 184, 166, 0.1)',
           textAlign: 'center'
@@ -609,41 +673,40 @@ export function Upload() {
 
                 <div style={{ display: 'flex', gap: '16px' }}>
                   {[
-                    { id: 'instagram', label: 'Instagram', color: '#E1306C' },
-                    { id: 'facebook', label: 'Facebook', color: '#1877F2' },
-                    { id: 'pinterest', label: 'Pinterest', color: '#E60023' }
-                  ].map((platform) => (
-                    <label
-                      key={platform.id}
-                      style={{
-                        flex: 1,
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '12px',
-                        padding: '16px',
-                        background: selectedPlatforms.includes(platform.id) ? '#1a1a1a' : 'transparent',
-                        border: selectedPlatforms.includes(platform.id) ? `2px solid ${platform.color}` : '2px solid #27272a',
-                        borderRadius: '12px',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selectedPlatforms.includes(platform.id)}
-                        onChange={() => togglePlatform(platform.id)}
+                    { id: 'instagram', label: 'Instagram' },
+                    { id: 'facebook', label: 'Facebook' },
+                    { id: 'pinterest', label: 'Pinterest' }
+                  ].map((platform) => {
+                    const isSelected = selectedPlatforms.includes(platform.id)
+                    return (
+                      <button
+                        key={platform.id}
+                        type="button"
+                        onClick={() => togglePlatform(platform.id)}
                         style={{
-                          width: '20px',
-                          height: '20px',
-                          accentColor: platform.color,
-                          cursor: 'pointer'
+                          flex: 1,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          padding: '16px',
+                          background: isSelected ? 'rgba(20, 184, 166, 0.1)' : 'transparent',
+                          border: isSelected ? '2px solid #14b8a6' : '2px solid #27272a',
+                          borderRadius: '12px',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease',
+                          boxShadow: isSelected ? '0 0 20px rgba(20, 184, 166, 0.3)' : 'none'
                         }}
-                      />
-                      <span style={{ color: 'white', fontSize: '16px', fontWeight: 500 }}>
-                        {platform.label}
-                      </span>
-                    </label>
-                  ))}
+                      >
+                        <span style={{
+                          color: isSelected ? '#14b8a6' : 'white',
+                          fontSize: '16px',
+                          fontWeight: 500
+                        }}>
+                          {platform.label}
+                        </span>
+                      </button>
+                    )
+                  })}
                 </div>
               </div>
             )}
@@ -660,85 +723,234 @@ export function Upload() {
                   When to Post
                 </h2>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}>
-                  <label
+                <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setPostType('now')}
                     style={{
+                      flex: 1,
                       display: 'flex',
                       alignItems: 'center',
+                      justifyContent: 'center',
                       gap: '12px',
                       padding: '16px',
-                      background: postType === 'now' ? '#1a1a1a' : 'transparent',
+                      background: postType === 'now' ? 'rgba(20, 184, 166, 0.1)' : 'transparent',
                       border: postType === 'now' ? '2px solid #14b8a6' : '2px solid #27272a',
                       borderRadius: '12px',
                       cursor: 'pointer',
-                      transition: 'all 0.2s ease'
+                      transition: 'all 0.2s ease',
+                      boxShadow: postType === 'now' ? '0 0 20px rgba(20, 184, 166, 0.3)' : 'none'
                     }}
                   >
-                    <input
-                      type="radio"
-                      name="postType"
-                      checked={postType === 'now'}
-                      onChange={() => setPostType('now')}
-                      style={{
-                        width: '20px',
-                        height: '20px',
-                        accentColor: '#14b8a6',
-                        cursor: 'pointer'
-                      }}
-                    />
-                    <span style={{ color: 'white', fontSize: '16px', fontWeight: 500 }}>
+                    <Send style={{ width: '20px', height: '20px', color: '#14b8a6' }} />
+                    <span style={{ color: postType === 'now' ? '#14b8a6' : 'white', fontSize: '16px', fontWeight: 500 }}>
                       Save as Draft
                     </span>
-                  </label>
+                  </button>
 
-                  <label
+                  <button
+                    type="button"
+                    onClick={() => setPostType('scheduled')}
                     style={{
+                      flex: 1,
                       display: 'flex',
                       alignItems: 'center',
+                      justifyContent: 'center',
                       gap: '12px',
                       padding: '16px',
-                      background: postType === 'scheduled' ? '#1a1a1a' : 'transparent',
+                      background: postType === 'scheduled' ? 'rgba(20, 184, 166, 0.1)' : 'transparent',
                       border: postType === 'scheduled' ? '2px solid #14b8a6' : '2px solid #27272a',
                       borderRadius: '12px',
                       cursor: 'pointer',
-                      transition: 'all 0.2s ease'
+                      transition: 'all 0.2s ease',
+                      boxShadow: postType === 'scheduled' ? '0 0 20px rgba(20, 184, 166, 0.3)' : 'none'
                     }}
                   >
-                    <input
-                      type="radio"
-                      name="postType"
-                      checked={postType === 'scheduled'}
-                      onChange={() => setPostType('scheduled')}
-                      style={{
-                        width: '20px',
-                        height: '20px',
-                        accentColor: '#14b8a6',
-                        cursor: 'pointer'
-                      }}
-                    />
-                    <span style={{ color: 'white', fontSize: '16px', fontWeight: 500 }}>
+                    <Clock style={{ width: '20px', height: '20px', color: '#14b8a6' }} />
+                    <span style={{ color: postType === 'scheduled' ? '#14b8a6' : 'white', fontSize: '16px', fontWeight: 500 }}>
                       Schedule for Later
                     </span>
-                  </label>
+                  </button>
                 </div>
 
                 {postType === 'scheduled' && (
-                  <input
-                    type="datetime-local"
-                    value={scheduledTime}
-                    onChange={(e) => setScheduledTime(e.target.value)}
-                    min={new Date().toISOString().slice(0, 16)}
-                    style={{
-                      width: '100%',
-                      padding: '16px',
-                      background: '#1a1a1a',
-                      border: '1px solid #27272a',
-                      borderRadius: '12px',
-                      color: 'white',
-                      fontSize: '14px',
-                      outline: 'none'
-                    }}
-                  />
+                  <div style={{ marginTop: '24px' }}>
+                    {/* Selected Date/Time Display */}
+                    {formattedDateTime && (
+                      <div style={{
+                        background: 'rgba(20, 184, 166, 0.1)',
+                        border: '1px solid #14b8a6',
+                        borderRadius: '12px',
+                        padding: '16px',
+                        marginBottom: '24px',
+                        textAlign: 'center'
+                      }}>
+                        <p style={{ color: '#14b8a6', fontSize: '18px', fontWeight: 600, margin: 0 }}>
+                          {formattedDateTime}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Time Picker */}
+                    <div style={{ marginBottom: '24px' }}>
+                      <label style={{ color: '#888', fontSize: '14px', fontWeight: 500, display: 'block', marginBottom: '8px' }}>
+                        Select Time
+                      </label>
+                      <input
+                        type="time"
+                        value={selectedTime}
+                        onChange={(e) => setSelectedTime(e.target.value)}
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          background: '#1a1a1a',
+                          border: '1px solid #27272a',
+                          borderRadius: '8px',
+                          color: 'white',
+                          fontSize: '14px',
+                          outline: 'none'
+                        }}
+                      />
+                    </div>
+
+                    {/* Calendar View */}
+                    <div style={{ background: '#1a1a1a', padding: '24px', borderRadius: '12px' }}>
+                      {/* Calendar Header */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                        <button
+                          type="button"
+                          onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+                          style={{
+                            background: '#0d0d0d',
+                            border: '1px solid #27272a',
+                            borderRadius: '8px',
+                            padding: '8px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                        >
+                          <ChevronLeft style={{ width: '20px', height: '20px', color: '#e5e5e5' }} />
+                        </button>
+
+                        <h3 style={{ color: 'white', fontSize: '16px', fontWeight: 600, margin: 0 }}>
+                          {format(currentMonth, 'MMMM yyyy')}
+                        </h3>
+
+                        <button
+                          type="button"
+                          onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+                          style={{
+                            background: '#0d0d0d',
+                            border: '1px solid #27272a',
+                            borderRadius: '8px',
+                            padding: '8px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                        >
+                          <ChevronRight style={{ width: '20px', height: '20px', color: '#e5e5e5' }} />
+                        </button>
+                      </div>
+
+                      {/* Days of Week */}
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px', marginBottom: '8px' }}>
+                        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                          <div key={day} style={{
+                            textAlign: 'center',
+                            color: '#888',
+                            fontSize: '11px',
+                            fontWeight: 600,
+                            padding: '8px 0'
+                          }}>
+                            {day}
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Calendar Grid */}
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
+                        {dateRange.map(date => {
+                          const dateKey = format(date, 'yyyy-MM-dd')
+                          const dayPosts = postsByDate[dateKey] || []
+                          const isCurrentMonth = isSameMonth(date, currentMonth)
+                          const isSelected = selectedDate && isSameDay(date, selectedDate)
+                          const isPast = isBefore(date, startOfDay(new Date()))
+                          const isTodayDate = isToday(date)
+
+                          return (
+                            <button
+                              key={dateKey}
+                              type="button"
+                              onClick={() => !isPast && setSelectedDate(date)}
+                              disabled={isPast}
+                              style={{
+                                background: isSelected ? '#14b8a6' : '#0d0d0d',
+                                border: isTodayDate && !isSelected ? '2px solid #14b8a6' : '1px solid #27272a',
+                                borderRadius: '8px',
+                                padding: '8px',
+                                minHeight: '60px',
+                                opacity: isCurrentMonth ? (isPast ? 0.3 : 1) : 0.3,
+                                cursor: isPast ? 'not-allowed' : 'pointer',
+                                transition: 'all 0.2s ease',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center'
+                              }}
+                            >
+                              <div style={{
+                                color: isSelected ? 'white' : (isTodayDate ? '#14b8a6' : '#888'),
+                                fontSize: '12px',
+                                fontWeight: isSelected || isTodayDate ? 600 : 400,
+                                marginBottom: '4px'
+                              }}>
+                                {format(date, 'd')}
+                              </div>
+
+                              {/* Post indicators */}
+                              {dayPosts.length > 0 && (
+                                <div style={{ display: 'flex', gap: '2px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                                  {dayPosts.slice(0, 3).map((post: any) => (
+                                    <div
+                                      key={post.id}
+                                      style={{
+                                        width: '6px',
+                                        height: '6px',
+                                        borderRadius: '50%',
+                                        background: getPlatformColor(post.platforms || [])
+                                      }}
+                                    />
+                                  ))}
+                                  {dayPosts.length > 3 && (
+                                    <span style={{ color: '#888', fontSize: '8px' }}>+{dayPosts.length - 3}</span>
+                                  )}
+                                </div>
+                              )}
+                            </button>
+                          )
+                        })}
+                      </div>
+
+                      {/* Legend */}
+                      <div style={{ marginTop: '16px', display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#E1306C' }} />
+                          <span style={{ color: '#888', fontSize: '11px' }}>Instagram</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#1877F2' }} />
+                          <span style={{ color: '#888', fontSize: '11px' }}>Facebook</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#E60023' }} />
+                          <span style={{ color: '#888', fontSize: '11px' }}>Pinterest</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 )}
               </div>
             )}
