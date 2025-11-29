@@ -156,15 +156,25 @@ export function Dashboard() {
 
   return (
     <AppLayout>
-      <div className="px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-12">
+      <div style={{ padding: '48px 32px' }}>
         {/* Welcome Title */}
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-white mb-8 sm:mb-12 md:mb-16 break-words">
+        <h1 style={{
+          color: '#ffffff',
+          fontSize: '32px',
+          fontWeight: 700,
+          textAlign: 'center',
+          marginBottom: '64px'
+        }}>
           Welcome back, {firstName}!
         </h1>
 
         {/* AI Caption Generation Section */}
-        <div className="p-4 sm:p-6 md:p-8 mb-8 sm:mb-12 md:mb-16 rounded-xl text-center" style={{
+        <div style={{
           background: '#1a1a1a',
+          padding: '32px',
+          borderRadius: '12px',
+          marginBottom: '64px',
+          textAlign: 'center',
           boxShadow: '0 0 40px rgba(20, 184, 166, 0.2), 0 0 80px rgba(20, 184, 166, 0.1)'
         }}>
           <h2 style={{
@@ -213,8 +223,13 @@ export function Dashboard() {
           </button>
         </div>
 
-        {/* Stats Grid - 1 col mobile, 3 cols desktop */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-8 sm:mb-12 md:mb-16">
+        {/* Stats Grid - 1x3 with white glow */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '16px',
+          marginBottom: '64px'
+        }}>
           {stats.map((stat) => (
             <div
               key={stat.label}
@@ -267,9 +282,13 @@ export function Dashboard() {
         </div>
 
         {/* Calendar View */}
-        <div className="mb-8 sm:mb-12 md:mb-16">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 mb-4 sm:mb-6">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-teal-400">
+        <div style={{ marginBottom: '64px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <h2 style={{
+              color: '#14b8a6',
+              fontSize: '24px',
+              fontWeight: 600
+            }}>
               Content Calendar
             </h2>
 
@@ -310,7 +329,7 @@ export function Dashboard() {
             </div>
           </div>
 
-          <div className="p-3 sm:p-4 md:p-8 rounded-xl overflow-x-auto" style={{ background: '#1a1a1a' }}>
+          <div style={{ background: '#1a1a1a', padding: '32px', borderRadius: '12px' }}>
             {/* Calendar Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <button
@@ -488,8 +507,13 @@ export function Dashboard() {
         </div>
 
         {/* Recent Posts Gallery */}
-        <div className="mb-8 sm:mb-12 md:mb-16">
-          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-teal-400 mb-4 sm:mb-6">
+        <div style={{ marginBottom: '64px' }}>
+          <h2 style={{
+            color: '#14b8a6',
+            fontSize: '24px',
+            fontWeight: 600,
+            marginBottom: '24px'
+          }}>
             Recent Posts
           </h2>
 
@@ -510,12 +534,18 @@ export function Dashboard() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
+            <div style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '1%'
+            }}>
               {recentPosts.map((post) => (
                 <div
                   key={post.id}
                   onClick={() => navigate(`/schedule?edit=${post.id}`)}
                   style={{
+                    width: '18%',
+                    margin: '0.5%',
                     borderRadius: '8px',
                     overflow: 'hidden',
                     background: '#1a1a1a',
