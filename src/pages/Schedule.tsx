@@ -25,7 +25,11 @@ import {
   subMonths,
   startOfWeek,
   endOfWeek,
-  isSameMonth
+  isSameMonth,
+  isSameDay,
+  isToday,
+  isBefore,
+  startOfDay
 } from 'date-fns'
 import { supabase } from '../lib/supabase'
 import toast from 'react-hot-toast'
@@ -65,6 +69,11 @@ export function Schedule() {
     scheduled_time: '',
     platforms: [] as string[]
   })
+
+  // Edit modal calendar state
+  const [editCalendarMonth, setEditCalendarMonth] = useState(new Date())
+  const [editSelectedDate, setEditSelectedDate] = useState<Date | null>(null)
+  const [editSelectedTime, setEditSelectedTime] = useState<string>('12:00')
 
   // Handle URL parameter for status filter
   useEffect(() => {
@@ -216,14 +225,51 @@ export function Schedule() {
 
   const handleEdit = (post: Post) => {
     const date = new Date(post.scheduled_for)
+    const timeHour = date.getHours()
+    const roundedTime = `${timeHour.toString().padStart(2, '0')}:00`
+
     setEditFormData({
       caption: post.final_caption,
       scheduled_date: format(date, 'yyyy-MM-dd'),
-      scheduled_time: format(date, 'HH:mm'),
+      scheduled_time: roundedTime,
       platforms: post.platforms || []
     })
+    setEditSelectedDate(date)
+    setEditSelectedTime(roundedTime)
+    setEditCalendarMonth(date)
     setEditingPost(post)
   }
+
+  // Generate time options in hourly intervals for edit modal
+  const editTimeOptions = Array.from({ length: 24 }, (_, i) => {
+    const time24 = `${i.toString().padStart(2, '0')}:00`
+    const dateObj = new Date(`2000-01-01T${time24}`)
+    const time12 = format(dateObj, 'h:mm a')
+    return { value: time24, label: time12 }
+  })
+
+  // Format the selected date/time for edit modal display
+  const editFormattedDateTime = editSelectedDate
+    ? `${format(editSelectedDate, 'MMM d, yyyy')} at ${format(new Date(`2000-01-01T${editSelectedTime}`), 'h:mm a')}`
+    : null
+
+  // Generate edit modal calendar grid
+  const editMonthStart = startOfMonth(editCalendarMonth)
+  const editMonthEnd = endOfMonth(editCalendarMonth)
+  const editCalendarStart = startOfWeek(editMonthStart)
+  const editCalendarEnd = endOfWeek(editMonthEnd)
+  const editDateRange = eachDayOfInterval({ start: editCalendarStart, end: editCalendarEnd })
+
+  // Sync edit form data when date/time selection changes
+  useEffect(() => {
+    if (editSelectedDate && editSelectedTime) {
+      setEditFormData(prev => ({
+        ...prev,
+        scheduled_date: format(editSelectedDate, 'yyyy-MM-dd'),
+        scheduled_time: editSelectedTime
+      }))
+    }
+  }, [editSelectedDate, editSelectedTime])
 
   const handleSaveEdit = async () => {
     if (!editingPost) return
@@ -935,7 +981,7 @@ export function Schedule() {
         </div>
       )}
 
-      {/* Edit Modal - Cleaned Up Design */}
+      {/* Edit Modal - Redesigned to Match Upload Page */}
       {editingPost && (
         <div
           style={{
@@ -958,7 +1004,7 @@ export function Schedule() {
               background: '#1a1a1a',
               borderRadius: '16px',
               padding: '40px',
-              maxWidth: '600px',
+              maxWidth: '700px',
               width: '100%',
               maxHeight: '90vh',
               overflowY: 'auto',
@@ -968,8 +1014,14 @@ export function Schedule() {
           >
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
-              <h2 style={{ color: '#14b8a6', fontSize: '28px', fontWeight: 700, margin: 0 }}>
-                Edit Scheduled Post
+              <h2 style={{
+                color: '#14b8a6',
+                fontSize: '28px',
+                fontWeight: 700,
+                margin: 0,
+                textShadow: '0 0 20px rgba(20, 184, 166, 0.6), 0 0 40px rgba(20, 184, 166, 0.4)'
+              }}>
+                Edit Post
               </h2>
               <button
                 onClick={() => setEditingPost(null)}
@@ -977,11 +1029,8 @@ export function Schedule() {
                   background: 'transparent',
                   border: 'none',
                   cursor: 'pointer',
-                  padding: '4px',
-                  transition: 'color 0.2s ease'
+                  padding: '4px'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.color = '#fff'}
-                onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
               >
                 <X style={{ width: '24px', height: '24px', color: '#888' }} />
               </button>
@@ -989,21 +1038,33 @@ export function Schedule() {
 
             {/* Thumbnail Preview */}
             <div style={{ marginBottom: '32px', textAlign: 'center' }}>
-              <img
-                src={editingPost.media?.thumbnail_url || editingPost.media?.cloudinary_url}
-                alt="Preview"
-                style={{
-                  maxWidth: '200px',
-                  maxHeight: '200px',
-                  objectFit: 'cover',
-                  borderRadius: '12px'
-                }}
-              />
+              {editingPost.media?.media_type === 'video' ? (
+                <video
+                  src={editingPost.media?.cloudinary_url}
+                  style={{
+                    maxWidth: '200px',
+                    maxHeight: '200px',
+                    objectFit: 'cover',
+                    borderRadius: '12px'
+                  }}
+                />
+              ) : (
+                <img
+                  src={editingPost.media?.thumbnail_url || editingPost.media?.cloudinary_url}
+                  alt="Preview"
+                  style={{
+                    maxWidth: '200px',
+                    maxHeight: '200px',
+                    objectFit: 'cover',
+                    borderRadius: '12px'
+                  }}
+                />
+              )}
             </div>
 
             {/* Caption */}
-            <div style={{ marginBottom: '24px' }}>
-              <label style={{ color: '#e5e5e5', fontSize: '14px', fontWeight: 500, display: 'block', marginBottom: '8px' }}>
+            <div style={{ marginBottom: '32px' }}>
+              <label style={{ color: 'white', fontSize: '16px', fontWeight: 600, display: 'block', marginBottom: '12px' }}>
                 Caption
               </label>
               <textarea
@@ -1011,9 +1072,9 @@ export function Schedule() {
                 onChange={(e) => setEditFormData({ ...editFormData, caption: e.target.value })}
                 style={{
                   width: '100%',
-                  minHeight: '120px',
-                  background: '#1a1a1a',
-                  border: '1px solid #27272a',
+                  minHeight: '150px',
+                  background: '#0d0d0d',
+                  border: '1px solid #374151',
                   borderRadius: '12px',
                   padding: '16px',
                   color: '#e5e5e5',
@@ -1021,107 +1082,242 @@ export function Schedule() {
                   lineHeight: '1.6',
                   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
                   outline: 'none',
-                  resize: 'vertical',
-                  transition: 'border-color 0.2s ease'
+                  resize: 'vertical'
                 }}
-                onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-                onBlur={(e) => e.target.style.borderColor = '#27272a'}
               />
-            </div>
-
-            {/* Date & Time */}
-            <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
-              <div style={{ flex: 1 }}>
-                <label style={{ color: '#e5e5e5', fontSize: '14px', fontWeight: 500, display: 'block', marginBottom: '8px' }}>
-                  Date
-                </label>
-                <input
-                  type="date"
-                  value={editFormData.scheduled_date}
-                  onChange={(e) => setEditFormData({ ...editFormData, scheduled_date: e.target.value })}
-                  min={new Date().toISOString().split('T')[0]}
-                  style={{
-                    width: '100%',
-                    height: '44px',
-                    background: '#1a1a1a',
-                    border: '1px solid #27272a',
-                    borderRadius: '12px',
-                    padding: '12px 16px',
-                    color: '#e5e5e5',
-                    fontSize: '15px',
-                    outline: 'none'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-                  onBlur={(e) => e.target.style.borderColor = '#27272a'}
-                />
-              </div>
-              <div style={{ flex: 1 }}>
-                <label style={{ color: '#e5e5e5', fontSize: '14px', fontWeight: 500, display: 'block', marginBottom: '8px' }}>
-                  Time
-                </label>
-                <input
-                  type="time"
-                  value={editFormData.scheduled_time}
-                  onChange={(e) => setEditFormData({ ...editFormData, scheduled_time: e.target.value })}
-                  style={{
-                    width: '100%',
-                    height: '44px',
-                    background: '#1a1a1a',
-                    border: '1px solid #27272a',
-                    borderRadius: '12px',
-                    padding: '12px 16px',
-                    color: '#e5e5e5',
-                    fontSize: '15px',
-                    outline: 'none'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-                  onBlur={(e) => e.target.style.borderColor = '#27272a'}
-                />
-              </div>
             </div>
 
             {/* Platforms */}
             <div style={{ marginBottom: '32px' }}>
-              <label style={{ color: '#e5e5e5', fontSize: '14px', fontWeight: 500, display: 'block', marginBottom: '12px' }}>
-                Platforms
+              <label style={{ color: 'white', fontSize: '16px', fontWeight: 600, display: 'block', marginBottom: '12px' }}>
+                Select Platforms
               </label>
               <div style={{ display: 'flex', gap: '12px' }}>
                 {[
-                  { id: 'instagram', label: 'Instagram', color: '#E1306C' },
-                  { id: 'facebook', label: 'Facebook', color: '#1877F2' },
-                  { id: 'pinterest', label: 'Pinterest', color: '#E60023' }
-                ].map(platform => (
-                  <label
-                    key={platform.id}
+                  { id: 'instagram', label: 'Instagram' },
+                  { id: 'facebook', label: 'Facebook' },
+                  { id: 'pinterest', label: 'Pinterest' }
+                ].map(platform => {
+                  const isSelected = editFormData.platforms.includes(platform.id)
+                  return (
+                    <button
+                      key={platform.id}
+                      type="button"
+                      onClick={() => togglePlatform(platform.id)}
+                      style={{
+                        flex: 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '14px',
+                        background: isSelected ? 'rgba(20, 184, 166, 0.1)' : 'transparent',
+                        border: isSelected ? '2px solid #14b8a6' : '2px solid #27272a',
+                        borderRadius: '12px',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                        boxShadow: isSelected ? '0 0 20px rgba(20, 184, 166, 0.3)' : 'none'
+                      }}
+                    >
+                      <span style={{
+                        color: isSelected ? '#14b8a6' : 'white',
+                        fontSize: '14px',
+                        fontWeight: 500
+                      }}>
+                        {platform.label}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Scheduling Section */}
+            <div style={{ marginBottom: '32px' }}>
+              <label style={{ color: 'white', fontSize: '16px', fontWeight: 600, display: 'block', marginBottom: '12px' }}>
+                Schedule
+              </label>
+
+              {/* Selected Date/Time Display */}
+              {editFormattedDateTime && (
+                <div style={{
+                  background: 'rgba(20, 184, 166, 0.1)',
+                  border: '1px solid #14b8a6',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  marginBottom: '20px',
+                  textAlign: 'center'
+                }}>
+                  <p style={{ color: '#f3f4f6', fontSize: '18px', fontWeight: 600, margin: 0 }}>
+                    {editFormattedDateTime}
+                  </p>
+                </div>
+              )}
+
+              {/* Time Picker Dropdown */}
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ color: '#888', fontSize: '14px', fontWeight: 500, display: 'block', marginBottom: '8px' }}>
+                  Select Time
+                </label>
+                <select
+                  value={editSelectedTime}
+                  onChange={(e) => setEditSelectedTime(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '12px 16px',
+                    background: '#1a1a1a',
+                    border: '1px solid #374151',
+                    borderRadius: '8px',
+                    color: 'white',
+                    fontSize: '14px',
+                    outline: 'none',
+                    cursor: 'pointer',
+                    appearance: 'none',
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2314b8a6' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'right 16px center'
+                  }}
+                >
+                  {editTimeOptions.map((option) => (
+                    <option key={option.value} value={option.value} style={{ background: '#1a1a1a', color: 'white' }}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Calendar View */}
+              <div style={{ background: '#0d0d0d', padding: '20px', borderRadius: '12px' }}>
+                {/* Calendar Header */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setEditCalendarMonth(subMonths(editCalendarMonth, 1))}
                     style={{
-                      flex: 1,
+                      background: '#1a1a1a',
+                      border: '1px solid #27272a',
+                      borderRadius: '8px',
+                      padding: '8px',
+                      cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '10px',
-                      padding: '12px 16px',
-                      background: '#1a1a1a',
-                      border: editFormData.platforms.includes(platform.id) ? `1px solid ${platform.color}` : '1px solid #27272a',
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease'
+                      justifyContent: 'center'
                     }}
                   >
-                    <input
-                      type="checkbox"
-                      checked={editFormData.platforms.includes(platform.id)}
-                      onChange={() => togglePlatform(platform.id)}
-                      style={{
-                        width: '18px',
-                        height: '18px',
-                        accentColor: platform.color,
-                        cursor: 'pointer'
-                      }}
-                    />
-                    <span style={{ color: '#e5e5e5', fontSize: '14px', fontWeight: 500 }}>
-                      {platform.label}
-                    </span>
-                  </label>
-                ))}
+                    <ChevronLeft style={{ width: '18px', height: '18px', color: '#e5e5e5' }} />
+                  </button>
+
+                  <h3 style={{ color: 'white', fontSize: '15px', fontWeight: 600, margin: 0 }}>
+                    {format(editCalendarMonth, 'MMMM yyyy')}
+                  </h3>
+
+                  <button
+                    type="button"
+                    onClick={() => setEditCalendarMonth(addMonths(editCalendarMonth, 1))}
+                    style={{
+                      background: '#1a1a1a',
+                      border: '1px solid #27272a',
+                      borderRadius: '8px',
+                      padding: '8px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <ChevronRight style={{ width: '18px', height: '18px', color: '#e5e5e5' }} />
+                  </button>
+                </div>
+
+                {/* Days of Week */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px', marginBottom: '8px' }}>
+                  {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                    <div key={day} style={{
+                      textAlign: 'center',
+                      color: '#888',
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      padding: '6px 0'
+                    }}>
+                      {day}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Calendar Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
+                  {editDateRange.map(date => {
+                    const dateKey = format(date, 'yyyy-MM-dd')
+                    const dayPosts = postsByDate[dateKey] || []
+                    const isCurrentMonth = isSameMonth(date, editCalendarMonth)
+                    const isSelected = editSelectedDate && isSameDay(date, editSelectedDate)
+                    const isPast = isBefore(date, startOfDay(new Date()))
+                    const isTodayDate = isToday(date)
+
+                    return (
+                      <button
+                        key={dateKey}
+                        type="button"
+                        onClick={() => !isPast && setEditSelectedDate(date)}
+                        disabled={isPast}
+                        style={{
+                          background: isSelected ? '#14b8a6' : '#1a1a1a',
+                          border: isTodayDate && !isSelected ? '2px solid #14b8a6' : '1px solid #27272a',
+                          borderRadius: '6px',
+                          padding: '6px',
+                          minHeight: '50px',
+                          opacity: isCurrentMonth ? (isPast ? 0.3 : 1) : 0.3,
+                          cursor: isPast ? 'not-allowed' : 'pointer',
+                          transition: 'all 0.2s ease',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center'
+                        }}
+                      >
+                        <div style={{
+                          color: isSelected ? 'white' : (isTodayDate ? '#14b8a6' : '#888'),
+                          fontSize: '11px',
+                          fontWeight: isSelected || isTodayDate ? 600 : 400,
+                          marginBottom: '2px'
+                        }}>
+                          {format(date, 'd')}
+                        </div>
+
+                        {/* Post indicators */}
+                        {dayPosts.length > 0 && (
+                          <div style={{ display: 'flex', gap: '2px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                            {dayPosts.slice(0, 3).map((post: any) => (
+                              <div
+                                key={post.id}
+                                style={{
+                                  width: '5px',
+                                  height: '5px',
+                                  borderRadius: '50%',
+                                  background: getPlatformColor(post.platforms?.[0] || '')
+                                }}
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
+
+                {/* Legend */}
+                <div style={{ marginTop: '12px', display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#E1306C' }} />
+                    <span style={{ color: '#888', fontSize: '10px' }}>Instagram</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#1877F2' }} />
+                    <span style={{ color: '#888', fontSize: '10px' }}>Facebook</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#E60023' }} />
+                    <span style={{ color: '#888', fontSize: '10px' }}>Pinterest</span>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -1136,11 +1332,11 @@ export function Schedule() {
                 }}
                 style={{
                   padding: '12px 24px',
-                  background: '#2a2a2a',
+                  background: 'transparent',
                   color: '#ef4444',
-                  fontSize: '16px',
+                  fontSize: '15px',
                   fontWeight: 600,
-                  border: '1px solid #ef4444',
+                  border: '2px solid #ef4444',
                   borderRadius: '8px',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease'
@@ -1150,11 +1346,11 @@ export function Schedule() {
                   e.currentTarget.style.color = 'white'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = '#2a2a2a'
+                  e.currentTarget.style.background = 'transparent'
                   e.currentTarget.style.color = '#ef4444'
                 }}
               >
-                Delete Post
+                Delete
               </button>
               <div style={{ display: 'flex', gap: '12px' }}>
                 <button
@@ -1163,7 +1359,7 @@ export function Schedule() {
                     padding: '12px 24px',
                     background: '#2a2a2a',
                     color: 'white',
-                    fontSize: '16px',
+                    fontSize: '15px',
                     fontWeight: 600,
                     border: 'none',
                     borderRadius: '8px',
@@ -1181,7 +1377,7 @@ export function Schedule() {
                     padding: '12px 32px',
                     background: '#14b8a6',
                     color: 'white',
-                    fontSize: '16px',
+                    fontSize: '15px',
                     fontWeight: 600,
                     border: 'none',
                     borderRadius: '8px',
