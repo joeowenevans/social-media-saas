@@ -1,13 +1,22 @@
+import { useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { useBrand } from '../hooks/useBrand'
 import { useNavigate } from 'react-router-dom'
 import { AppLayout } from '../components/layout/AppLayout'
 import { BrandSettings } from '../components/brand/BrandSettings'
+import { AlertCircle, X } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 export function Settings() {
-  const { user } = useAuth()
+  const { user, deleteAccount } = useAuth()
   const { brand, loading, createBrand, updateBrand } = useBrand(user?.id)
   const navigate = useNavigate()
+
+  // Delete account state
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+  const [deletePassword, setDeletePassword] = useState('')
+  const [deleteError, setDeleteError] = useState('')
+  const [deleting, setDeleting] = useState(false)
 
   if (loading) {
     return (
@@ -34,6 +43,39 @@ export function Settings() {
     navigate('/dashboard')
   }
 
+  const handleDeleteAccount = async () => {
+    if (!deletePassword) {
+      setDeleteError('Please enter your password')
+      return
+    }
+
+    setDeleting(true)
+    setDeleteError('')
+
+    const { error } = await deleteAccount(deletePassword)
+
+    if (error) {
+      setDeleteError(error.message)
+      setDeleting(false)
+      return
+    }
+
+    toast.success('Account deleted successfully')
+    navigate('/login?deleted=true')
+  }
+
+  const openDeleteModal = () => {
+    setDeleteModalOpen(true)
+    setDeletePassword('')
+    setDeleteError('')
+  }
+
+  const closeDeleteModal = () => {
+    setDeleteModalOpen(false)
+    setDeletePassword('')
+    setDeleteError('')
+  }
+
   return (
     <AppLayout>
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 32px' }}>
@@ -58,7 +100,248 @@ export function Settings() {
         </div>
 
         <BrandSettings brand={brand} onSave={handleSave} onComplete={handleComplete} />
+
+        {/* Danger Zone - Delete Account */}
+        <div style={{
+          marginTop: '80px',
+          padding: '32px',
+          background: '#1a1a1a',
+          borderRadius: '12px',
+          border: '1px solid rgba(239, 68, 68, 0.3)'
+        }}>
+          <h2 style={{
+            color: '#ef4444',
+            fontSize: '20px',
+            fontWeight: 600,
+            marginBottom: '12px'
+          }}>
+            Danger Zone
+          </h2>
+          <p style={{
+            color: '#888',
+            fontSize: '14px',
+            marginBottom: '24px',
+            lineHeight: 1.6
+          }}>
+            Once you delete your account, there is no going back. All your data including posts, media, and brand settings will be permanently deleted.
+          </p>
+          <button
+            onClick={openDeleteModal}
+            style={{
+              padding: '12px 24px',
+              background: 'transparent',
+              color: '#ef4444',
+              fontSize: '15px',
+              fontWeight: 600,
+              border: '2px solid #ef4444',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = '#ef4444'
+              e.currentTarget.style.color = 'white'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'transparent'
+              e.currentTarget.style.color = '#ef4444'
+            }}
+          >
+            Delete Account
+          </button>
+        </div>
       </div>
+
+      {/* Delete Account Confirmation Modal */}
+      {deleteModalOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: '24px'
+          }}
+          onClick={closeDeleteModal}
+        >
+          <div
+            style={{
+              background: '#1a1a1a',
+              borderRadius: '16px',
+              padding: '32px',
+              maxWidth: '450px',
+              width: '100%',
+              boxShadow: '0 0 60px rgba(0, 0, 0, 0.5)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '50%',
+                  background: 'rgba(239, 68, 68, 0.1)'
+                }}>
+                  <AlertCircle style={{ width: '28px', height: '28px', color: '#ef4444' }} />
+                </div>
+                <h2 style={{
+                  color: '#ef4444',
+                  fontSize: '22px',
+                  fontWeight: 700,
+                  margin: 0
+                }}>
+                  Delete Account
+                </h2>
+              </div>
+              <button
+                onClick={closeDeleteModal}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '4px'
+                }}
+              >
+                <X style={{ width: '20px', height: '20px', color: '#888' }} />
+              </button>
+            </div>
+
+            {/* Warning */}
+            <div style={{
+              background: 'rgba(239, 68, 68, 0.1)',
+              border: '1px solid rgba(239, 68, 68, 0.3)',
+              borderRadius: '8px',
+              padding: '16px',
+              marginBottom: '24px'
+            }}>
+              <p style={{
+                color: '#fca5a5',
+                fontSize: '14px',
+                lineHeight: 1.6,
+                margin: 0
+              }}>
+                <strong>Warning:</strong> This action is permanent and cannot be undone. All your data including posts, media, brand settings, and account information will be permanently deleted.
+              </p>
+            </div>
+
+            {/* Password Input */}
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{
+                color: 'white',
+                fontSize: '14px',
+                fontWeight: 500,
+                display: 'block',
+                marginBottom: '8px'
+              }}>
+                Enter your password to confirm
+              </label>
+              <input
+                type="password"
+                value={deletePassword}
+                onChange={(e) => {
+                  setDeletePassword(e.target.value)
+                  setDeleteError('')
+                }}
+                placeholder="Enter your password"
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  background: '#0d0d0d',
+                  border: deleteError ? '1px solid #ef4444' : '1px solid #374151',
+                  borderRadius: '8px',
+                  color: 'white',
+                  fontSize: '14px',
+                  outline: 'none',
+                  boxSizing: 'border-box'
+                }}
+              />
+              {deleteError && (
+                <p style={{
+                  color: '#ef4444',
+                  fontSize: '13px',
+                  marginTop: '8px',
+                  margin: '8px 0 0 0'
+                }}>
+                  {deleteError}
+                </p>
+              )}
+            </div>
+
+            {/* Actions */}
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+              <button
+                onClick={closeDeleteModal}
+                disabled={deleting}
+                style={{
+                  padding: '12px 24px',
+                  background: '#2a2a2a',
+                  color: 'white',
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: deleting ? 'not-allowed' : 'pointer',
+                  opacity: deleting ? 0.6 : 1,
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => !deleting && (e.currentTarget.style.background = '#333')}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteAccount}
+                disabled={!deletePassword || deleting}
+                style={{
+                  padding: '12px 24px',
+                  background: !deletePassword || deleting ? '#4b5563' : '#ef4444',
+                  color: 'white',
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: !deletePassword || deleting ? 'not-allowed' : 'pointer',
+                  opacity: !deletePassword ? 0.6 : 1,
+                  transition: 'all 0.2s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+                onMouseEnter={(e) => {
+                  if (deletePassword && !deleting) {
+                    e.currentTarget.style.background = '#dc2626'
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (deletePassword && !deleting) {
+                    e.currentTarget.style.background = '#ef4444'
+                  }
+                }}
+              >
+                {deleting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    Deleting...
+                  </>
+                ) : (
+                  'Delete Account'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </AppLayout>
   )
 }
