@@ -227,9 +227,7 @@ export function Dashboard() {
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '32px',
-          maxWidth: '1000px',
-          margin: '0 auto',
+          gap: '16px',
           marginBottom: '64px'
         }}>
           {stats.map((stat) => (
@@ -241,14 +239,17 @@ export function Dashboard() {
               }}
               style={{
                 background: '#1a1a1a',
-                borderRadius: '12px',
-                padding: '24px 20px',
+                borderRadius: '10px',
+                padding: '16px 20px',
                 boxShadow: '0 0 20px rgba(255, 255, 255, 0.05)',
                 transition: 'all 0.3s ease',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'scale(1.05)'
+                e.currentTarget.style.transform = 'scale(1.02)'
                 e.currentTarget.style.boxShadow = '0 0 30px rgba(255, 255, 255, 0.12)'
               }}
               onMouseLeave={(e) => {
@@ -256,29 +257,26 @@ export function Dashboard() {
                 e.currentTarget.style.boxShadow = '0 0 20px rgba(255, 255, 255, 0.05)'
               }}
             >
-              <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <stat.icon style={{ width: '24px', height: '24px', color: stat.color, flexShrink: 0 }} />
                 <p style={{
-                  fontSize: '11px',
+                  fontSize: '13px',
                   fontWeight: 500,
                   color: '#a1a1aa',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
-                  marginBottom: '12px'
+                  letterSpacing: '0.05em'
                 }}>
                   {stat.label}
                 </p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <stat.icon style={{ width: '32px', height: '32px', color: stat.color, flexShrink: 0 }} />
-                  <p style={{
-                    fontSize: '32px',
-                    fontWeight: 700,
-                    color: 'white',
-                    lineHeight: 1
-                  }}>
-                    {stat.value}
-                  </p>
-                </div>
               </div>
+              <p style={{
+                fontSize: '28px',
+                fontWeight: 700,
+                color: 'white',
+                lineHeight: 1
+              }}>
+                {stat.value}
+              </p>
             </div>
           ))}
         </div>
