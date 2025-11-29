@@ -87,11 +87,9 @@ export function Upload() {
     ? `${format(selectedDate, 'MMM d, yyyy')} at ${format(new Date(`2000-01-01T${selectedTime}`), 'h:mm a')}`
     : null
 
-  // Generate time options in 30-minute intervals
-  const timeOptions = Array.from({ length: 48 }, (_, i) => {
-    const hours = Math.floor(i / 2)
-    const minutes = (i % 2) * 30
-    const time24 = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
+  // Generate time options in hourly intervals
+  const timeOptions = Array.from({ length: 24 }, (_, i) => {
+    const time24 = `${i.toString().padStart(2, '0')}:00`
     const date = new Date(`2000-01-01T${time24}`)
     const time12 = format(date, 'h:mm a')
     return { value: time24, label: time12 }
@@ -414,23 +412,6 @@ export function Upload() {
 
   return (
     <AppLayout>
-      <style>{`
-        /* Custom scrollbar for caption textarea */
-        textarea::-webkit-scrollbar {
-          width: 8px;
-        }
-        textarea::-webkit-scrollbar-track {
-          background: #374151;
-          border-radius: 4px;
-        }
-        textarea::-webkit-scrollbar-thumb {
-          background: #6b7280;
-          border-radius: 4px;
-        }
-        textarea::-webkit-scrollbar-thumb:hover {
-          background: #14b8a6;
-        }
-      `}</style>
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 32px' }}>
         {/* Page Title with Teal Text Glow */}
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
@@ -787,7 +768,7 @@ export function Upload() {
                         marginBottom: '24px',
                         textAlign: 'center'
                       }}>
-                        <p style={{ color: '#14b8a6', fontSize: '18px', fontWeight: 600, margin: 0 }}>
+                        <p style={{ color: '#f3f4f6', fontSize: '18px', fontWeight: 600, margin: 0 }}>
                           {formattedDateTime}
                         </p>
                       </div>
@@ -804,8 +785,8 @@ export function Upload() {
                         style={{
                           width: '100%',
                           padding: '12px 16px',
-                          background: '#1f2937',
-                          border: '1px solid #27272a',
+                          background: '#1a1a1a',
+                          border: '1px solid #374151',
                           borderRadius: '8px',
                           color: 'white',
                           fontSize: '14px',
@@ -818,7 +799,7 @@ export function Upload() {
                         }}
                       >
                         {timeOptions.map((option) => (
-                          <option key={option.value} value={option.value} style={{ background: '#1f2937', color: 'white' }}>
+                          <option key={option.value} value={option.value} style={{ background: '#1a1a1a', color: 'white' }}>
                             {option.label}
                           </option>
                         ))}
