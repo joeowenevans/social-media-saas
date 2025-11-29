@@ -51,7 +51,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         <div className="hidden sm:flex h-full w-full items-center justify-between px-12">
           {/* Logo (1/3) */}
           <div className="flex-1 flex items-center gap-3">
-            <Share2 className="w-6 h-6 text-white" />
+            <Share2 className="w-6 h-6 text-teal-400" />
             <span className="text-teal-400 text-xl font-bold">SocialAI</span>
           </div>
 
@@ -110,14 +110,14 @@ export function AppLayout({ children }: AppLayoutProps) {
         <div className="flex sm:hidden h-full w-full items-center justify-between px-4">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <Share2 className="w-6 h-6 text-white" />
+            <Share2 className="w-6 h-6 text-teal-400" />
             <span className="text-teal-400 text-xl font-bold">SocialAI</span>
           </div>
 
           {/* Hamburger Button */}
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="p-2 bg-transparent border-none cursor-pointer"
+            className="sm:hidden p-2 bg-transparent border-none cursor-pointer"
             aria-label="Open menu"
           >
             <Menu className="w-7 h-7 text-teal-400" />
