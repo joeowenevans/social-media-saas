@@ -3,7 +3,7 @@ import { usePosts } from '../hooks/usePosts'
 import { useAuth } from '../hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
 import { AppLayout } from '../components/layout/AppLayout'
-import { FileText, Clock, CheckCircle2, Sparkles, X, Hash, ChevronLeft, ChevronRight, Edit3, XCircle } from 'lucide-react'
+import { FileText, Clock, CheckCircle2, Sparkles, X, Hash, ChevronLeft, ChevronRight, Edit3 } from 'lucide-react'
 import { useState } from 'react'
 import {
   startOfMonth,
@@ -62,8 +62,34 @@ export function Dashboard() {
     return media.cloudinary_url
   }
 
-  // Get user's first name from metadata
-  const firstName = user?.user_metadata?.first_name || user?.email?.split('@')[0] || 'there'
+  // Get user's first name - check metadata, brand name, or extract from email
+  const getFirstName = () => {
+    // 1. Check user metadata first_name
+    if (user?.user_metadata?.first_name) {
+      return user.user_metadata.first_name
+    }
+
+    // 2. Check brand name (use first word)
+    if (brand?.name) {
+      const brandFirstWord = brand.name.split(' ')[0]
+      if (brandFirstWord && !/^\d/.test(brandFirstWord)) {
+        return brandFirstWord
+      }
+    }
+
+    // 3. Extract from email: take first part before @ and before any dots/numbers, then capitalize
+    if (user?.email) {
+      const emailPrefix = user.email.split('@')[0]
+      // Get first part before dots, underscores, or numbers
+      const namePart = emailPrefix.split(/[._\d]/)[0]
+      if (namePart) {
+        return namePart.charAt(0).toUpperCase() + namePart.slice(1).toLowerCase()
+      }
+    }
+
+    return 'there'
+  }
+  const firstName = getFirstName()
 
   if (brandLoading) {
     return (
@@ -98,13 +124,11 @@ export function Dashboard() {
   const scheduledPosts = posts.filter(p => p.status === 'scheduled')
   const postedPosts = posts.filter(p => p.status === 'posted')
   const draftPosts = posts.filter(p => p.status === 'draft')
-  const failedPosts = posts.filter(p => p.status === 'failed')
 
   const stats = [
     { label: 'Scheduled', value: scheduledPosts.length, icon: Clock, filter: 'scheduled', color: '#14b8a6' },
     { label: 'Posted', value: postedPosts.length, icon: CheckCircle2, filter: 'posted', color: '#14b8a6' },
     { label: 'Drafts', value: draftPosts.length, icon: Edit3, filter: 'draft', color: '#14b8a6' },
-    { label: 'Failed', value: failedPosts.length, icon: XCircle, filter: 'failed', color: '#14b8a6' },
   ]
 
   // Calendar generation for month view
@@ -203,12 +227,12 @@ export function Dashboard() {
           </button>
         </div>
 
-        {/* Stats Grid - 1x4 with white glow */}
+        {/* Stats Grid - 1x3 with white glow */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '16px',
-          maxWidth: '1200px',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '24px',
+          maxWidth: '900px',
           margin: '0 auto',
           marginBottom: '64px'
         }}>
