@@ -35,11 +35,39 @@ export function AppLayout({ children }: AppLayoutProps) {
   const isActive = (path: string) => location.pathname === path
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}>
+    <div
+      className="min-h-screen flex flex-col"
+      style={{
+        background: `
+          radial-gradient(ellipse 80% 50% at 10% 10%, rgba(20, 184, 166, 0.08) 0%, transparent 50%),
+          radial-gradient(ellipse 80% 50% at 90% 90%, rgba(20, 184, 166, 0.06) 0%, transparent 50%),
+          radial-gradient(ellipse 60% 40% at 50% 0%, rgba(20, 184, 166, 0.04) 0%, transparent 40%),
+          linear-gradient(180deg, #111111 0%, #0a0a0a 100%)
+        `,
+        position: 'relative'
+      }}
+    >
+      {/* Noise texture overlay */}
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 0.035,
+          pointerEvents: 'none',
+          zIndex: 0,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+          backgroundRepeat: 'repeat',
+          backgroundSize: '128px 128px'
+        }}
+      />
       {/* Header - Fixed Layout */}
       <header
         style={{
-          background: '#0f0f0f',
+          background: 'rgba(15, 15, 15, 0.95)',
+          backdropFilter: 'blur(8px)',
           borderBottom: '1px solid #1a1a1a',
           height: '64px',
           width: '100%',
@@ -156,7 +184,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1">
+      <main className="flex-1" style={{ position: 'relative', zIndex: 1 }}>
         <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-8">
           {children}
         </div>
@@ -165,9 +193,12 @@ export function AppLayout({ children }: AppLayoutProps) {
       {/* Footer - New Design System */}
       <footer
         style={{
-          background: '#0f0f0f',
+          background: 'rgba(15, 15, 15, 0.95)',
+          backdropFilter: 'blur(8px)',
           borderTop: '1px solid #1a1a1a',
-          marginTop: '64px'
+          marginTop: '64px',
+          position: 'relative',
+          zIndex: 1
         }}
       >
         <div
