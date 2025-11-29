@@ -85,7 +85,24 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
         input[type="number"] {
           -moz-appearance: textfield;
         }
+        /* Mobile input fixes */
+        @media (max-width: 639px) {
+          .brand-form input,
+          .brand-form textarea,
+          .brand-form select {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+          }
+          .brand-form .number-inputs-row {
+            flex-direction: column !important;
+            gap: 16px !important;
+          }
+          .brand-form .number-inputs-row input {
+            width: 100% !important;
+          }
+        }
       `}</style>
+      <div className="brand-form">
       {/* 1. Brand Name */}
       <div style={fieldContainerStyle}>
         <label htmlFor="name" style={labelStyle}>
@@ -301,7 +318,7 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
       </div>
 
       {/* 12 & 13. Number Inputs Row */}
-      <div style={{ display: 'flex', gap: '24px', marginBottom: '32px' }}>
+      <div className="number-inputs-row" style={{ display: 'flex', gap: '24px', marginBottom: '32px' }}>
         <div>
           <label htmlFor="num_hashtags" style={labelStyle}>
             Number of Hashtags
@@ -369,6 +386,7 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
         >
           {loading ? 'Saving...' : initialData ? 'Update Brand' : 'Create Brand'}
         </button>
+      </div>
       </div>
     </form>
   )
