@@ -62,6 +62,13 @@ export function SignupForm() {
           box-shadow: inset 0 0 20px 20px #0d0d0d !important;
           border: 1px solid #27272a !important;
         }
+
+        /* Mobile-only styles - does not affect desktop */
+        @media (max-width: 639px) {
+          .auth-form-container { padding: 32px 24px !important; }
+          .auth-input { width: 100% !important; box-sizing: border-box !important; }
+          .auth-button { width: 80% !important; max-width: none !important; }
+        }
       `}</style>
 
       <div className="w-full" style={{ maxWidth: '400px' }}>
@@ -90,6 +97,7 @@ export function SignupForm() {
 
         {/* Form Container with Teal Glow */}
         <div
+          className="auth-form-container"
           style={{
             background: '#1a1a1a',
             border: '1px solid #27272a',
@@ -109,6 +117,7 @@ export function SignupForm() {
           >
             {/* First Name Input */}
             <input
+              className="auth-input"
               id="first-name"
               name="firstName"
               type="text"
@@ -136,6 +145,7 @@ export function SignupForm() {
 
             {/* Last Name Input */}
             <input
+              className="auth-input"
               id="last-name"
               name="lastName"
               type="text"
@@ -163,6 +173,7 @@ export function SignupForm() {
 
             {/* Email Input */}
             <input
+              className="auth-input"
               id="email-address"
               name="email"
               type="email"
@@ -190,6 +201,7 @@ export function SignupForm() {
 
             {/* Password Input */}
             <input
+              className="auth-input"
               id="password"
               name="password"
               type="password"
@@ -217,6 +229,7 @@ export function SignupForm() {
 
             {/* Confirm Password Input */}
             <input
+              className="auth-input"
               id="confirm-password"
               name="confirm-password"
               type="password"
@@ -244,6 +257,7 @@ export function SignupForm() {
 
             {/* Sign Up Button */}
             <button
+              className="auth-button"
               type="submit"
               disabled={loading}
               style={{
