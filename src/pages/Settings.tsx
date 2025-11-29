@@ -37,26 +37,33 @@ export function Settings() {
   return (
     <AppLayout>
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 32px' }}>
-        {/* Page Title */}
-        <h1 style={{
-          color: '#14b8a6',
-          fontSize: '32px',
-          fontWeight: 700,
-          textAlign: 'center',
-          marginBottom: '16px'
+        {/* Page Title Card with Teal Glow */}
+        <div style={{
+          background: '#1a1a1a',
+          borderRadius: '12px',
+          padding: '32px',
+          marginBottom: '64px',
+          maxWidth: '768px',
+          margin: '0 auto 64px',
+          boxShadow: '0 0 30px rgba(20, 184, 166, 0.2), 0 0 60px rgba(20, 184, 166, 0.1)',
+          textAlign: 'center'
         }}>
-          Brand Settings
-        </h1>
-
-        {/* Subtitle */}
-        <p style={{
-          color: '#888',
-          fontSize: '16px',
-          textAlign: 'center',
-          marginBottom: '64px'
-        }}>
-          Configure your brand profile and AI preferences
-        </p>
+          <h1 style={{
+            color: '#14b8a6',
+            fontSize: '32px',
+            fontWeight: 700,
+            marginBottom: '12px'
+          }}>
+            Brand Settings
+          </h1>
+          <p style={{
+            color: '#888',
+            fontSize: '16px',
+            margin: 0
+          }}>
+            Configure your brand profile and AI preferences
+          </p>
+        </div>
 
         <BrandSettings brand={brand} onSave={handleSave} onComplete={handleComplete} />
       </div>

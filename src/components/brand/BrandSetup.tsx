@@ -75,6 +75,17 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
 
   return (
     <form onSubmit={handleSubmit}>
+      <style>{`
+        /* Hide number input spinners */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        input[type="number"] {
+          -moz-appearance: textfield;
+        }
+      `}</style>
       {/* 1. Brand Name */}
       <div style={fieldContainerStyle}>
         <label htmlFor="name" style={labelStyle}>
@@ -171,7 +182,7 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
           id="preferred_caption_length"
           style={{
             ...inputStyle,
-            height: '44px',
+            height: '56px',
             cursor: 'pointer',
             appearance: 'none',
             backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23e5e5e5' d='M4.427 6.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 6H4.604a.25.25 0 00-.177.427z'/%3E%3C/svg%3E")`,
@@ -217,7 +228,7 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
           id="cta_style"
           style={{
             ...inputStyle,
-            height: '44px',
+            height: '56px',
             cursor: 'pointer',
             appearance: 'none',
             backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23e5e5e5' d='M4.427 6.427l3.396 3.396a.25.25 0 00.354 0l3.396-3.396A.25.25 0 0011.396 6H4.604a.25.25 0 00-.177.427z'/%3E%3C/svg%3E")`,
@@ -291,7 +302,7 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
 
       {/* 12 & 13. Number Inputs Row */}
       <div style={{ display: 'flex', gap: '24px', marginBottom: '32px' }}>
-        <div style={{ flex: 1 }}>
+        <div>
           <label htmlFor="num_hashtags" style={labelStyle}>
             Number of Hashtags
           </label>
@@ -301,7 +312,7 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
             min="0"
             max="30"
             placeholder="7"
-            style={{ ...inputStyle, height: '44px' }}
+            style={{ ...inputStyle, width: '100px', height: '44px' }}
             value={formData.num_hashtags}
             onChange={(e) => setFormData({ ...formData, num_hashtags: parseInt(e.target.value) || 0 })}
             onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
@@ -309,7 +320,7 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
           />
         </div>
 
-        <div style={{ flex: 1 }}>
+        <div>
           <label htmlFor="num_emojis" style={labelStyle}>
             Number of Emojis
           </label>
@@ -319,7 +330,7 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
             min="0"
             max="10"
             placeholder="2"
-            style={{ ...inputStyle, height: '44px' }}
+            style={{ ...inputStyle, width: '100px', height: '44px' }}
             value={formData.num_emojis}
             onChange={(e) => setFormData({ ...formData, num_emojis: parseInt(e.target.value) || 0 })}
             onFocus={(e) => e.target.style.borderColor = '#14b8a6'}

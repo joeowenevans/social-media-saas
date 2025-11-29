@@ -337,6 +337,8 @@ export function Schedule() {
           borderRadius: '12px',
           padding: '32px',
           marginBottom: '48px',
+          maxWidth: '768px',
+          margin: '0 auto 48px',
           boxShadow: '0 0 30px rgba(20, 184, 166, 0.2), 0 0 60px rgba(20, 184, 166, 0.1)',
           textAlign: 'center'
         }}>
