@@ -10,13 +10,7 @@ interface BrandSettingsProps {
 export function BrandSettings({ brand, onSave, onComplete }: BrandSettingsProps) {
   return (
     <div>
-      <h2 style={{
-        color: '#14b8a6',
-        fontSize: '24px',
-        fontWeight: 600,
-        marginBottom: '32px',
-        textAlign: 'left'
-      }}>
+      <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-teal-400 mb-6 sm:mb-8 text-left">
         {brand ? 'Edit Brand Profile' : 'Create Brand Profile'}
       </h2>
       <BrandSetup onComplete={onComplete} onSave={onSave} initialData={brand || undefined} />

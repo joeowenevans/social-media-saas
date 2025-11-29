@@ -447,38 +447,23 @@ export function Schedule() {
 
   return (
     <AppLayout>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 32px' }}>
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-12">
         {/* Page Title with Teal Text Glow */}
-        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-          <h1 style={{
-            color: '#14b8a6',
-            fontSize: '32px',
-            fontWeight: 700,
-            marginBottom: '12px',
+        <div className="text-center mb-8 sm:mb-10 md:mb-12">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 text-teal-400" style={{
             textShadow: '0 0 20px rgba(20, 184, 166, 0.6), 0 0 40px rgba(20, 184, 166, 0.4), 0 0 60px rgba(20, 184, 166, 0.2)'
           }}>
             Scheduled Posts
           </h1>
-          <p style={{
-            color: '#888',
-            fontSize: '16px',
-            margin: 0
-          }}>
+          <p className="text-sm sm:text-base text-[#888] m-0">
             Plan and edit your scheduled content
           </p>
         </div>
 
         {/* Side-by-Side Filters */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '32px',
-          gap: '24px',
-          flexWrap: 'wrap'
-        }}>
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 sm:mb-8 gap-4">
           {/* Status Filter - Left */}
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <div className="flex gap-2 items-center overflow-x-auto pb-2 lg:pb-0 w-full lg:w-auto">
             {[
               { id: 'all', label: 'All', color: '#14b8a6' },
               { id: 'scheduled', label: 'Scheduled', color: '#14b8a6' },
@@ -488,16 +473,11 @@ export function Schedule() {
               <button
                 key={status.id}
                 onClick={() => setSelectedStatus(status.id as any)}
+                className="shrink-0 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all"
                 style={{
                   background: selectedStatus === status.id ? status.color : '#1a1a1a',
                   border: `1px solid ${selectedStatus === status.id ? status.color : '#27272a'}`,
-                  borderRadius: '20px',
-                  padding: '10px 24px',
-                  color: selectedStatus === status.id ? 'white' : '#888',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
+                  color: selectedStatus === status.id ? 'white' : '#888'
                 }}
               >
                 {status.label}
@@ -506,7 +486,7 @@ export function Schedule() {
           </div>
 
           {/* Platform Filter - Right */}
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <div className="flex gap-2 items-center overflow-x-auto pb-2 lg:pb-0 w-full lg:w-auto">
             {[
               { id: 'all', label: 'All', color: '#14b8a6' },
               { id: 'instagram', label: 'Instagram', color: '#E1306C' },
@@ -516,16 +496,11 @@ export function Schedule() {
               <button
                 key={platform.id}
                 onClick={() => setSelectedPlatform(platform.id as any)}
+                className="shrink-0 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all"
                 style={{
                   background: selectedPlatform === platform.id ? platform.color : '#1a1a1a',
                   border: `1px solid ${selectedPlatform === platform.id ? platform.color : '#27272a'}`,
-                  borderRadius: '20px',
-                  padding: '10px 24px',
-                  color: selectedPlatform === platform.id ? 'white' : '#888',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
+                  color: selectedPlatform === platform.id ? 'white' : '#888'
                 }}
               >
                 {platform.label}
@@ -535,13 +510,7 @@ export function Schedule() {
         </div>
 
         {/* Scheduled Posts Section */}
-        <h2 style={{
-          color: '#14b8a6',
-          fontSize: '24px',
-          fontWeight: 600,
-          marginBottom: '32px',
-          textAlign: 'left'
-        }}>
+        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-teal-400 mb-6 sm:mb-8 text-left">
           Your Scheduled Posts
         </h2>
 
@@ -578,11 +547,7 @@ export function Schedule() {
             </button>
           </div>
         ) : (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
-            gap: '24px'
-          }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {sortedPosts.map((post: any) => (
               <div
                 key={post.id}
@@ -737,18 +702,14 @@ export function Schedule() {
         )}
 
         {/* Content Calendar Section - Moved to Bottom */}
-        <div style={{ marginTop: '64px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-            <h2 style={{
-              color: '#14b8a6',
-              fontSize: '24px',
-              fontWeight: 600
-            }}>
+        <div className="mt-10 sm:mt-12 md:mt-16">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-teal-400">
               Content Calendar
             </h2>
 
             {/* View Toggle */}
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div className="flex gap-2">
               <button
                 onClick={() => setCalendarView('week')}
                 style={{
@@ -784,7 +745,7 @@ export function Schedule() {
             </div>
           </div>
 
-          <div style={{ background: '#1a1a1a', padding: '32px', borderRadius: '12px' }}>
+          <div className="p-4 sm:p-6 md:p-8 rounded-xl overflow-x-auto" style={{ background: '#1a1a1a' }}>
             {/* Calendar Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <button
@@ -1064,41 +1025,21 @@ export function Schedule() {
       {/* Edit Modal - Redesigned with View-only for Posted */}
       {editingPost && (
         <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0, 0, 0, 0.8)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-            padding: '24px'
-          }}
+          className="fixed inset-0 flex items-center justify-center z-[1000] p-4 sm:p-6"
+          style={{ background: 'rgba(0, 0, 0, 0.8)' }}
           onClick={() => { setEditingPost(null); setLightboxOpen(false); }}
         >
           <div
+            className="w-full max-w-[700px] max-h-[90vh] overflow-y-auto rounded-2xl p-5 sm:p-8 md:p-10"
             style={{
               background: '#1a1a1a',
-              borderRadius: '16px',
-              padding: '40px',
-              maxWidth: '700px',
-              width: '100%',
-              maxHeight: '90vh',
-              overflowY: 'auto',
               boxShadow: '0 0 60px rgba(0, 0, 0, 0.5)'
             }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
-              <h2 style={{
-                color: '#14b8a6',
-                fontSize: '28px',
-                fontWeight: 700,
-                margin: 0,
+            <div className="flex justify-between items-center mb-6 sm:mb-8">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-teal-400 m-0" style={{
                 textShadow: '0 0 20px rgba(20, 184, 166, 0.6), 0 0 40px rgba(20, 184, 166, 0.4)'
               }}>
                 {editingPost.status === 'posted' ? 'View Post' : 'Edit Post'}
@@ -1213,11 +1154,11 @@ export function Schedule() {
             </div>
 
             {/* Platforms */}
-            <div style={{ marginBottom: '32px' }}>
-              <label style={{ color: 'white', fontSize: '16px', fontWeight: 600, display: 'block', marginBottom: '12px' }}>
+            <div className="mb-6 sm:mb-8">
+              <label className="text-white text-sm sm:text-base font-semibold block mb-3">
                 {editingPost.status === 'posted' ? 'Posted To' : 'Select Platforms'}
               </label>
-              <div style={{ display: 'flex', gap: '12px' }}>
+              <div className="flex flex-col sm:flex-row gap-3">
                 {[
                   { id: 'instagram', label: 'Instagram' },
                   { id: 'facebook', label: 'Facebook' },
@@ -1493,9 +1434,9 @@ export function Schedule() {
                 </button>
               </div>
             ) : (
-              <div style={{ display: 'flex', gap: '12px', justifyContent: 'space-between' }}>
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-between">
                 {/* Left side buttons */}
-                <div style={{ display: 'flex', gap: '12px' }}>
+                <div className="flex gap-3 order-2 sm:order-1">
                   <button
                     onClick={() => {
                       setPostToDelete(editingPost.id)
@@ -1568,40 +1509,16 @@ export function Schedule() {
                   </button>
                 </div>
                 {/* Right side buttons */}
-                <div style={{ display: 'flex', gap: '12px' }}>
+                <div className="flex gap-3 order-1 sm:order-2">
                   <button
                     onClick={() => setEditingPost(null)}
-                    style={{
-                      padding: '12px 24px',
-                      background: '#2a2a2a',
-                      color: 'white',
-                      fontSize: '15px',
-                      fontWeight: 600,
-                      border: 'none',
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = '#333'}
-                    onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
+                    className="flex-1 sm:flex-none px-5 sm:px-6 py-3 bg-[#2a2a2a] text-white text-sm sm:text-base font-semibold rounded-lg transition-all hover:bg-[#333]"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleSaveEdit}
-                    style={{
-                      padding: '12px 32px',
-                      background: '#14b8a6',
-                      color: 'white',
-                      fontSize: '15px',
-                      fontWeight: 600,
-                      border: 'none',
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = '#10a896'}
-                    onMouseLeave={(e) => e.currentTarget.style.background = '#14b8a6'}
+                    className="flex-1 sm:flex-none px-6 sm:px-8 py-3 bg-teal-500 text-white text-sm sm:text-base font-semibold rounded-lg transition-all hover:bg-teal-600"
                   >
                     Save Changes
                   </button>

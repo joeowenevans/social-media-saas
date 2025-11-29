@@ -156,80 +156,31 @@ export function Dashboard() {
 
   return (
     <AppLayout>
-      <div style={{ padding: '48px 32px' }}>
+      <div className="px-2 sm:px-4 md:px-8 py-6 sm:py-8 md:py-12">
         {/* Welcome Title */}
-        <h1 style={{
-          color: '#ffffff',
-          fontSize: '32px',
-          fontWeight: 700,
-          textAlign: 'center',
-          marginBottom: '64px'
-        }}>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-8 sm:mb-12 md:mb-16">
           Welcome back, {firstName}!
         </h1>
 
         {/* AI Caption Generation Section */}
-        <div style={{
-          background: '#1a1a1a',
-          padding: '32px',
-          borderRadius: '12px',
-          marginBottom: '64px',
-          textAlign: 'center',
-          boxShadow: '0 0 40px rgba(20, 184, 166, 0.2), 0 0 80px rgba(20, 184, 166, 0.1)'
-        }}>
-          <h2 style={{
-            color: '#14b8a6',
-            fontSize: '24px',
-            fontWeight: 600,
-            marginBottom: '16px'
-          }}>
+        <div className="bg-[#1a1a1a] p-5 sm:p-6 md:p-8 rounded-xl mb-8 sm:mb-12 md:mb-16 text-center"
+          style={{ boxShadow: '0 0 40px rgba(20, 184, 166, 0.2), 0 0 80px rgba(20, 184, 166, 0.1)' }}>
+          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-teal-400 mb-3 sm:mb-4">
             AI-Powered Caption Generation
           </h2>
-          <p style={{
-            color: '#e5e5e5',
-            fontSize: '16px',
-            lineHeight: '1.7',
-            marginTop: '16px',
-            marginBottom: '24px'
-          }}>
+          <p className="text-sm sm:text-base text-[#e5e5e5] leading-relaxed mb-4 sm:mb-6">
             Upload your media and let our AI create engaging captions optimized for your brand voice and target audience.
           </p>
           <button
             onClick={() => navigate('/upload')}
-            style={{
-              width: '200px',
-              height: '48px',
-              background: '#2a2a2a',
-              color: 'white',
-              border: 'none',
-              borderRadius: '24px',
-              fontSize: '15px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              margin: '0 auto',
-              display: 'block'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#14b8a6'
-              e.currentTarget.style.transform = 'scale(1.05)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = '#2a2a2a'
-              e.currentTarget.style.transform = 'scale(1)'
-            }}
+            className="w-full sm:w-auto px-8 sm:px-10 h-11 sm:h-12 bg-[#2a2a2a] text-white rounded-full font-semibold text-sm sm:text-base transition-all duration-200 hover:bg-teal-500 hover:scale-105"
           >
             Get Started
           </button>
         </div>
 
-        {/* Stats Grid - 1x3 with white glow */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '16px',
-          marginBottom: '64px'
-        }}>
+        {/* Stats Grid - 1 col mobile, 3 cols desktop */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-8 sm:mb-12 md:mb-16">
           {stats.map((stat) => (
             <div
               key={stat.label}
@@ -282,54 +233,38 @@ export function Dashboard() {
         </div>
 
         {/* Calendar View */}
-        <div style={{ marginBottom: '64px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-            <h2 style={{
-              color: '#14b8a6',
-              fontSize: '24px',
-              fontWeight: 600
-            }}>
+        <div className="mb-8 sm:mb-12 md:mb-16">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-teal-400">
               Content Calendar
             </h2>
 
             {/* View Toggle */}
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div className="flex gap-2">
               <button
                 onClick={() => setCalendarView('week')}
-                style={{
-                  padding: '8px 16px',
-                  background: calendarView === 'week' ? '#14b8a6' : '#0d0d0d',
-                  border: `1px solid ${calendarView === 'week' ? '#14b8a6' : '#27272a'}`,
-                  borderRadius: '6px',
-                  color: calendarView === 'week' ? 'white' : '#888',
-                  fontSize: '13px',
-                  fontWeight: 500,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
+                className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-all ${
+                  calendarView === 'week'
+                    ? 'bg-teal-500 text-white border border-teal-500'
+                    : 'bg-[#0d0d0d] text-gray-400 border border-[#27272a]'
+                }`}
               >
                 Week
               </button>
               <button
                 onClick={() => setCalendarView('month')}
-                style={{
-                  padding: '8px 16px',
-                  background: calendarView === 'month' ? '#14b8a6' : '#0d0d0d',
-                  border: `1px solid ${calendarView === 'month' ? '#14b8a6' : '#27272a'}`,
-                  borderRadius: '6px',
-                  color: calendarView === 'month' ? 'white' : '#888',
-                  fontSize: '13px',
-                  fontWeight: 500,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
+                className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-all ${
+                  calendarView === 'month'
+                    ? 'bg-teal-500 text-white border border-teal-500'
+                    : 'bg-[#0d0d0d] text-gray-400 border border-[#27272a]'
+                }`}
               >
                 Month
               </button>
             </div>
           </div>
 
-          <div style={{ background: '#1a1a1a', padding: '32px', borderRadius: '12px' }}>
+          <div className="bg-[#1a1a1a] p-3 sm:p-4 md:p-8 rounded-xl overflow-x-auto">
             {/* Calendar Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <button
@@ -507,13 +442,8 @@ export function Dashboard() {
         </div>
 
         {/* Recent Posts Gallery */}
-        <div style={{ marginBottom: '64px' }}>
-          <h2 style={{
-            color: '#14b8a6',
-            fontSize: '24px',
-            fontWeight: 600,
-            marginBottom: '24px'
-          }}>
+        <div className="mb-8 sm:mb-12 md:mb-16">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-teal-400 mb-4 sm:mb-6">
             Recent Posts
           </h2>
 
@@ -526,41 +456,21 @@ export function Dashboard() {
               <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-xl bg-[#222] mb-4">
                 <FileText className="w-8 h-8 text-[#a1a1aa]" />
               </div>
-              <p className="text-[#a1a1aa] mb-4">
+              <p className="text-[#a1a1aa] mb-4 text-sm sm:text-base">
                 No posts yet. Start by uploading your first piece of content!
               </p>
-              <button onClick={() => navigate('/upload')} className="bg-primary-500 hover:bg-primary-600 text-white font-medium px-6 py-3 rounded-lg transition-colors">
+              <button onClick={() => navigate('/upload')} className="w-full sm:w-auto bg-primary-500 hover:bg-primary-600 text-white font-medium px-6 py-3 rounded-lg transition-colors">
                 Upload Content
               </button>
             </div>
           ) : (
-            <div style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '1%'
-            }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4">
               {recentPosts.map((post) => (
                 <div
                   key={post.id}
                   onClick={() => navigate(`/schedule?edit=${post.id}`)}
-                  style={{
-                    width: '18%',
-                    margin: '0.5%',
-                    borderRadius: '8px',
-                    overflow: 'hidden',
-                    background: '#1a1a1a',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    boxShadow: '0 0 10px rgba(255, 255, 255, 0.05)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.02)'
-                    e.currentTarget.style.boxShadow = '0 0 20px rgba(20, 184, 166, 0.3), 0 0 40px rgba(20, 184, 166, 0.1)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)'
-                    e.currentTarget.style.boxShadow = '0 0 10px rgba(255, 255, 255, 0.05)'
-                  }}
+                  className="rounded-lg overflow-hidden bg-[#1a1a1a] cursor-pointer transition-all duration-300 hover:scale-[1.02]"
+                  style={{ boxShadow: '0 0 10px rgba(255, 255, 255, 0.05)' }}
                 >
                   {/* Image/Video Thumbnail */}
                   <div style={{ aspectRatio: '1 / 1', position: 'relative', background: '#0d0d0d' }}>
