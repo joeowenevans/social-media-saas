@@ -78,7 +78,16 @@ export function Settings() {
 
   return (
     <AppLayout>
-      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 32px' }}>
+      {/* Mobile-only styles - does not affect desktop */}
+      <style>{`
+        @media (max-width: 639px) {
+          .settings-container { padding: 24px 16px !important; }
+          .settings-title { font-size: 24px !important; }
+          .danger-zone { padding: 20px !important; }
+          .danger-zone h2 { font-size: 18px !important; }
+        }
+      `}</style>
+      <div className="settings-container" style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 32px' }}>
         {/* Page Title with Teal Text Glow */}
         <div style={{ textAlign: 'center', marginBottom: '64px' }}>
           <h1 style={{
@@ -102,7 +111,7 @@ export function Settings() {
         <BrandSettings brand={brand} onSave={handleSave} onComplete={handleComplete} />
 
         {/* Danger Zone - Delete Account */}
-        <div style={{
+        <div className="danger-zone" style={{
           marginTop: '80px',
           padding: '32px',
           background: '#1a1a1a',
