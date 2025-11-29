@@ -64,9 +64,10 @@ export function AppLayout({ children }: AppLayoutProps) {
           zIndex: 50
         }}
       >
+        {/* Desktop Navigation - Hidden on mobile, visible on sm+ */}
         <div
+          className="hidden sm:flex"
           style={{
-            display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             height: '100%',
@@ -101,9 +102,8 @@ export function AppLayout({ children }: AppLayoutProps) {
             </span>
           </div>
 
-          {/* Right Side - Navigation (2/3) - Desktop only */}
+          {/* Right Side - Navigation (2/3) */}
           <nav
-            className="desktop-nav"
             style={{
               flex: 2,
               display: 'flex',
@@ -169,17 +169,54 @@ export function AppLayout({ children }: AppLayoutProps) {
               Sign Out
             </button>
           </nav>
+        </div>
 
-          {/* Mobile Hamburger Button - Hidden on desktop */}
+        {/* Mobile Navigation - Visible on mobile, hidden on sm+ */}
+        <div
+          className="sm:hidden flex"
+          style={{
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            height: '100%',
+            padding: '0 16px',
+            width: '100%'
+          }}
+        >
+          {/* Logo */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px'
+            }}
+          >
+            <Share2
+              style={{
+                color: 'white',
+                width: '24px',
+                height: '24px'
+              }}
+            />
+            <span
+              style={{
+                color: '#14b8a6',
+                fontSize: '20px',
+                fontWeight: 700
+              }}
+            >
+              SocialAI
+            </span>
+          </div>
+
+          {/* Hamburger Button */}
           <button
-            className="mobile-menu-btn"
             onClick={() => setMobileMenuOpen(true)}
             style={{
               background: 'transparent',
               border: 'none',
               padding: '10px',
               cursor: 'pointer',
-              display: 'none',
+              display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               minWidth: '44px',
@@ -192,10 +229,10 @@ export function AppLayout({ children }: AppLayoutProps) {
         </div>
       </header>
 
-      {/* Mobile Menu Overlay - Only renders on mobile */}
+      {/* Mobile Menu Overlay - Only visible on mobile */}
       {mobileMenuOpen && (
         <div
-          className="mobile-menu-overlay"
+          className="sm:hidden"
           style={{
             position: 'fixed',
             top: 0,
@@ -203,7 +240,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             right: 0,
             bottom: 0,
             zIndex: 100,
-            display: 'none'
+            display: 'flex'
           }}
         >
           {/* Backdrop */}
@@ -334,17 +371,11 @@ export function AppLayout({ children }: AppLayoutProps) {
         </div>
       )}
 
-      {/* Mobile-only CSS - does not affect desktop */}
+      {/* CSS Animation for Mobile Menu */}
       <style>{`
         @keyframes slideInRight {
           from { transform: translateX(100%); }
           to { transform: translateX(0); }
-        }
-
-        @media (max-width: 639px) {
-          .desktop-nav { display: none !important; }
-          .mobile-menu-btn { display: flex !important; }
-          .mobile-menu-overlay { display: flex !important; }
         }
       `}</style>
 
