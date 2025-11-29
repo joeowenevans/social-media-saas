@@ -78,9 +78,20 @@ export function Settings() {
 
   return (
     <AppLayout>
-      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 32px' }}>
+      {/* Mobile-only styles - does not affect desktop */}
+      <style>{`
+        @media (max-width: 639px) {
+          .settings-container { padding: 16px !important; }
+          .settings-title { font-size: 24px !important; margin-bottom: 32px !important; }
+          .danger-zone { padding: 20px !important; margin-top: 48px !important; }
+          .delete-modal { padding: 24px !important; }
+          .delete-modal-actions { flex-direction: column !important; }
+          .delete-modal-actions button { width: 100% !important; }
+        }
+      `}</style>
+      <div className="settings-container" style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 32px' }}>
         {/* Page Title with Teal Text Glow */}
-        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+        <div className="settings-title" style={{ textAlign: 'center', marginBottom: '64px' }}>
           <h1 style={{
             color: '#14b8a6',
             fontSize: '32px',
@@ -102,7 +113,7 @@ export function Settings() {
         <BrandSettings brand={brand} onSave={handleSave} onComplete={handleComplete} />
 
         {/* Danger Zone - Delete Account */}
-        <div style={{
+        <div className="danger-zone" style={{
           marginTop: '80px',
           padding: '32px',
           background: '#1a1a1a',
@@ -171,6 +182,7 @@ export function Settings() {
           onClick={closeDeleteModal}
         >
           <div
+            className="delete-modal"
             style={{
               background: '#1a1a1a',
               borderRadius: '16px',
@@ -279,7 +291,7 @@ export function Settings() {
             </div>
 
             {/* Actions */}
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+            <div className="delete-modal-actions" style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
               <button
                 onClick={closeDeleteModal}
                 disabled={deleting}

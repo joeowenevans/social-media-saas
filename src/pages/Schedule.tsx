@@ -447,10 +447,30 @@ export function Schedule() {
 
   return (
     <AppLayout>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 32px' }}>
+      {/* Mobile-only styles - does not affect desktop */}
+      <style>{`
+        @media (max-width: 639px) {
+          .schedule-container { padding: 16px !important; }
+          .schedule-title { font-size: 24px !important; }
+          .schedule-filters { flex-direction: column !important; gap: 16px !important; }
+          .filter-group { flex-wrap: wrap !important; justify-content: center !important; }
+          .filter-group button { padding: 8px 16px !important; font-size: 12px !important; }
+          .posts-grid { grid-template-columns: 1fr !important; }
+          .post-card { min-height: auto !important; }
+          .calendar-section { padding: 16px !important; overflow-x: auto; }
+          .calendar-grid-wrapper { min-width: 500px; }
+          .edit-modal { padding: 24px !important; max-height: 85vh !important; }
+          .edit-modal-actions { flex-direction: column !important; gap: 12px !important; }
+          .edit-modal-actions > div { width: 100% !important; justify-content: center !important; }
+          .edit-modal-actions button { flex: 1 !important; }
+          .edit-platform-grid { flex-direction: column !important; }
+          .edit-platform-grid button { width: 100% !important; }
+        }
+      `}</style>
+      <div className="schedule-container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 32px' }}>
         {/* Page Title with Teal Text Glow */}
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-          <h1 style={{
+          <h1 className="schedule-title" style={{
             color: '#14b8a6',
             fontSize: '32px',
             fontWeight: 700,
@@ -469,7 +489,7 @@ export function Schedule() {
         </div>
 
         {/* Side-by-Side Filters */}
-        <div style={{
+        <div className="schedule-filters" style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -478,7 +498,7 @@ export function Schedule() {
           flexWrap: 'wrap'
         }}>
           {/* Status Filter - Left */}
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <div className="filter-group" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             {[
               { id: 'all', label: 'All', color: '#14b8a6' },
               { id: 'scheduled', label: 'Scheduled', color: '#14b8a6' },
@@ -506,7 +526,7 @@ export function Schedule() {
           </div>
 
           {/* Platform Filter - Right */}
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <div className="filter-group" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             {[
               { id: 'all', label: 'All', color: '#14b8a6' },
               { id: 'instagram', label: 'Instagram', color: '#E1306C' },
@@ -578,7 +598,7 @@ export function Schedule() {
             </button>
           </div>
         ) : (
-          <div style={{
+          <div className="posts-grid" style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
             gap: '24px'
@@ -784,7 +804,7 @@ export function Schedule() {
             </div>
           </div>
 
-          <div style={{ background: '#1a1a1a', padding: '32px', borderRadius: '12px' }}>
+          <div className="calendar-section" style={{ background: '#1a1a1a', padding: '32px', borderRadius: '12px' }}>
             {/* Calendar Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <button
@@ -1080,6 +1100,7 @@ export function Schedule() {
           onClick={() => { setEditingPost(null); setLightboxOpen(false); }}
         >
           <div
+            className="edit-modal"
             style={{
               background: '#1a1a1a',
               borderRadius: '16px',
@@ -1217,7 +1238,7 @@ export function Schedule() {
               <label style={{ color: 'white', fontSize: '16px', fontWeight: 600, display: 'block', marginBottom: '12px' }}>
                 {editingPost.status === 'posted' ? 'Posted To' : 'Select Platforms'}
               </label>
-              <div style={{ display: 'flex', gap: '12px' }}>
+              <div className="edit-platform-grid" style={{ display: 'flex', gap: '12px' }}>
                 {[
                   { id: 'instagram', label: 'Instagram' },
                   { id: 'facebook', label: 'Facebook' },
@@ -1493,7 +1514,7 @@ export function Schedule() {
                 </button>
               </div>
             ) : (
-              <div style={{ display: 'flex', gap: '12px', justifyContent: 'space-between' }}>
+              <div className="edit-modal-actions" style={{ display: 'flex', gap: '12px', justifyContent: 'space-between' }}>
                 {/* Left side buttons */}
                 <div style={{ display: 'flex', gap: '12px' }}>
                   <button

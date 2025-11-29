@@ -412,10 +412,26 @@ export function Upload() {
 
   return (
     <AppLayout>
-      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 32px' }}>
+      {/* Mobile-only styles - does not affect desktop */}
+      <style>{`
+        @media (max-width: 639px) {
+          .upload-container { padding: 16px !important; }
+          .upload-title { font-size: 24px !important; }
+          .upload-subtitle { font-size: 14px !important; }
+          .upload-section { margin-bottom: 32px !important; }
+          .upload-dropzone { padding: 32px 16px !important; }
+          .platform-grid { flex-direction: column !important; }
+          .platform-grid button { flex: none !important; width: 100% !important; }
+          .post-type-grid { flex-direction: column !important; }
+          .post-type-grid button { flex: none !important; width: 100% !important; }
+          .upload-calendar { padding: 16px !important; overflow-x: auto; }
+          .upload-calendar-grid { min-width: 280px; }
+        }
+      `}</style>
+      <div className="upload-container" style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 32px' }}>
         {/* Page Title with Teal Text Glow */}
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-          <h1 style={{
+          <h1 className="upload-title" style={{
             color: '#14b8a6',
             fontSize: '32px',
             fontWeight: 700,
@@ -424,7 +440,7 @@ export function Upload() {
           }}>
             Upload Content
           </h1>
-          <p style={{
+          <p className="upload-subtitle" style={{
             color: '#888',
             fontSize: '16px',
             margin: 0
@@ -434,7 +450,7 @@ export function Upload() {
         </div>
 
         {/* Upload Media Section */}
-        <div style={{ marginBottom: '64px' }}>
+        <div className="upload-section" style={{ marginBottom: '64px' }}>
           <h2 style={{
             color: 'white',
             fontSize: '18px',
@@ -447,6 +463,7 @@ export function Upload() {
           {!uploadedMedia ? (
             <div
               {...getRootProps()}
+              className="upload-dropzone"
               style={{
                 background: '#1a1a1a',
                 padding: '48px',
@@ -654,7 +671,7 @@ export function Upload() {
                   Select Platforms
                 </h2>
 
-                <div style={{ display: 'flex', gap: '16px' }}>
+                <div className="platform-grid" style={{ display: 'flex', gap: '16px' }}>
                   {[
                     { id: 'instagram', label: 'Instagram' },
                     { id: 'facebook', label: 'Facebook' },
@@ -706,7 +723,7 @@ export function Upload() {
                   When to Post
                 </h2>
 
-                <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
+                <div className="post-type-grid" style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
                   <button
                     type="button"
                     onClick={() => setPostType('now')}
@@ -807,7 +824,7 @@ export function Upload() {
                     </div>
 
                     {/* Calendar View */}
-                    <div style={{ background: '#1a1a1a', padding: '24px', borderRadius: '12px' }}>
+                    <div className="upload-calendar" style={{ background: '#1a1a1a', padding: '24px', borderRadius: '12px' }}>
                       {/* Calendar Header */}
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                         <button
@@ -865,7 +882,7 @@ export function Upload() {
                       </div>
 
                       {/* Calendar Grid */}
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
+                      <div className="upload-calendar-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
                         {dateRange.map(date => {
                           const dateKey = format(date, 'yyyy-MM-dd')
                           const dayPosts = postsByDate[dateKey] || []

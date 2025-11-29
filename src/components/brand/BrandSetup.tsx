@@ -85,6 +85,13 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
         input[type="number"] {
           -moz-appearance: textfield;
         }
+        /* Mobile-only styles */
+        @media (max-width: 639px) {
+          .brand-field { margin-bottom: 24px !important; }
+          .brand-field input, .brand-field textarea, .brand-field select { padding: 12px !important; font-size: 14px !important; }
+          .brand-slider-row { flex-direction: column !important; gap: 20px !important; }
+          .brand-slider-row > div { width: 100% !important; }
+        }
       `}</style>
       {/* 1. Brand Name */}
       <div style={fieldContainerStyle}>

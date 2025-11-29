@@ -192,14 +192,14 @@ export function AppLayout({ children }: AppLayoutProps) {
 
       {/* Main Content */}
       <main className="flex-1">
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-8">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-4 sm:py-8">
           {children}
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="bg-[#0f0f0f] border-t border-[#1a1a1a] mt-16">
-        <div className="max-w-[900px] mx-auto text-center p-8">
+      <footer className="bg-[#0f0f0f] border-t border-[#1a1a1a] mt-8 sm:mt-16">
+        <div className="max-w-[900px] mx-auto text-center p-4 sm:p-8">
           <div className="text-teal-400 font-bold text-lg mb-4">SocialAI</div>
           <div className="flex flex-col items-center gap-4">
             {['Privacy Policy', 'Terms of Service', 'Contact', 'Support'].map((link) => (

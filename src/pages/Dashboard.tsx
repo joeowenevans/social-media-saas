@@ -159,16 +159,24 @@ export function Dashboard() {
       {/* Mobile-only styles - does not affect desktop */}
       <style>{`
         @media (max-width: 639px) {
-          .dashboard-container { padding: 24px 16px !important; }
-          .stats-grid { grid-template-columns: 1fr !important; }
-          .posts-gallery { display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; }
-          .posts-gallery > div { width: 100% !important; margin: 0 !important; }
+          .dashboard-container { padding: 16px !important; }
+          .dashboard-title { font-size: 24px !important; margin-bottom: 32px !important; }
+          .ai-section { padding: 20px !important; margin-bottom: 32px !important; }
+          .ai-section h2 { font-size: 20px !important; }
+          .ai-section p { font-size: 14px !important; }
+          .stats-grid { grid-template-columns: 1fr !important; gap: 12px !important; margin-bottom: 32px !important; }
+          .section-title { font-size: 20px !important; }
+          .calendar-header { flex-direction: column !important; gap: 16px !important; }
           .calendar-container { padding: 16px !important; overflow-x: auto; }
+          .calendar-grid { min-width: 500px; }
+          .posts-gallery { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+          .posts-gallery > div { width: 100% !important; margin: 0 !important; }
+          .recent-posts-section { margin-bottom: 32px !important; }
         }
       `}</style>
       <div className="dashboard-container" style={{ padding: '48px 32px' }}>
         {/* Welcome Title */}
-        <h1 style={{
+        <h1 className="dashboard-title" style={{
           color: '#ffffff',
           fontSize: '32px',
           fontWeight: 700,
@@ -179,7 +187,7 @@ export function Dashboard() {
         </h1>
 
         {/* AI Caption Generation Section */}
-        <div style={{
+        <div className="ai-section" style={{
           background: '#1a1a1a',
           padding: '32px',
           borderRadius: '12px',
@@ -293,8 +301,8 @@ export function Dashboard() {
 
         {/* Calendar View */}
         <div style={{ marginBottom: '64px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-            <h2 style={{
+          <div className="calendar-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <h2 className="section-title" style={{
               color: '#14b8a6',
               fontSize: '24px',
               fontWeight: 600
@@ -404,7 +412,7 @@ export function Dashboard() {
             </div>
 
             {/* Calendar Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px' }}>
+            <div className="calendar-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px' }}>
               {(calendarView === 'month' ? dateRange : weekDateRange).map(date => {
                 const dateKey = format(date, 'yyyy-MM-dd')
                 const dayPosts = postsByDate[dateKey] || []
@@ -517,8 +525,8 @@ export function Dashboard() {
         </div>
 
         {/* Recent Posts Gallery */}
-        <div style={{ marginBottom: '64px' }}>
-          <h2 style={{
+        <div className="recent-posts-section" style={{ marginBottom: '64px' }}>
+          <h2 className="section-title" style={{
             color: '#14b8a6',
             fontSize: '24px',
             fontWeight: 600,
