@@ -1,15 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
-import {
-  Share2,
-  LayoutDashboard,
-  Upload,
-  Calendar,
-  Settings,
-  Menu,
-  X
-} from 'lucide-react'
+import { Share2, LayoutDashboard, Upload, Calendar, Settings, Menu, X } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 interface AppLayoutProps {
@@ -52,91 +44,40 @@ export function AppLayout({ children }: AppLayoutProps) {
         backgroundSize: '24px 24px'
       }}
     >
-      {/* Header - Fixed Layout */}
-      <header
-        style={{
-          background: '#0f0f0f',
-          borderBottom: '1px solid #1a1a1a',
-          height: '64px',
-          width: '100%',
-          position: 'sticky',
-          top: 0,
-          zIndex: 50
-        }}
-      >
-        {/* Desktop Navigation - Hidden on mobile, visible on sm+ */}
-        <div
-          className="hidden sm:flex"
-          style={{
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            height: '100%',
-            padding: '0 48px',
-            width: '100%'
-          }}
-        >
-          {/* Left Side - Logo Section (1/3) */}
-          <div
-            style={{
-              flex: 1,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px'
-            }}
-          >
-            <Share2
-              style={{
-                color: 'white',
-                width: '24px',
-                height: '24px'
-              }}
-            />
-            <span
-              style={{
-                color: '#14b8a6',
-                fontSize: '20px',
-                fontWeight: 700
-              }}
-            >
-              SocialAI
-            </span>
+      {/* Header */}
+      <header className="sticky top-0 z-50 h-16 w-full bg-[#0f0f0f] border-b border-[#1a1a1a]">
+
+        {/* Desktop Navigation - hidden on mobile, flex on sm+ */}
+        <div className="hidden sm:flex h-full w-full items-center justify-between px-12">
+          {/* Logo (1/3) */}
+          <div className="flex-1 flex items-center gap-3">
+            <Share2 className="w-6 h-6 text-white" />
+            <span className="text-teal-400 text-xl font-bold">SocialAI</span>
           </div>
 
-          {/* Right Side - Navigation (2/3) */}
-          <nav
-            style={{
-              flex: 2,
-              display: 'flex',
-              justifyContent: 'space-evenly',
-              alignItems: 'center'
-            }}
-          >
+          {/* Nav Items (2/3) */}
+          <nav className="flex-[2] flex justify-evenly items-center">
             {navItems.map((item) => (
               <button
                 key={item.path}
                 onClick={() => navigate(item.path)}
-                className="unstyled"
+                className="bg-transparent border-none cursor-pointer transition-all duration-300"
                 style={{
-                  color: isActive(item.path) ? '#14b8a6' : '#e5e5e5',
+                  color: isActive(item.path) ? '#2dd4bf' : '#e5e5e5',
                   fontSize: '15px',
                   fontWeight: 600,
-                  background: 'transparent',
-                  border: 'none',
-                  padding: '0',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
                   textShadow: isActive(item.path)
-                    ? '0 0 12px rgba(20, 184, 166, 0.8), 0 0 24px rgba(20, 184, 166, 0.5)'
+                    ? '0 0 10px rgba(20, 184, 166, 0.6), 0 0 20px rgba(20, 184, 166, 0.4)'
                     : 'none'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#14b8a6'
-                  e.currentTarget.style.textShadow = '0 0 10px rgba(20, 184, 166, 0.8)'
+                  e.currentTarget.style.color = '#2dd4bf'
+                  e.currentTarget.style.textShadow = '0 0 10px rgba(20, 184, 166, 0.6)'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = isActive(item.path) ? '#14b8a6' : '#e5e5e5'
+                  e.currentTarget.style.color = isActive(item.path) ? '#2dd4bf' : '#e5e5e5'
                   e.currentTarget.style.textShadow = isActive(item.path)
-                    ? '0 0 12px rgba(20, 184, 166, 0.8), 0 0 24px rgba(20, 184, 166, 0.5)'
+                    ? '0 0 10px rgba(20, 184, 166, 0.6), 0 0 20px rgba(20, 184, 166, 0.4)'
                     : 'none'
                 }}
               >
@@ -145,21 +86,15 @@ export function AppLayout({ children }: AppLayoutProps) {
             ))}
             <button
               onClick={handleSignOut}
-              className="unstyled"
+              className="bg-transparent border-none cursor-pointer transition-all duration-300"
               style={{
                 color: '#e5e5e5',
                 fontSize: '15px',
-                fontWeight: 600,
-                background: 'transparent',
-                border: 'none',
-                padding: '0',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                textShadow: 'none'
+                fontWeight: 600
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.color = '#14b8a6'
-                e.currentTarget.style.textShadow = '0 0 10px rgba(20, 184, 166, 0.8)'
+                e.currentTarget.style.color = '#2dd4bf'
+                e.currentTarget.style.textShadow = '0 0 10px rgba(20, 184, 166, 0.6)'
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.color = '#e5e5e5'
@@ -171,199 +106,71 @@ export function AppLayout({ children }: AppLayoutProps) {
           </nav>
         </div>
 
-        {/* Mobile Navigation - Visible on mobile, hidden on sm+ */}
-        <div
-          className="sm:hidden flex"
-          style={{
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            height: '100%',
-            padding: '0 16px',
-            width: '100%'
-          }}
-        >
+        {/* Mobile Navigation - flex on mobile, hidden on sm+ */}
+        <div className="flex sm:hidden h-full w-full items-center justify-between px-4">
           {/* Logo */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px'
-            }}
-          >
-            <Share2
-              style={{
-                color: 'white',
-                width: '24px',
-                height: '24px'
-              }}
-            />
-            <span
-              style={{
-                color: '#14b8a6',
-                fontSize: '20px',
-                fontWeight: 700
-              }}
-            >
-              SocialAI
-            </span>
+          <div className="flex items-center gap-3">
+            <Share2 className="w-6 h-6 text-white" />
+            <span className="text-teal-400 text-xl font-bold">SocialAI</span>
           </div>
 
           {/* Hamburger Button */}
           <button
-            className="sm:hidden"
             onClick={() => setMobileMenuOpen(true)}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              padding: '10px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              minWidth: '44px',
-              minHeight: '44px'
-            }}
+            className="p-2 bg-transparent border-none cursor-pointer"
             aria-label="Open menu"
           >
-            <Menu style={{ color: '#14b8a6', width: '28px', height: '28px' }} />
+            <Menu className="w-7 h-7 text-teal-400" />
           </button>
         </div>
       </header>
 
-      {/* Mobile Menu Overlay - Only visible on mobile */}
+      {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
-        <div
-          className="sm:hidden"
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 100,
-            display: 'flex'
-          }}
-        >
+        <div className="sm:hidden fixed inset-0 z-[100] flex">
           {/* Backdrop */}
           <div
             onClick={() => setMobileMenuOpen(false)}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: 'rgba(0, 0, 0, 0.5)',
-              backdropFilter: 'blur(4px)'
-            }}
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
           />
 
-          {/* Slide-in Menu from Right */}
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              right: 0,
-              bottom: 0,
-              width: '280px',
-              maxWidth: '80vw',
-              background: '#1a1a1a',
-              borderLeft: '1px solid #2a2a2a',
-              display: 'flex',
-              flexDirection: 'column',
-              animation: 'slideInRight 0.2s ease-out'
-            }}
-          >
-            {/* Menu Header with Close Button */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: '16px 20px',
-                borderBottom: '1px solid #2a2a2a'
-              }}
-            >
-              <span
-                style={{
-                  color: '#14b8a6',
-                  fontSize: '18px',
-                  fontWeight: 700
-                }}
-              >
-                Menu
-              </span>
+          {/* Slide-in Menu */}
+          <div className="absolute top-0 right-0 bottom-0 w-72 max-w-[80vw] bg-gray-800 border-l border-gray-700 flex flex-col animate-slide-in">
+            {/* Header with Close */}
+            <div className="flex justify-between items-center p-4 border-b border-gray-700">
+              <span className="text-teal-400 text-lg font-bold">Menu</span>
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  padding: '10px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  minWidth: '44px',
-                  minHeight: '44px',
-                  marginRight: '-10px'
-                }}
+                className="p-2 bg-transparent border-none cursor-pointer"
                 aria-label="Close menu"
               >
-                <X style={{ color: '#e5e5e5', width: '24px', height: '24px' }} />
+                <X className="w-6 h-6 text-gray-300" />
               </button>
             </div>
 
-            {/* Mobile Nav Items */}
-            <nav style={{ flex: 1, padding: '16px 0' }}>
+            {/* Nav Items */}
+            <nav className="flex-1 py-4">
               {navItems.map((item) => (
                 <button
                   key={item.path}
                   onClick={() => handleNavClick(item.path)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '16px',
-                    width: '100%',
-                    padding: '16px 24px',
-                    background: isActive(item.path) ? 'rgba(20, 184, 166, 0.1)' : 'transparent',
-                    border: 'none',
-                    borderLeft: isActive(item.path) ? '3px solid #14b8a6' : '3px solid transparent',
-                    color: isActive(item.path) ? '#14b8a6' : '#e5e5e5',
-                    fontSize: '16px',
-                    fontWeight: 500,
-                    cursor: 'pointer',
-                    textAlign: 'left',
-                    minHeight: '52px',
-                    transition: 'all 0.2s ease'
-                  }}
+                  className={`w-full flex items-center gap-4 px-6 py-4 border-none cursor-pointer text-left transition-all ${
+                    isActive(item.path)
+                      ? 'bg-teal-400/10 border-l-4 border-l-teal-400 text-teal-400'
+                      : 'bg-transparent border-l-4 border-l-transparent text-gray-300 hover:bg-gray-700'
+                  }`}
                 >
-                  <item.icon style={{ width: '22px', height: '22px', flexShrink: 0 }} />
-                  {item.label}
+                  <item.icon className="w-5 h-5 flex-shrink-0" />
+                  <span className="text-base font-medium">{item.label}</span>
                 </button>
               ))}
             </nav>
 
-            {/* Sign Out Button at Bottom */}
-            <div style={{ padding: '16px 20px', borderTop: '1px solid #2a2a2a' }}>
+            {/* Sign Out */}
+            <div className="p-4 border-t border-gray-700">
               <button
                 onClick={handleSignOut}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px',
-                  width: '100%',
-                  padding: '14px 20px',
-                  background: '#2a2a2a',
-                  border: 'none',
-                  borderRadius: '8px',
-                  color: '#e5e5e5',
-                  fontSize: '15px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  minHeight: '48px',
-                  transition: 'all 0.2s ease'
-                }}
+                className="w-full py-3 px-4 bg-gray-700 hover:bg-gray-600 border-none rounded-lg text-gray-300 text-base font-semibold cursor-pointer transition-colors"
               >
                 Sign Out
               </button>
@@ -372,11 +179,14 @@ export function AppLayout({ children }: AppLayoutProps) {
         </div>
       )}
 
-      {/* CSS Animation for Mobile Menu */}
+      {/* Animation styles */}
       <style>{`
-        @keyframes slideInRight {
+        @keyframes slide-in {
           from { transform: translateX(100%); }
           to { transform: translateX(0); }
+        }
+        .animate-slide-in {
+          animation: slide-in 0.2s ease-out;
         }
       `}</style>
 
@@ -387,101 +197,22 @@ export function AppLayout({ children }: AppLayoutProps) {
         </div>
       </main>
 
-      {/* Footer - New Design System */}
-      <footer
-        style={{
-          background: '#0f0f0f',
-          borderTop: '1px solid #1a1a1a',
-          marginTop: '64px'
-        }}
-      >
-        <div
-          className="mx-auto text-center"
-          style={{
-            maxWidth: '900px',
-            padding: '32px'
-          }}
-        >
-          {/* Logo */}
-          <div
-            style={{
-              color: '#14b8a6',
-              fontWeight: 700,
-              fontSize: '18px',
-              marginBottom: '16px'
-            }}
-          >
-            SocialAI
-          </div>
-
-          {/* Links - Stacked vertically, centered */}
+      {/* Footer */}
+      <footer className="bg-[#0f0f0f] border-t border-[#1a1a1a] mt-16">
+        <div className="max-w-[900px] mx-auto text-center p-8">
+          <div className="text-teal-400 font-bold text-lg mb-4">SocialAI</div>
           <div className="flex flex-col items-center gap-4">
-            <a
-              href="#"
-              className="transition-colors"
-              style={{
-                color: '#888',
-                fontSize: '14px',
-                textDecoration: 'none',
-                transition: 'color 0.2s'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
-              onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
-            >
-              Privacy Policy
-            </a>
-            <a
-              href="#"
-              className="transition-colors"
-              style={{
-                color: '#888',
-                fontSize: '14px',
-                textDecoration: 'none',
-                transition: 'color 0.2s'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
-              onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
-            >
-              Terms of Service
-            </a>
-            <a
-              href="#"
-              className="transition-colors"
-              style={{
-                color: '#888',
-                fontSize: '14px',
-                textDecoration: 'none',
-                transition: 'color 0.2s'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
-              onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
-            >
-              Contact
-            </a>
-            <a
-              href="#"
-              className="transition-colors"
-              style={{
-                color: '#888',
-                fontSize: '14px',
-                textDecoration: 'none',
-                transition: 'color 0.2s'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
-              onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
-            >
-              Support
-            </a>
+            {['Privacy Policy', 'Terms of Service', 'Contact', 'Support'].map((link) => (
+              <a
+                key={link}
+                href="#"
+                className="text-gray-500 text-sm hover:text-teal-400 transition-colors"
+              >
+                {link}
+              </a>
+            ))}
           </div>
-
-          {/* Copyright */}
-          <div
-            style={{
-              color: '#888',
-              fontSize: '14px',
-              marginTop: '24px'
-            }}
-          >
+          <div className="text-gray-500 text-sm mt-6">
             &copy; {new Date().getFullYear()} SocialAI. All rights reserved.
           </div>
         </div>
