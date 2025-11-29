@@ -37,22 +37,14 @@ export function Settings() {
   return (
     <AppLayout>
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 32px' }}>
-        {/* Page Title Card with Teal Glow */}
-        <div style={{
-          background: '#1a1a1a',
-          borderRadius: '12px',
-          padding: '32px',
-          marginBottom: '64px',
-          maxWidth: '512px',
-          margin: '0 auto 64px',
-          boxShadow: '0 0 30px rgba(20, 184, 166, 0.2), 0 0 60px rgba(20, 184, 166, 0.1)',
-          textAlign: 'center'
-        }}>
+        {/* Page Title with Teal Text Glow */}
+        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
           <h1 style={{
             color: '#14b8a6',
             fontSize: '32px',
             fontWeight: 700,
-            marginBottom: '12px'
+            marginBottom: '12px',
+            textShadow: '0 0 20px rgba(20, 184, 166, 0.6), 0 0 40px rgba(20, 184, 166, 0.4), 0 0 60px rgba(20, 184, 166, 0.2)'
           }}>
             Brand Settings
           </h1>
