@@ -102,7 +102,7 @@ export function AppLayout({ children }: AppLayoutProps) {
 
           {/* Desktop Navigation - Hidden on mobile */}
           <nav
-            className="hidden md:flex"
+            className="hidden sm:flex"
             style={{
               flex: 2,
               justifyContent: 'space-evenly',
@@ -170,7 +170,7 @@ export function AppLayout({ children }: AppLayoutProps) {
 
           {/* Mobile Hamburger Button - Visible only on mobile */}
           <button
-            className="md:hidden"
+            className="sm:hidden"
             onClick={() => setMobileMenuOpen(true)}
             style={{
               background: 'transparent',
@@ -193,7 +193,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
         <div
-          className="md:hidden"
+          className="sm:hidden"
           style={{
             position: 'fixed',
             top: 0,
