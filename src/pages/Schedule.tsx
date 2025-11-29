@@ -331,26 +331,31 @@ export function Schedule() {
   return (
     <AppLayout>
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 32px' }}>
-        {/* Page Title */}
-        <h1 style={{
-          color: '#14b8a6',
-          fontSize: '32px',
-          fontWeight: 700,
-          textAlign: 'center',
-          marginBottom: '16px'
+        {/* Page Title Card with Teal Glow */}
+        <div style={{
+          background: '#1a1a1a',
+          borderRadius: '12px',
+          padding: '32px',
+          marginBottom: '48px',
+          boxShadow: '0 0 30px rgba(20, 184, 166, 0.2), 0 0 60px rgba(20, 184, 166, 0.1)',
+          textAlign: 'center'
         }}>
-          Scheduled Posts
-        </h1>
-
-        {/* Subtitle */}
-        <p style={{
-          color: '#888',
-          fontSize: '16px',
-          textAlign: 'center',
-          marginBottom: '48px'
-        }}>
-          Plan and edit your scheduled content
-        </p>
+          <h1 style={{
+            color: '#14b8a6',
+            fontSize: '32px',
+            fontWeight: 700,
+            marginBottom: '12px'
+          }}>
+            Scheduled Posts
+          </h1>
+          <p style={{
+            color: '#888',
+            fontSize: '16px',
+            margin: 0
+          }}>
+            Plan and edit your scheduled content
+          </p>
+        </div>
 
         {/* Side-by-Side Filters */}
         <div style={{
@@ -468,7 +473,26 @@ export function Schedule() {
             gap: '24px'
           }}>
             {sortedPosts.map((post: any) => (
-              <div key={post.id} style={{ borderRadius: '12px', overflow: 'hidden' }}>
+              <div
+                key={post.id}
+                style={{
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  minHeight: '600px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 0 10px rgba(255, 255, 255, 0.05)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'scale(1.02)'
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(20, 184, 166, 0.3), 0 0 40px rgba(20, 184, 166, 0.1)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)'
+                  e.currentTarget.style.boxShadow = '0 0 10px rgba(255, 255, 255, 0.05)'
+                }}
+              >
                 {/* Image */}
                 <div style={{
                   aspectRatio: '1 / 1',
@@ -492,11 +516,8 @@ export function Schedule() {
                       style={{
                         width: '100%',
                         height: '100%',
-                        objectFit: 'cover',
-                        transition: 'filter 0.2s ease'
+                        objectFit: 'cover'
                       }}
-                      onMouseEnter={(e) => e.currentTarget.style.filter = 'brightness(1.1)'}
-                      onMouseLeave={(e) => e.currentTarget.style.filter = 'brightness(1)'}
                     />
                   )}
                 </div>
@@ -505,24 +526,62 @@ export function Schedule() {
                 <div style={{
                   background: '#1a1a1a',
                   borderTop: '1px solid #27272a',
-                  padding: '20px'
+                  padding: '20px',
+                  flex: 1,
+                  display: 'flex',
+                  flexDirection: 'column'
                 }}>
+                  {/* Status and Platform - Repositioned */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                    <span style={{
+                      padding: '4px 12px',
+                      borderRadius: '12px',
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px',
+                      background: post.status === 'posted' ? 'rgba(16, 185, 129, 0.2)' :
+                                  post.status === 'scheduled' ? 'rgba(20, 184, 166, 0.2)' :
+                                  'rgba(107, 114, 128, 0.2)',
+                      color: post.status === 'posted' ? '#10b981' :
+                             post.status === 'scheduled' ? '#14b8a6' :
+                             '#888'
+                    }}>
+                      {post.status}
+                    </span>
+
+                    {/* Platform Names */}
+                    {post.platforms && post.platforms.length > 0 && (
+                      <span style={{
+                        fontSize: '11px',
+                        color: '#888',
+                        fontWeight: 500
+                      }}>
+                        {post.platforms.slice(0, 2).map((p: string) => p.charAt(0).toUpperCase() + p.slice(1)).join(', ')}
+                        {post.platforms.length > 2 && ` +${post.platforms.length - 2}`}
+                      </span>
+                    )}
+                  </div>
+
                   {/* Caption */}
                   <p style={{
                     color: '#e5e5e5',
                     fontSize: '14px',
                     lineHeight: 1.5,
-                    maxHeight: '60px',
+                    height: '60px',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
-                    marginBottom: '16px'
+                    marginBottom: '12px',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 3,
+                    WebkitBoxOrient: 'vertical'
                   }}>
                     {post.final_caption}
                   </p>
 
                   {/* Date & Time - Only show for scheduled and posted */}
                   {post.status !== 'draft' && post.scheduled_for && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <CalendarIcon style={{ width: '14px', height: '14px', color: '#14b8a6' }} />
                         <span style={{ color: '#14b8a6', fontSize: '13px' }}>
@@ -538,28 +597,8 @@ export function Schedule() {
                     </div>
                   )}
 
-                  {/* Platform Badges */}
-                  <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>
-                    {post.platforms?.map((platform: string) => (
-                      <span
-                        key={platform}
-                        style={{
-                          background: getPlatformColor(platform),
-                          color: 'white',
-                          padding: '4px 10px',
-                          borderRadius: '12px',
-                          fontSize: '12px',
-                          fontWeight: 500,
-                          textTransform: 'capitalize'
-                        }}
-                      >
-                        {platform}
-                      </span>
-                    ))}
-                  </div>
-
                   {/* Action Buttons */}
-                  <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
+                  <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
                     <button
                       onClick={() => handleEdit(post)}
                       style={{
