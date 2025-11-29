@@ -412,7 +412,28 @@ export function Upload() {
 
   return (
     <AppLayout>
-      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 32px' }}>
+      {/* Mobile-only styles - does not affect desktop */}
+      <style>{`
+        @media (max-width: 639px) {
+          .upload-container { padding: 24px 16px !important; }
+          .upload-title { font-size: 24px !important; }
+          .upload-section-title { font-size: 16px !important; }
+          .platform-buttons { flex-direction: column !important; }
+          .platform-buttons button { flex: none !important; width: 100% !important; }
+          .post-type-buttons { flex-direction: column !important; }
+          .post-type-buttons button { flex: none !important; width: 100% !important; }
+          .upload-calendar { padding: 16px !important; }
+          .upload-calendar-header { margin-bottom: 12px !important; }
+          .upload-calendar-header h3 { font-size: 14px !important; }
+          .upload-calendar-grid { gap: 2px !important; }
+          .upload-calendar-day { padding: 6px !important; min-height: 50px !important; }
+          .upload-calendar-day > div:first-child { font-size: 10px !important; }
+          .upload-legend { gap: 8px !important; }
+          .upload-legend > div { gap: 4px !important; }
+          .upload-legend span { font-size: 9px !important; }
+        }
+      `}</style>
+      <div className="upload-container" style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 32px' }}>
         {/* Page Title with Teal Text Glow */}
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
           <h1 style={{
@@ -654,7 +675,7 @@ export function Upload() {
                   Select Platforms
                 </h2>
 
-                <div style={{ display: 'flex', gap: '16px' }}>
+                <div className="platform-buttons" style={{ display: 'flex', gap: '16px' }}>
                   {[
                     { id: 'instagram', label: 'Instagram' },
                     { id: 'facebook', label: 'Facebook' },
@@ -706,7 +727,7 @@ export function Upload() {
                   When to Post
                 </h2>
 
-                <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
+                <div className="post-type-buttons" style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
                   <button
                     type="button"
                     onClick={() => setPostType('now')}
@@ -807,9 +828,9 @@ export function Upload() {
                     </div>
 
                     {/* Calendar View */}
-                    <div style={{ background: '#1a1a1a', padding: '24px', borderRadius: '12px' }}>
+                    <div className="upload-calendar" style={{ background: '#1a1a1a', padding: '24px', borderRadius: '12px' }}>
                       {/* Calendar Header */}
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                      <div className="upload-calendar-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                         <button
                           type="button"
                           onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
@@ -865,7 +886,7 @@ export function Upload() {
                       </div>
 
                       {/* Calendar Grid */}
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
+                      <div className="upload-calendar-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
                         {dateRange.map(date => {
                           const dateKey = format(date, 'yyyy-MM-dd')
                           const dayPosts = postsByDate[dateKey] || []
@@ -878,6 +899,7 @@ export function Upload() {
                             <button
                               key={dateKey}
                               type="button"
+                              className="upload-calendar-day"
                               onClick={() => !isPast && setSelectedDate(date)}
                               disabled={isPast}
                               style={{
@@ -928,7 +950,7 @@ export function Upload() {
                       </div>
 
                       {/* Legend */}
-                      <div style={{ marginTop: '16px', display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                      <div className="upload-legend" style={{ marginTop: '16px', display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#E1306C' }} />
                           <span style={{ color: '#888', fontSize: '11px' }}>Instagram</span>
