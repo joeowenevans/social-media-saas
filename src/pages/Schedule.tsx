@@ -1018,12 +1018,14 @@ export function Schedule() {
                 style={{
                   width: '100%',
                   minHeight: '120px',
-                  background: '#0d0d0d',
+                  background: '#1a1a1a',
                   border: '1px solid #27272a',
-                  borderRadius: '8px',
+                  borderRadius: '12px',
                   padding: '16px',
                   color: '#e5e5e5',
                   fontSize: '15px',
+                  lineHeight: '1.6',
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
                   outline: 'none',
                   resize: 'vertical',
                   transition: 'border-color 0.2s ease'
@@ -1047,9 +1049,9 @@ export function Schedule() {
                   style={{
                     width: '100%',
                     height: '44px',
-                    background: '#0d0d0d',
+                    background: '#1a1a1a',
                     border: '1px solid #27272a',
-                    borderRadius: '8px',
+                    borderRadius: '12px',
                     padding: '12px 16px',
                     color: '#e5e5e5',
                     fontSize: '15px',
@@ -1070,9 +1072,9 @@ export function Schedule() {
                   style={{
                     width: '100%',
                     height: '44px',
-                    background: '#0d0d0d',
+                    background: '#1a1a1a',
                     border: '1px solid #27272a',
-                    borderRadius: '8px',
+                    borderRadius: '12px',
                     padding: '12px 16px',
                     color: '#e5e5e5',
                     fontSize: '15px',
@@ -1103,7 +1105,7 @@ export function Schedule() {
                       alignItems: 'center',
                       gap: '10px',
                       padding: '12px 16px',
-                      background: editFormData.platforms.includes(platform.id) ? '#0d0d0d' : '#0d0d0d',
+                      background: '#1a1a1a',
                       border: editFormData.platforms.includes(platform.id) ? `1px solid ${platform.color}` : '1px solid #27272a',
                       borderRadius: '8px',
                       cursor: 'pointer',
@@ -1130,43 +1132,74 @@ export function Schedule() {
             </div>
 
             {/* Actions */}
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'space-between' }}>
               <button
-                onClick={() => setEditingPost(null)}
+                onClick={() => {
+                  if (confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+                    handleDelete(editingPost.id)
+                    setEditingPost(null)
+                  }
+                }}
                 style={{
                   padding: '12px 24px',
                   background: '#2a2a2a',
-                  color: 'white',
+                  color: '#ef4444',
                   fontSize: '16px',
                   fontWeight: 600,
-                  border: 'none',
+                  border: '1px solid #ef4444',
                   borderRadius: '8px',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.background = '#333'}
-                onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSaveEdit}
-                style={{
-                  padding: '12px 32px',
-                  background: '#14b8a6',
-                  color: 'white',
-                  fontSize: '16px',
-                  fontWeight: 600,
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#ef4444'
+                  e.currentTarget.style.color = 'white'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.background = '#10a896'}
-                onMouseLeave={(e) => e.currentTarget.style.background = '#14b8a6'}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#2a2a2a'
+                  e.currentTarget.style.color = '#ef4444'
+                }}
               >
-                Save Changes
+                Delete Post
               </button>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <button
+                  onClick={() => setEditingPost(null)}
+                  style={{
+                    padding: '12px 24px',
+                    background: '#2a2a2a',
+                    color: 'white',
+                    fontSize: '16px',
+                    fontWeight: 600,
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = '#333'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSaveEdit}
+                  style={{
+                    padding: '12px 32px',
+                    background: '#14b8a6',
+                    color: 'white',
+                    fontSize: '16px',
+                    fontWeight: 600,
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = '#10a896'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = '#14b8a6'}
+                >
+                  Save Changes
+                </button>
+              </div>
             </div>
           </div>
         </div>
