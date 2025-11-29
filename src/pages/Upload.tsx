@@ -412,33 +412,49 @@ export function Upload() {
 
   return (
     <AppLayout>
-      <div className="max-w-[900px] mx-auto px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-12">
+      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 32px' }}>
         {/* Page Title with Teal Text Glow */}
-        <div className="text-center mb-8 sm:mb-10 md:mb-12">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 text-teal-400" style={{
+        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+          <h1 style={{
+            color: '#14b8a6',
+            fontSize: '32px',
+            fontWeight: 700,
+            marginBottom: '12px',
             textShadow: '0 0 20px rgba(20, 184, 166, 0.6), 0 0 40px rgba(20, 184, 166, 0.4), 0 0 60px rgba(20, 184, 166, 0.2)'
           }}>
             Upload Content
           </h1>
-          <p className="text-sm sm:text-base text-[#888] m-0">
+          <p style={{
+            color: '#888',
+            fontSize: '16px',
+            margin: 0
+          }}>
             Create AI-powered posts for your brand
           </p>
         </div>
 
         {/* Upload Media Section */}
-        <div className="mb-10 sm:mb-12 md:mb-16">
-          <h2 className="text-white text-base sm:text-lg font-semibold mb-4 sm:mb-6">
+        <div style={{ marginBottom: '64px' }}>
+          <h2 style={{
+            color: 'white',
+            fontSize: '18px',
+            fontWeight: 600,
+            marginBottom: '24px'
+          }}>
             Upload Media
           </h2>
 
           {!uploadedMedia ? (
             <div
               {...getRootProps()}
-              className="p-6 sm:p-8 md:p-12 rounded-xl text-center transition-all"
               style={{
                 background: '#1a1a1a',
+                padding: '48px',
+                borderRadius: '12px',
                 border: isDragActive ? '2px dashed #14b8a6' : '2px dashed #27272a',
+                textAlign: 'center',
                 cursor: uploading ? 'not-allowed' : 'pointer',
+                transition: 'all 0.2s ease',
                 opacity: uploading ? 0.6 : 1
               }}
             >
@@ -544,9 +560,14 @@ export function Upload() {
         {/* Caption Section */}
         {uploadedMedia && (
           <>
-            <div className="mb-10 sm:mb-12 md:mb-16">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 mb-4 sm:mb-6">
-                <h2 className="text-white text-base sm:text-lg font-semibold m-0">
+            <div style={{ marginBottom: '64px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                <h2 style={{
+                  color: 'white',
+                  fontSize: '18px',
+                  fontWeight: 600,
+                  margin: 0
+                }}>
                   Caption
                 </h2>
                 <button
@@ -623,12 +644,17 @@ export function Upload() {
 
             {/* Platform Selection */}
             {!generating && (
-              <div className="mb-10 sm:mb-12 md:mb-16">
-                <h2 className="text-white text-base sm:text-lg font-semibold mb-4 sm:mb-6">
+              <div style={{ marginBottom: '64px' }}>
+                <h2 style={{
+                  color: 'white',
+                  fontSize: '18px',
+                  fontWeight: 600,
+                  marginBottom: '24px'
+                }}>
                   Select Platforms
                 </h2>
 
-                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <div style={{ display: 'flex', gap: '16px' }}>
                   {[
                     { id: 'instagram', label: 'Instagram' },
                     { id: 'facebook', label: 'Facebook' },
@@ -670,12 +696,17 @@ export function Upload() {
 
             {/* Scheduling */}
             {!generating && (
-              <div className="mb-10 sm:mb-12 md:mb-16">
-                <h2 className="text-white text-base sm:text-lg font-semibold mb-4 sm:mb-6">
+              <div style={{ marginBottom: '64px' }}>
+                <h2 style={{
+                  color: 'white',
+                  fontSize: '18px',
+                  fontWeight: 600,
+                  marginBottom: '24px'
+                }}>
                   When to Post
                 </h2>
 
-                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4 sm:mb-6">
+                <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
                   <button
                     type="button"
                     onClick={() => setPostType('now')}
@@ -726,7 +757,7 @@ export function Upload() {
                 </div>
 
                 {postType === 'scheduled' && (
-                  <div className="mt-4 sm:mt-6">
+                  <div style={{ marginTop: '24px' }}>
                     {/* Selected Date/Time Display */}
                     {formattedDateTime && (
                       <div style={{
@@ -744,8 +775,8 @@ export function Upload() {
                     )}
 
                     {/* Time Picker Dropdown */}
-                    <div className="mb-4 sm:mb-6">
-                      <label className="text-[#888] text-sm font-medium block mb-2">
+                    <div style={{ marginBottom: '24px' }}>
+                      <label style={{ color: '#888', fontSize: '14px', fontWeight: 500, display: 'block', marginBottom: '8px' }}>
                         Select Time
                       </label>
                       <select
@@ -776,7 +807,7 @@ export function Upload() {
                     </div>
 
                     {/* Calendar View */}
-                    <div className="p-4 sm:p-6 rounded-xl" style={{ background: '#1a1a1a' }}>
+                    <div style={{ background: '#1a1a1a', padding: '24px', borderRadius: '12px' }}>
                       {/* Calendar Header */}
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                         <button
@@ -919,14 +950,21 @@ export function Upload() {
 
             {/* Action Buttons */}
             {!generating && (
-              <div className="flex justify-center">
+              <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
                 <button
                   onClick={handleSavePost}
                   disabled={saving}
-                  className="w-full sm:w-auto px-8 sm:px-12 py-3 sm:py-4 bg-teal-500 text-white text-base font-semibold rounded-lg transition-all"
                   style={{
+                    padding: '16px 48px',
+                    background: '#14b8a6',
+                    color: 'white',
+                    fontSize: '16px',
+                    fontWeight: 600,
+                    border: 'none',
+                    borderRadius: '8px',
                     cursor: saving ? 'not-allowed' : 'pointer',
-                    opacity: saving ? 0.6 : 1
+                    opacity: saving ? 0.6 : 1,
+                    transition: 'all 0.2s ease'
                   }}
                 >
                   {saving ? 'Saving...' : postType === 'scheduled' ? 'Schedule Post' : 'Save as Draft'}

@@ -78,15 +78,23 @@ export function Settings() {
 
   return (
     <AppLayout>
-      <div className="max-w-[900px] mx-auto px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-12">
+      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 32px' }}>
         {/* Page Title with Teal Text Glow */}
-        <div className="text-center mb-10 sm:mb-12 md:mb-16">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 text-teal-400" style={{
+        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+          <h1 style={{
+            color: '#14b8a6',
+            fontSize: '32px',
+            fontWeight: 700,
+            marginBottom: '12px',
             textShadow: '0 0 20px rgba(20, 184, 166, 0.6), 0 0 40px rgba(20, 184, 166, 0.4), 0 0 60px rgba(20, 184, 166, 0.2)'
           }}>
             Brand Settings
           </h1>
-          <p className="text-sm sm:text-base text-[#888] m-0">
+          <p style={{
+            color: '#888',
+            fontSize: '16px',
+            margin: 0
+          }}>
             Configure your brand profile and AI preferences
           </p>
         </div>
@@ -94,13 +102,27 @@ export function Settings() {
         <BrandSettings brand={brand} onSave={handleSave} onComplete={handleComplete} />
 
         {/* Danger Zone - Delete Account */}
-        <div className="mt-12 sm:mt-16 md:mt-20 p-5 sm:p-6 md:p-8 bg-[#1a1a1a] rounded-xl" style={{
+        <div style={{
+          marginTop: '80px',
+          padding: '32px',
+          background: '#1a1a1a',
+          borderRadius: '12px',
           border: '1px solid rgba(239, 68, 68, 0.3)'
         }}>
-          <h2 className="text-lg sm:text-xl font-semibold text-red-500 mb-3">
+          <h2 style={{
+            color: '#ef4444',
+            fontSize: '20px',
+            fontWeight: 600,
+            marginBottom: '12px'
+          }}>
             Danger Zone
           </h2>
-          <p className="text-sm text-[#888] mb-4 sm:mb-6 leading-relaxed">
+          <p style={{
+            color: '#888',
+            fontSize: '14px',
+            marginBottom: '24px',
+            lineHeight: 1.6
+          }}>
             Once you delete your account, there is no going back. All your data including posts, media, and brand settings will be permanently deleted.
           </p>
           <button
@@ -133,25 +155,52 @@ export function Settings() {
       {/* Delete Account Confirmation Modal */}
       {deleteModalOpen && (
         <div
-          className="fixed inset-0 flex items-center justify-center z-[1000] p-4 sm:p-6"
-          style={{ background: 'rgba(0, 0, 0, 0.8)' }}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: '24px'
+          }}
           onClick={closeDeleteModal}
         >
           <div
-            className="w-full max-w-[450px] rounded-2xl p-5 sm:p-8"
             style={{
               background: '#1a1a1a',
+              borderRadius: '16px',
+              padding: '32px',
+              maxWidth: '450px',
+              width: '100%',
               boxShadow: '0 0 60px rgba(0, 0, 0, 0.5)'
             }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex justify-between items-start mb-5 sm:mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full" style={{ background: 'rgba(239, 68, 68, 0.1)' }}>
-                  <AlertCircle className="w-6 h-6 sm:w-7 sm:h-7 text-red-500" />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '50%',
+                  background: 'rgba(239, 68, 68, 0.1)'
+                }}>
+                  <AlertCircle style={{ width: '28px', height: '28px', color: '#ef4444' }} />
                 </div>
-                <h2 className="text-lg sm:text-xl font-bold text-red-500 m-0">
+                <h2 style={{
+                  color: '#ef4444',
+                  fontSize: '22px',
+                  fontWeight: 700,
+                  margin: 0
+                }}>
                   Delete Account
                 </h2>
               </div>
@@ -230,7 +279,7 @@ export function Settings() {
             </div>
 
             {/* Actions */}
-            <div className="flex flex-col-reverse sm:flex-row gap-3 sm:justify-end">
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
               <button
                 onClick={closeDeleteModal}
                 disabled={deleting}
