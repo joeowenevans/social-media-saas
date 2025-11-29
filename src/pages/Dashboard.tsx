@@ -14,7 +14,10 @@ import {
   subMonths,
   startOfWeek,
   endOfWeek,
-  isSameMonth
+  isSameMonth,
+  isToday,
+  addWeeks,
+  subWeeks
 } from 'date-fns'
 
 export function Dashboard() {
@@ -24,6 +27,8 @@ export function Dashboard() {
   const navigate = useNavigate()
   const [selectedPost, setSelectedPost] = useState<any>(null)
   const [currentMonth, setCurrentMonth] = useState(new Date())
+  const [calendarView, setCalendarView] = useState<'week' | 'month'>('month')
+  const [currentWeek, setCurrentWeek] = useState(new Date())
 
   // Get user's first name from metadata
   const firstName = user?.user_metadata?.first_name || user?.email?.split('@')[0] || 'there'
@@ -70,12 +75,17 @@ export function Dashboard() {
     { label: 'Failed', value: failedPosts.length, icon: XCircle, filter: 'failed', color: '#14b8a6' },
   ]
 
-  // Calendar generation
+  // Calendar generation for month view
   const monthStart = startOfMonth(currentMonth)
   const monthEnd = endOfMonth(currentMonth)
   const startDate = startOfWeek(monthStart)
   const endDate = endOfWeek(monthEnd)
   const dateRange = eachDayOfInterval({ start: startDate, end: endDate })
+
+  // Calendar generation for week view
+  const weekStart = startOfWeek(currentWeek)
+  const weekEnd = endOfWeek(currentWeek)
+  const weekDateRange = eachDayOfInterval({ start: weekStart, end: weekEnd })
 
   // Group scheduled posts by date
   const postsByDate = scheduledPosts.reduce((acc: any, post) => {
@@ -86,16 +96,6 @@ export function Dashboard() {
     }
     return acc
   }, {})
-
-  // Get platform color
-  const getPlatformColor = (platforms: string[]) => {
-    if (!platforms || platforms.length === 0) return '#14b8a6'
-    if (platforms.includes('instagram')) return '#E1306C'
-    if (platforms.includes('facebook')) return '#1877F2'
-    if (platforms.includes('pinterest')) return '#E60023'
-    if (platforms.includes('linkedin')) return '#0A66C2'
-    return '#14b8a6'
-  }
 
   // Recent posts for gallery (all posts, limit 10)
   const recentPosts = [...posts]
@@ -233,75 +233,110 @@ export function Dashboard() {
 
         {/* Calendar View */}
         <div style={{ marginBottom: '64px' }}>
-          <h2 style={{
-            color: '#14b8a6',
-            fontSize: '24px',
-            fontWeight: 600,
-            marginBottom: '24px'
-          }}>
-            Scheduled Posts Calendar
-          </h2>
-          <div style={{
-            background: '#1a1a1a',
-            padding: '32px',
-            borderRadius: '12px'
-          }}>
-            {/* Month Navigation */}
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '24px'
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <h2 style={{
+              color: '#14b8a6',
+              fontSize: '24px',
+              fontWeight: 600
             }}>
+              Scheduled Posts Calendar
+            </h2>
+
+            {/* View Toggle */}
+            <div style={{ display: 'flex', gap: '8px' }}>
               <button
-                onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
-                className="unstyled"
+                onClick={() => setCalendarView('week')}
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: '#14b8a6',
+                  padding: '8px 16px',
+                  background: calendarView === 'week' ? '#14b8a6' : '#0d0d0d',
+                  border: `1px solid ${calendarView === 'week' ? '#14b8a6' : '#27272a'}`,
+                  borderRadius: '6px',
+                  color: calendarView === 'week' ? 'white' : '#888',
+                  fontSize: '13px',
+                  fontWeight: 500,
                   cursor: 'pointer',
-                  padding: '8px'
+                  transition: 'all 0.2s ease'
                 }}
               >
-                <ChevronLeft className="w-6 h-6" />
+                Week
               </button>
-              <h3 style={{
-                color: 'white',
-                fontSize: '18px',
-                fontWeight: 600
-              }}>
-                {format(currentMonth, 'MMMM yyyy')}
-              </h3>
               <button
-                onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-                className="unstyled"
+                onClick={() => setCalendarView('month')}
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: '#14b8a6',
+                  padding: '8px 16px',
+                  background: calendarView === 'month' ? '#14b8a6' : '#0d0d0d',
+                  border: `1px solid ${calendarView === 'month' ? '#14b8a6' : '#27272a'}`,
+                  borderRadius: '6px',
+                  color: calendarView === 'month' ? 'white' : '#888',
+                  fontSize: '13px',
+                  fontWeight: 500,
                   cursor: 'pointer',
-                  padding: '8px'
+                  transition: 'all 0.2s ease'
                 }}
               >
-                <ChevronRight className="w-6 h-6" />
+                Month
+              </button>
+            </div>
+          </div>
+
+          <div style={{ background: '#1a1a1a', padding: '32px', borderRadius: '12px' }}>
+            {/* Calendar Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <button
+                onClick={() => calendarView === 'month'
+                  ? setCurrentMonth(subMonths(currentMonth, 1))
+                  : setCurrentWeek(subWeeks(currentWeek, 1))
+                }
+                style={{
+                  background: '#0d0d0d',
+                  border: '1px solid #27272a',
+                  borderRadius: '8px',
+                  padding: '8px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <ChevronLeft style={{ width: '20px', height: '20px', color: '#e5e5e5' }} />
+              </button>
+
+              <h3 style={{ color: 'white', fontSize: '18px', fontWeight: 600 }}>
+                {calendarView === 'month'
+                  ? format(currentMonth, 'MMMM yyyy')
+                  : `${format(weekStart, 'MMM d')} - ${format(weekEnd, 'MMM d, yyyy')}`
+                }
+              </h3>
+
+              <button
+                onClick={() => calendarView === 'month'
+                  ? setCurrentMonth(addMonths(currentMonth, 1))
+                  : setCurrentWeek(addWeeks(currentWeek, 1))
+                }
+                style={{
+                  background: '#0d0d0d',
+                  border: '1px solid #27272a',
+                  borderRadius: '8px',
+                  padding: '8px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <ChevronRight style={{ width: '20px', height: '20px', color: '#e5e5e5' }} />
               </button>
             </div>
 
-            {/* Weekday Headers */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(7, 1fr)',
-              gap: '8px',
-              marginBottom: '8px'
-            }}>
+            {/* Days of Week */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px', marginBottom: '8px' }}>
               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
                 <div key={day} style={{
                   textAlign: 'center',
-                  color: '#a1a1aa',
+                  color: '#888',
                   fontSize: '12px',
                   fontWeight: 600,
-                  padding: '8px'
+                  padding: '8px 0'
                 }}>
                   {day}
                 </div>
@@ -309,76 +344,95 @@ export function Dashboard() {
             </div>
 
             {/* Calendar Grid */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(7, 1fr)',
-              gap: '8px'
-            }}>
-              {dateRange.map((date, idx) => {
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px' }}>
+              {(calendarView === 'month' ? dateRange : weekDateRange).map(date => {
                 const dateKey = format(date, 'yyyy-MM-dd')
                 const dayPosts = postsByDate[dateKey] || []
-                const isCurrentMonth = isSameMonth(date, currentMonth)
+                const isCurrentMonth = calendarView === 'month' ? isSameMonth(date, currentMonth) : true
+                const isTodayDate = isToday(date)
+                const maxPosts = calendarView === 'week' ? 3 : 2
 
                 return (
                   <div
-                    key={idx}
+                    key={dateKey}
                     style={{
-                      background: '#0d0d0d',
-                      border: '1px solid #27272a',
+                      background: isTodayDate ? 'rgba(20, 184, 166, 0.1)' : '#0d0d0d',
+                      border: isTodayDate ? '2px solid #14b8a6' : '1px solid #27272a',
                       borderRadius: '8px',
                       padding: '12px',
-                      minHeight: '100px',
+                      minHeight: calendarView === 'week' ? '150px' : '100px',
                       opacity: isCurrentMonth ? 1 : 0.4
                     }}
                   >
-                    <div style={{ color: '#888', fontSize: '12px', marginBottom: '8px' }}>
-                      {format(date, 'd')}
+                    <div style={{
+                      color: isTodayDate ? '#14b8a6' : '#888',
+                      fontSize: '12px',
+                      marginBottom: '8px',
+                      fontWeight: isTodayDate ? 600 : 400
+                    }}>
+                      {calendarView === 'week' ? format(date, 'MMM d') : format(date, 'd')}
                     </div>
 
-                    {dayPosts.slice(0, 2).map((post: any) => (
-                      <div key={post.id} style={{ marginBottom: '8px' }}>
-                        <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginBottom: '4px' }}>
+                    {dayPosts.slice(0, maxPosts).map((post: any) => (
+                      <div
+                        key={post.id}
+                        style={{ marginBottom: '8px', cursor: 'pointer' }}
+                        onClick={() => navigate(`/schedule?edit=${post.id}`)}
+                      >
+                        <div style={{ display: 'flex', gap: '6px', alignItems: 'flex-start', marginBottom: '4px' }}>
                           <img
                             src={post.media?.thumbnail_url || post.media?.cloudinary_url}
                             alt=""
                             style={{
-                              width: '40px',
-                              height: '40px',
+                              width: calendarView === 'week' ? '48px' : '40px',
+                              height: calendarView === 'week' ? '48px' : '40px',
                               borderRadius: '6px',
-                              objectFit: 'cover'
+                              objectFit: 'cover',
+                              flexShrink: 0
                             }}
                           />
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ display: 'flex', gap: '4px', marginBottom: '2px' }}>
-                              {post.platforms?.slice(0, 2).map((platform: string) => (
-                                <div
-                                  key={platform}
-                                  style={{
-                                    width: '6px',
-                                    height: '6px',
-                                    borderRadius: '50%',
-                                    background: getPlatformColor([platform])
-                                  }}
-                                />
-                              ))}
-                            </div>
+                            {/* Platform names as text */}
                             <div style={{
-                              color: '#888',
-                              fontSize: '11px',
+                              color: '#666',
+                              fontSize: '10px',
+                              marginBottom: '2px',
                               overflow: 'hidden',
                               textOverflow: 'ellipsis',
                               whiteSpace: 'nowrap'
                             }}>
-                              {post.final_caption.split(' ').slice(0, 3).join(' ')}...
+                              {post.platforms?.slice(0, 2).map((p: string) =>
+                                p.charAt(0).toUpperCase() + p.slice(1)
+                              ).join(', ')}
+                              {post.platforms?.length > 2 && ` +${post.platforms.length - 2}`}
                             </div>
+                            {/* Media type */}
+                            <div style={{
+                              color: '#666',
+                              fontSize: '10px',
+                              marginBottom: '2px'
+                            }}>
+                              {post.media?.media_type === 'video' ? 'video' : 'image'}
+                            </div>
+                            {calendarView === 'week' && (
+                              <div style={{
+                                color: '#888',
+                                fontSize: '11px',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap'
+                              }}>
+                                {post.final_caption?.split(' ').slice(0, 4).join(' ')}...
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
                     ))}
 
-                    {dayPosts.length > 2 && (
+                    {dayPosts.length > maxPosts && (
                       <div style={{ color: '#14b8a6', fontSize: '11px', fontWeight: 500 }}>
-                        +{dayPosts.length - 2} more
+                        +{dayPosts.length - maxPosts} more
                       </div>
                     )}
                   </div>
@@ -424,7 +478,7 @@ export function Dashboard() {
               {recentPosts.map((post) => (
                 <div
                   key={post.id}
-                  onClick={() => navigate(`/schedule?post=${post.id}`)}
+                  onClick={() => navigate(`/schedule?edit=${post.id}`)}
                   style={{
                     width: '18%',
                     margin: '0.5%',

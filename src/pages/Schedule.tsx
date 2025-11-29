@@ -29,7 +29,9 @@ import {
   isSameDay,
   isToday,
   isBefore,
-  startOfDay
+  startOfDay,
+  addWeeks,
+  subWeeks
 } from 'date-fns'
 import { supabase } from '../lib/supabase'
 import toast from 'react-hot-toast'
@@ -80,6 +82,10 @@ export function Schedule() {
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
   const [postToDelete, setPostToDelete] = useState<string | null>(null)
 
+  // Calendar view toggle (week/month)
+  const [calendarView, setCalendarView] = useState<'week' | 'month'>('month')
+  const [currentWeek, setCurrentWeek] = useState(new Date())
+
   // Handle URL parameter for status filter
   useEffect(() => {
     const statusParam = searchParams.get('status')
@@ -87,6 +93,21 @@ export function Schedule() {
       setSelectedStatus(statusParam as any)
     }
   }, [searchParams])
+
+  // Handle URL parameter for edit modal (from Dashboard click)
+  useEffect(() => {
+    const editPostId = searchParams.get('edit')
+    if (editPostId && posts.length > 0) {
+      const postToEdit = posts.find((p: any) => p.id === editPostId)
+      if (postToEdit) {
+        handleEdit(postToEdit as Post)
+        // Clear the URL parameter after opening modal
+        const newParams = new URLSearchParams(searchParams)
+        newParams.delete('edit')
+        window.history.replaceState({}, '', `${window.location.pathname}${newParams.toString() ? '?' + newParams.toString() : ''}`)
+      }
+    }
+  }, [searchParams, posts])
 
   // Filter by status first
   const statusFilteredPosts = selectedStatus === 'all'
@@ -114,12 +135,17 @@ export function Schedule() {
     return acc
   }, {})
 
-  // Generate calendar grid
+  // Generate calendar grid for month view
   const monthStart = startOfMonth(currentMonth)
   const monthEnd = endOfMonth(currentMonth)
   const startDate = startOfWeek(monthStart)
   const endDate = endOfWeek(monthEnd)
   const dateRange = eachDayOfInterval({ start: startDate, end: endDate })
+
+  // Generate calendar grid for week view
+  const weekStart = startOfWeek(currentWeek)
+  const weekEnd = endOfWeek(currentWeek)
+  const weekDateRange = eachDayOfInterval({ start: weekStart, end: weekEnd })
 
   const getPlatformColor = (platform: string) => {
     if (platform === 'instagram') return '#E1306C'
@@ -684,20 +710,60 @@ export function Schedule() {
 
         {/* Content Calendar Section - Moved to Bottom */}
         <div style={{ marginTop: '64px' }}>
-          <h2 style={{
-            color: '#14b8a6',
-            fontSize: '24px',
-            fontWeight: 600,
-            marginBottom: '24px'
-          }}>
-            Content Calendar
-          </h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <h2 style={{
+              color: '#14b8a6',
+              fontSize: '24px',
+              fontWeight: 600
+            }}>
+              Content Calendar
+            </h2>
+
+            {/* View Toggle */}
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                onClick={() => setCalendarView('week')}
+                style={{
+                  padding: '8px 16px',
+                  background: calendarView === 'week' ? '#14b8a6' : '#0d0d0d',
+                  border: `1px solid ${calendarView === 'week' ? '#14b8a6' : '#27272a'}`,
+                  borderRadius: '6px',
+                  color: calendarView === 'week' ? 'white' : '#888',
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                Week
+              </button>
+              <button
+                onClick={() => setCalendarView('month')}
+                style={{
+                  padding: '8px 16px',
+                  background: calendarView === 'month' ? '#14b8a6' : '#0d0d0d',
+                  border: `1px solid ${calendarView === 'month' ? '#14b8a6' : '#27272a'}`,
+                  borderRadius: '6px',
+                  color: calendarView === 'month' ? 'white' : '#888',
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                Month
+              </button>
+            </div>
+          </div>
 
           <div style={{ background: '#1a1a1a', padding: '32px', borderRadius: '12px' }}>
             {/* Calendar Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <button
-                onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+                onClick={() => calendarView === 'month'
+                  ? setCurrentMonth(subMonths(currentMonth, 1))
+                  : setCurrentWeek(subWeeks(currentWeek, 1))
+                }
                 style={{
                   background: '#0d0d0d',
                   border: '1px solid #27272a',
@@ -713,11 +779,17 @@ export function Schedule() {
               </button>
 
               <h3 style={{ color: 'white', fontSize: '18px', fontWeight: 600 }}>
-                {format(currentMonth, 'MMMM yyyy')}
+                {calendarView === 'month'
+                  ? format(currentMonth, 'MMMM yyyy')
+                  : `${format(weekStart, 'MMM d')} - ${format(weekEnd, 'MMM d, yyyy')}`
+                }
               </h3>
 
               <button
-                onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+                onClick={() => calendarView === 'month'
+                  ? setCurrentMonth(addMonths(currentMonth, 1))
+                  : setCurrentWeek(addWeeks(currentWeek, 1))
+                }
                 style={{
                   background: '#0d0d0d',
                   border: '1px solid #27272a',
@@ -750,71 +822,94 @@ export function Schedule() {
 
             {/* Calendar Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px' }}>
-              {dateRange.map(date => {
+              {(calendarView === 'month' ? dateRange : weekDateRange).map(date => {
                 const dateKey = format(date, 'yyyy-MM-dd')
                 const dayPosts = postsByDate[dateKey] || []
-                const isCurrentMonth = isSameMonth(date, currentMonth)
+                const isCurrentMonth = calendarView === 'month' ? isSameMonth(date, currentMonth) : true
+                const isTodayDate = isToday(date)
+                const maxPosts = calendarView === 'week' ? 3 : 2
 
                 return (
                   <div
                     key={dateKey}
                     style={{
-                      background: '#0d0d0d',
-                      border: '1px solid #27272a',
+                      background: isTodayDate ? 'rgba(20, 184, 166, 0.1)' : '#0d0d0d',
+                      border: isTodayDate ? '2px solid #14b8a6' : '1px solid #27272a',
                       borderRadius: '8px',
                       padding: '12px',
-                      minHeight: '100px',
+                      minHeight: calendarView === 'week' ? '150px' : '100px',
                       opacity: isCurrentMonth ? 1 : 0.4
                     }}
                   >
-                    <div style={{ color: '#888', fontSize: '12px', marginBottom: '8px' }}>
-                      {format(date, 'd')}
+                    <div style={{
+                      color: isTodayDate ? '#14b8a6' : '#888',
+                      fontSize: '12px',
+                      marginBottom: '8px',
+                      fontWeight: isTodayDate ? 600 : 400
+                    }}>
+                      {calendarView === 'week' ? format(date, 'MMM d') : format(date, 'd')}
                     </div>
 
-                    {dayPosts.slice(0, 2).map((post: any) => (
-                      <div key={post.id} style={{ marginBottom: '8px' }}>
-                        <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginBottom: '4px' }}>
+                    {dayPosts.slice(0, maxPosts).map((post: any) => (
+                      <div
+                        key={post.id}
+                        style={{ marginBottom: '8px', cursor: 'pointer' }}
+                        onClick={() => handleEdit(post)}
+                      >
+                        <div style={{ display: 'flex', gap: '6px', alignItems: 'flex-start', marginBottom: '4px' }}>
                           <img
                             src={post.media?.thumbnail_url || post.media?.cloudinary_url}
                             alt=""
                             style={{
-                              width: '40px',
-                              height: '40px',
+                              width: calendarView === 'week' ? '48px' : '40px',
+                              height: calendarView === 'week' ? '48px' : '40px',
                               borderRadius: '6px',
-                              objectFit: 'cover'
+                              objectFit: 'cover',
+                              flexShrink: 0
                             }}
                           />
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ display: 'flex', gap: '4px', marginBottom: '2px' }}>
-                              {post.platforms?.slice(0, 2).map((platform: string) => (
-                                <div
-                                  key={platform}
-                                  style={{
-                                    width: '6px',
-                                    height: '6px',
-                                    borderRadius: '50%',
-                                    background: getPlatformColor(platform)
-                                  }}
-                                />
-                              ))}
-                            </div>
+                            {/* Platform names as text */}
                             <div style={{
-                              color: '#888',
-                              fontSize: '11px',
+                              color: '#666',
+                              fontSize: '10px',
+                              marginBottom: '2px',
                               overflow: 'hidden',
                               textOverflow: 'ellipsis',
                               whiteSpace: 'nowrap'
                             }}>
-                              {post.final_caption.split(' ').slice(0, 3).join(' ')}...
+                              {post.platforms?.slice(0, 2).map((p: string) =>
+                                p.charAt(0).toUpperCase() + p.slice(1)
+                              ).join(', ')}
+                              {post.platforms?.length > 2 && ` +${post.platforms.length - 2}`}
                             </div>
+                            {/* Media type */}
+                            <div style={{
+                              color: '#666',
+                              fontSize: '10px',
+                              marginBottom: '2px'
+                            }}>
+                              {post.media?.media_type === 'video' ? 'video' : 'image'}
+                            </div>
+                            {calendarView === 'week' && (
+                              <div style={{
+                                color: '#888',
+                                fontSize: '11px',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap'
+                              }}>
+                                {post.final_caption?.split(' ').slice(0, 4).join(' ')}...
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
                     ))}
 
-                    {dayPosts.length > 2 && (
+                    {dayPosts.length > maxPosts && (
                       <div style={{ color: '#14b8a6', fontSize: '11px', fontWeight: 500 }}>
-                        +{dayPosts.length - 2} more
+                        +{dayPosts.length - maxPosts} more
                       </div>
                     )}
                   </div>
