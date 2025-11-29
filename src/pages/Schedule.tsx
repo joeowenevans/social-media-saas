@@ -552,7 +552,7 @@ export function Schedule() {
                   e.currentTarget.style.boxShadow = '0 0 10px rgba(255, 255, 255, 0.05)'
                 }}
               >
-                {/* Image with Media Type Indicator */}
+                {/* Image */}
                 <div style={{
                   aspectRatio: '1 / 1',
                   overflow: 'hidden',
@@ -579,24 +579,6 @@ export function Schedule() {
                       }}
                     />
                   )}
-                  {/* Media Type Indicator */}
-                  <div style={{
-                    position: 'absolute',
-                    top: '12px',
-                    right: '12px',
-                    background: 'rgba(0, 0, 0, 0.7)',
-                    borderRadius: '6px',
-                    padding: '6px 8px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                  }}>
-                    {post.media?.media_type === 'video' ? (
-                      <Video style={{ width: '14px', height: '14px', color: '#14b8a6' }} />
-                    ) : (
-                      <ImageIcon style={{ width: '14px', height: '14px', color: '#14b8a6' }} />
-                    )}
-                  </div>
                 </div>
 
                 {/* Info Card */}
@@ -676,8 +658,22 @@ export function Schedule() {
 
                   {/* Draft indicator */}
                   {post.status === 'draft' && (
-                    <div style={{ marginTop: 'auto', color: '#666', fontSize: '12px' }}>
-                      Click to edit and schedule
+                    <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ color: '#666', fontSize: '12px' }}>
+                        click to edit and schedule
+                      </span>
+                      <span style={{ color: '#666', fontSize: '12px' }}>
+                        {post.media?.media_type === 'video' ? 'video' : 'image'}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Media type for non-drafts */}
+                  {post.status !== 'draft' && (
+                    <div style={{ marginTop: '12px', textAlign: 'right' }}>
+                      <span style={{ color: '#666', fontSize: '12px' }}>
+                        {post.media?.media_type === 'video' ? 'video' : 'image'}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -842,7 +838,7 @@ export function Schedule() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            zIndex: 1000,
+            zIndex: 1300,
             padding: '24px'
           }}
           onClick={() => setPostToConfirm(null)}
@@ -1374,9 +1370,9 @@ export function Schedule() {
                 </button>
               </div>
             ) : (
-              <>
-                {/* Action Buttons Row */}
-                <div style={{ display: 'flex', gap: '12px', justifyContent: 'space-between', marginBottom: '16px' }}>
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'space-between' }}>
+                {/* Left side buttons */}
+                <div style={{ display: 'flex', gap: '12px' }}>
                   <button
                     onClick={() => {
                       setPostToDelete(editingPost.id)
@@ -1404,93 +1400,90 @@ export function Schedule() {
                   >
                     Delete
                   </button>
-                  <div style={{ display: 'flex', gap: '12px' }}>
-                    <button
-                      onClick={() => setEditingPost(null)}
-                      style={{
-                        padding: '12px 24px',
-                        background: '#2a2a2a',
-                        color: 'white',
-                        fontSize: '15px',
-                        fontWeight: 600,
-                        border: 'none',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.background = '#333'}
-                      onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handleSaveEdit}
-                      style={{
-                        padding: '12px 32px',
-                        background: '#14b8a6',
-                        color: 'white',
-                        fontSize: '15px',
-                        fontWeight: 600,
-                        border: 'none',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.background = '#10a896'}
-                      onMouseLeave={(e) => e.currentTarget.style.background = '#14b8a6'}
-                    >
-                      Save Changes
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => {
+                      setPostToConfirm(editingPost.id)
+                    }}
+                    disabled={posting === editingPost.id}
+                    style={{
+                      padding: '12px 24px',
+                      background: '#2a2a2a',
+                      color: 'white',
+                      fontSize: '15px',
+                      fontWeight: 600,
+                      border: '2px solid #27272a',
+                      borderRadius: '8px',
+                      cursor: posting === editingPost.id ? 'not-allowed' : 'pointer',
+                      opacity: posting === editingPost.id ? 0.6 : 1,
+                      transition: 'all 0.2s ease',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (posting !== editingPost.id) {
+                        e.currentTarget.style.background = '#14b8a6'
+                        e.currentTarget.style.borderColor = '#14b8a6'
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = '#2a2a2a'
+                      e.currentTarget.style.borderColor = '#27272a'
+                    }}
+                  >
+                    {posting === editingPost.id ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        Posting...
+                      </>
+                    ) : (
+                      <>
+                        <Send style={{ width: '16px', height: '16px' }} />
+                        Post Now
+                      </>
+                    )}
+                  </button>
                 </div>
-
-                {/* Post Now Button - At Bottom */}
-                <button
-                  onClick={() => {
-                    setPostToConfirm(editingPost.id)
-                  }}
-                  disabled={posting === editingPost.id}
-                  style={{
-                    width: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '8px',
-                    padding: '14px',
-                    background: '#2a2a2a',
-                    color: 'white',
-                    fontSize: '15px',
-                    fontWeight: 600,
-                    border: '2px solid #27272a',
-                    borderRadius: '8px',
-                    cursor: posting === editingPost.id ? 'not-allowed' : 'pointer',
-                    opacity: posting === editingPost.id ? 0.6 : 1,
-                    transition: 'all 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (posting !== editingPost.id) {
-                      e.currentTarget.style.background = '#14b8a6'
-                      e.currentTarget.style.borderColor = '#14b8a6'
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = '#2a2a2a'
-                    e.currentTarget.style.borderColor = '#27272a'
-                  }}
-                >
-                  {posting === editingPost.id ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                      Posting...
-                    </>
-                  ) : (
-                    <>
-                      <Send style={{ width: '18px', height: '18px' }} />
-                      Post Now
-                    </>
-                  )}
-                </button>
-              </>
+                {/* Right side buttons */}
+                <div style={{ display: 'flex', gap: '12px' }}>
+                  <button
+                    onClick={() => setEditingPost(null)}
+                    style={{
+                      padding: '12px 24px',
+                      background: '#2a2a2a',
+                      color: 'white',
+                      fontSize: '15px',
+                      fontWeight: 600,
+                      border: 'none',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = '#333'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSaveEdit}
+                    style={{
+                      padding: '12px 32px',
+                      background: '#14b8a6',
+                      color: 'white',
+                      fontSize: '15px',
+                      fontWeight: 600,
+                      border: 'none',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = '#10a896'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = '#14b8a6'}
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         </div>
