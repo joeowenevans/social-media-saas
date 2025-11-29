@@ -65,6 +65,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         }}
       >
         <div
+          className="header-inner"
           style={{
             display: 'flex',
             justifyContent: 'space-between',
@@ -345,6 +346,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           .desktop-nav { display: none !important; }
           .mobile-menu-btn { display: flex !important; }
           .mobile-menu-overlay { display: flex !important; }
+          .header-inner { padding: 0 16px !important; }
         }
       `}</style>
 

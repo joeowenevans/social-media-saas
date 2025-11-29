@@ -159,11 +159,26 @@ export function Dashboard() {
       {/* Mobile-only styles - does not affect desktop */}
       <style>{`
         @media (max-width: 639px) {
-          .dashboard-container { padding: 24px 16px !important; }
+          .dashboard-container { padding: 24px 16px !important; max-width: 100vw !important; overflow-x: hidden !important; }
           .stats-grid { grid-template-columns: 1fr !important; }
           .posts-gallery { display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; }
           .posts-gallery > div { width: 100% !important; margin: 0 !important; }
-          .calendar-container { padding: 16px !important; overflow-x: auto; }
+          .calendar-section { max-width: 100% !important; overflow: hidden !important; }
+          .calendar-title-row { flex-direction: column !important; gap: 12px !important; align-items: flex-start !important; }
+          .calendar-view-toggle button { padding: 6px 12px !important; font-size: 12px !important; }
+          .calendar-container { padding: 12px !important; }
+          .calendar-header { margin-bottom: 12px !important; }
+          .calendar-header h3 { font-size: 14px !important; }
+          .calendar-header button { padding: 6px !important; }
+          .calendar-header button svg { width: 16px !important; height: 16px !important; }
+          .calendar-days-header { gap: 2px !important; margin-bottom: 4px !important; }
+          .calendar-days-header > div { font-size: 9px !important; padding: 4px 0 !important; }
+          .calendar-grid { gap: 2px !important; }
+          .calendar-day { padding: 4px !important; min-height: 50px !important; border-radius: 4px !important; }
+          .calendar-day-date { font-size: 9px !important; margin-bottom: 2px !important; }
+          .calendar-post-thumb { width: 24px !important; height: 24px !important; border-radius: 3px !important; }
+          .calendar-post-info { display: none !important; }
+          .calendar-more { font-size: 9px !important; }
         }
       `}</style>
       <div className="dashboard-container" style={{ padding: '48px 32px' }}>
@@ -292,8 +307,8 @@ export function Dashboard() {
         </div>
 
         {/* Calendar View */}
-        <div style={{ marginBottom: '64px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+        <div className="calendar-section" style={{ marginBottom: '64px' }}>
+          <div className="calendar-title-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
             <h2 style={{
               color: '#14b8a6',
               fontSize: '24px',
@@ -303,7 +318,7 @@ export function Dashboard() {
             </h2>
 
             {/* View Toggle */}
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div className="calendar-view-toggle" style={{ display: 'flex', gap: '8px' }}>
               <button
                 onClick={() => setCalendarView('week')}
                 style={{
@@ -341,7 +356,7 @@ export function Dashboard() {
 
           <div className="calendar-container" style={{ background: '#1a1a1a', padding: '32px', borderRadius: '12px' }}>
             {/* Calendar Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <div className="calendar-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <button
                 onClick={() => calendarView === 'month'
                   ? setCurrentMonth(subMonths(currentMonth, 1))
@@ -389,7 +404,7 @@ export function Dashboard() {
             </div>
 
             {/* Days of Week */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px', marginBottom: '8px' }}>
+            <div className="calendar-days-header" style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px', marginBottom: '8px' }}>
               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
                 <div key={day} style={{
                   textAlign: 'center',
@@ -404,7 +419,7 @@ export function Dashboard() {
             </div>
 
             {/* Calendar Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px' }}>
+            <div className="calendar-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px' }}>
               {(calendarView === 'month' ? dateRange : weekDateRange).map(date => {
                 const dateKey = format(date, 'yyyy-MM-dd')
                 const dayPosts = postsByDate[dateKey] || []
@@ -415,6 +430,7 @@ export function Dashboard() {
                 return (
                   <div
                     key={dateKey}
+                    className="calendar-day"
                     style={{
                       background: isTodayDate ? 'rgba(20, 184, 166, 0.1)' : '#0d0d0d',
                       border: isTodayDate ? '2px solid #14b8a6' : '1px solid #27272a',
@@ -424,7 +440,7 @@ export function Dashboard() {
                       opacity: isCurrentMonth ? 1 : 0.4
                     }}
                   >
-                    <div style={{
+                    <div className="calendar-day-date" style={{
                       color: isTodayDate ? '#14b8a6' : '#888',
                       fontSize: '12px',
                       marginBottom: '8px',
@@ -444,6 +460,7 @@ export function Dashboard() {
                             <img
                               src={getMediaThumbnail(post.media)}
                               alt=""
+                              className="calendar-post-thumb"
                               style={{
                                 width: calendarView === 'week' ? '48px' : '40px',
                                 height: calendarView === 'week' ? '48px' : '40px',
@@ -465,7 +482,7 @@ export function Dashboard() {
                               border: '2px solid #0d0d0d'
                             }} />
                           </div>
-                          <div style={{ flex: 1, minWidth: 0 }}>
+                          <div className="calendar-post-info" style={{ flex: 1, minWidth: 0 }}>
                             {/* Platform names as text */}
                             <div style={{
                               color: '#666',
@@ -505,7 +522,7 @@ export function Dashboard() {
                     ))}
 
                     {dayPosts.length > maxPosts && (
-                      <div style={{ color: '#14b8a6', fontSize: '11px', fontWeight: 500 }}>
+                      <div className="calendar-more" style={{ color: '#14b8a6', fontSize: '11px', fontWeight: 500 }}>
                         +{dayPosts.length - maxPosts} more
                       </div>
                     )}
