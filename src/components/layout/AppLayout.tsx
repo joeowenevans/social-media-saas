@@ -45,7 +45,7 @@ export function AppLayout({ children }: AppLayoutProps) {
 
   return (
     <div
-      className="min-h-screen flex flex-col"
+      className="app-root min-h-screen flex flex-col"
       style={{
         backgroundColor: '#0a0a0a',
         backgroundImage: 'radial-gradient(circle, rgba(75, 85, 99, 0.35) 1px, transparent 1px)',
@@ -75,31 +75,43 @@ export function AppLayout({ children }: AppLayoutProps) {
             width: '100%'
           }}
         >
-          {/* Left Side - Logo Section (1/3) */}
+          {/* Left Side - Logo Section (1/3) - Clickable to Dashboard */}
           <div
             style={{
               flex: 1,
               display: 'flex',
-              alignItems: 'center',
-              gap: '12px'
+              alignItems: 'center'
             }}
           >
-            <Share2
+            <button
+              onClick={() => navigate('/dashboard')}
               style={{
-                color: 'white',
-                width: '24px',
-                height: '24px'
-              }}
-            />
-            <span
-              style={{
-                color: '#14b8a6',
-                fontSize: '20px',
-                fontWeight: 700
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 0
               }}
             >
-              SocialAI
-            </span>
+              <Share2
+                style={{
+                  color: 'white',
+                  width: '24px',
+                  height: '24px'
+                }}
+              />
+              <span
+                style={{
+                  color: '#14b8a6',
+                  fontSize: '20px',
+                  fontWeight: 700
+                }}
+              >
+                SocialAI
+              </span>
+            </button>
           </div>
 
           {/* Right Side - Navigation (2/3) - Desktop only */}
@@ -347,12 +359,14 @@ export function AppLayout({ children }: AppLayoutProps) {
           .mobile-menu-btn { display: flex !important; }
           .mobile-menu-overlay { display: flex !important; }
           .header-inner { padding: 0 16px !important; }
+          .app-root { overflow-x: hidden !important; max-width: 100vw !important; }
+          .app-main { padding-left: 16px !important; padding-right: 16px !important; }
         }
       `}</style>
 
       {/* Main Content */}
       <main className="flex-1">
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-8">
+        <div className="app-main max-w-[1400px] mx-auto px-6 lg:px-12 py-8">
           {children}
         </div>
       </main>
