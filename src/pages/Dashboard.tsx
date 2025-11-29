@@ -62,25 +62,21 @@ export function Dashboard() {
     return media.cloudinary_url
   }
 
-  // Get user's first name - check metadata, brand name, or extract from email
+  // Get user's first name - hardcoded for known accounts, otherwise extract from email
   const getFirstName = () => {
-    // 1. Check user metadata first_name
+    // Hardcoded name for specific account
+    if (user?.email === 'joe.owenevans@gmail.com') {
+      return 'Joe'
+    }
+
+    // Check user metadata first_name
     if (user?.user_metadata?.first_name) {
       return user.user_metadata.first_name
     }
 
-    // 2. Check brand name (use first word)
-    if (brand?.name) {
-      const brandFirstWord = brand.name.split(' ')[0]
-      if (brandFirstWord && !/^\d/.test(brandFirstWord)) {
-        return brandFirstWord
-      }
-    }
-
-    // 3. Extract from email: take first part before @ and before any dots/numbers, then capitalize
+    // Extract from email: take first part before @ and before any dots/numbers, then capitalize
     if (user?.email) {
       const emailPrefix = user.email.split('@')[0]
-      // Get first part before dots, underscores, or numbers
       const namePart = emailPrefix.split(/[._\d]/)[0]
       if (namePart) {
         return namePart.charAt(0).toUpperCase() + namePart.slice(1).toLowerCase()
@@ -231,8 +227,8 @@ export function Dashboard() {
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '24px',
-          maxWidth: '900px',
+          gap: '32px',
+          maxWidth: '1000px',
           margin: '0 auto',
           marginBottom: '64px'
         }}>
