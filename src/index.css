@@ -47,6 +47,31 @@
     background-color: rgba(45, 212, 191, 0.3);
   }
 
+  /* Global Dark Theme Scrollbar Styling */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #4b5563 #1f2937;
+  }
+
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #1f2937;
+    border-radius: 4px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: #4b5563;
+    border-radius: 4px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: #14b8a6;
+  }
+
   h1 {
     color: #14b8a6;
     font-size: 32px;
