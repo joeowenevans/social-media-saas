@@ -188,19 +188,44 @@ export default async function handler(
 
     const prompt = `You are a social media caption expert. Create an engaging Instagram caption for this image/video.
 
+FIRST, analyze this specific image carefully:
+- What is the main subject?
+- What style, setting, or context do you see?
+- What colors, mood, or emotions does it convey?
+- What unique details stand out?
+
+Use these specific observations in your caption. Reference what makes THIS particular image special - don't write generic captions.
+
 ${brandContext}
 ${lengthGuidance}
 Number of hashtags: ${hashtags}${hashtagContext}
 Call-to-action style: ${ctaText}
 Number of emojis to use: ${emojis}${examplesContext}${phrasesContext}
 
-Format the caption as follows:
-1. Start with engaging sentences that describe the content and connect with the audience (${lengthGuidance})
-2. Add a line break
-3. Include ${hashtags} relevant hashtags
-4. End with a call-to-action using the style: "${ctaText}"
+CAPTION OPENING - IMPORTANT:
+Vary your opening style. Don't always use the same pattern. Mix it up using different approaches:
+- Bold statement
+- Descriptive scene-setting ("Meet..." / "Introducing..." / "This...")
+- Emotion or reaction ("We're obsessed with..." / "Can't stop looking at...")
+- Direct reference to the subject
+- Story-like opening
+- Occasional question (but not every time)
 
-Make it authentic, engaging, and optimized for social media engagement. Use ${emojis} emojis naturally throughout the caption. Match the brand voice and values described above.`
+Each caption should feel fresh and unique - avoid repetitive patterns.
+
+Format the caption as follows:
+1. Start with a varied, engaging opening that describes THIS specific image (${lengthGuidance})
+2. Reference specific visual elements you observe
+3. Add a line break
+4. Include ${hashtags} relevant hashtags
+5. End with a call-to-action using the style: "${ctaText}"
+
+Make it authentic, engaging, and optimized for social media engagement. Use ${emojis} emojis naturally throughout the caption. Match the brand voice and values described above.
+
+IMPORTANT:
+- Your caption must clearly relate to what's shown in this specific image
+- Avoid generic phrases that could apply to any image
+- Each caption should have a different opening style than the last`
 
     console.log('Prompt length:', prompt.length)
     console.log('Image URL being sent to OpenAI:', imageUrlForAI)
