@@ -29,7 +29,11 @@ export function LoginForm() {
   return (
     <div
       className="min-h-screen flex items-center justify-center px-4"
-      style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}
+      style={{
+        backgroundColor: '#0a0a0a',
+        backgroundImage: 'radial-gradient(circle, rgba(75, 85, 99, 0.35) 1px, transparent 1px)',
+        backgroundSize: '24px 24px'
+      }}
     >
       <style>{`
         /* Fix autofill white background */
