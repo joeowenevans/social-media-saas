@@ -217,7 +217,7 @@ export function Dashboard() {
             marginTop: '16px',
             marginBottom: '24px'
           }}>
-            Upload your media and let our AI create engaging captions optimized for your brand voice and target audience.
+            Upload your media and let our AI create engaging captions optimised for your brand voice and target audience.
           </p>
           <button
             onClick={() => navigate('/upload')}
