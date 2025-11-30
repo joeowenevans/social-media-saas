@@ -27,7 +27,7 @@ export function Dashboard() {
   const navigate = useNavigate()
   const [selectedPost, setSelectedPost] = useState<any>(null)
   const [currentMonth, setCurrentMonth] = useState(new Date())
-  const [calendarView, setCalendarView] = useState<'week' | 'month'>('month')
+  const [calendarView, setCalendarView] = useState<'week' | 'month'>('week')
   const [currentWeek, setCurrentWeek] = useState(new Date())
 
   // Helper function to get proper thumbnail URL for videos

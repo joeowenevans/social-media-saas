@@ -262,7 +262,7 @@ export function Support() {
                 Email Support
               </h3>
               <p style={{ color: '#888', fontSize: '14px' }}>
-                support@socialai.com
+                studio@dizzyotter.com
               </p>
             </div>
           </div>

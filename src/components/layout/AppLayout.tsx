@@ -457,6 +457,20 @@ export function AppLayout({ children }: AppLayoutProps) {
             >
               Support
             </Link>
+            <a
+              href="mailto:studio@dizzyotter.com"
+              className="transition-colors"
+              style={{
+                color: '#888',
+                fontSize: '14px',
+                textDecoration: 'none',
+                transition: 'color 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
+            >
+              studio@dizzyotter.com
+            </a>
           </div>
 
           {/* Copyright */}
