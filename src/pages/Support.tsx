@@ -94,7 +94,7 @@ export function Support() {
           }}
         >
           <Link
-            to="/"
+            to="/dashboard"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -108,7 +108,7 @@ export function Support() {
             </span>
           </Link>
           <Link
-            to="/"
+            to="/dashboard"
             style={{
               display: 'flex',
               alignItems: 'center',

@@ -83,7 +83,7 @@ export function Contact() {
           }}
         >
           <Link
-            to="/"
+            to="/dashboard"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -97,7 +97,7 @@ export function Contact() {
             </span>
           </Link>
           <Link
-            to="/"
+            to="/dashboard"
             style={{
               display: 'flex',
               alignItems: 'center',
