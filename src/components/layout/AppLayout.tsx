@@ -302,19 +302,28 @@ export function AppLayout({ children }: AppLayoutProps) {
                     gap: '16px',
                     width: '100%',
                     padding: '16px 24px',
-                    background: isActive(item.path) ? '#14b8a6' : 'transparent',
+                    background: 'transparent',
                     border: 'none',
-                    borderRadius: isActive(item.path) ? '0' : '0',
-                    color: isActive(item.path) ? '#0a0a0a' : '#e5e5e5',
+                    color: isActive(item.path) ? '#ffffff' : '#14b8a6',
                     fontSize: '16px',
-                    fontWeight: isActive(item.path) ? 600 : 500,
+                    fontWeight: 500,
                     cursor: 'pointer',
                     textAlign: 'left',
                     minHeight: '52px',
-                    transition: 'all 0.2s ease'
+                    transition: 'all 0.2s ease',
+                    textShadow: isActive(item.path)
+                      ? '0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4)'
+                      : '0 0 10px rgba(20, 184, 166, 0.6), 0 0 20px rgba(20, 184, 166, 0.3)'
                   }}
                 >
-                  <item.icon style={{ width: '22px', height: '22px', flexShrink: 0 }} />
+                  <item.icon style={{
+                    width: '22px',
+                    height: '22px',
+                    flexShrink: 0,
+                    filter: isActive(item.path)
+                      ? 'drop-shadow(0 0 6px rgba(255, 255, 255, 0.8))'
+                      : 'drop-shadow(0 0 6px rgba(20, 184, 166, 0.6))'
+                  }} />
                   {item.label}
                 </button>
               ))}
