@@ -5,7 +5,7 @@ import { useBrand } from '../hooks/useBrand'
 import { usePosts } from '../hooks/usePosts'
 import { AppLayout } from '../components/layout/AppLayout'
 import { useDropzone } from 'react-dropzone'
-import { Upload as UploadIcon, Wand2, Sparkles, Image as ImageIcon, Video, X, Send, Clock, ChevronLeft, ChevronRight, Zap } from 'lucide-react'
+import { Upload as UploadIcon, Wand2, Sparkles, Image as ImageIcon, Video, X, Send, Clock, ChevronLeft, ChevronRight, Zap, AlertCircle } from 'lucide-react'
 import type { Media } from '../types'
 import toast from 'react-hot-toast'
 import { supabase } from '../lib/supabase'
@@ -38,6 +38,7 @@ export function Upload() {
   const [scheduledTime, setScheduledTime] = useState<string>('')
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([])
   const [postType, setPostType] = useState<'post_now' | 'draft' | 'scheduled'>('draft')
+  const [showPostNowConfirm, setShowPostNowConfirm] = useState(false)
   const abortControllerRef = useRef<AbortController | null>(null)
 
   // Calendar state
@@ -377,6 +378,18 @@ export function Upload() {
       return
     }
 
+    // Show confirmation modal for Post Now
+    if (postType === 'post_now') {
+      setShowPostNowConfirm(true)
+      return
+    }
+
+    await executePost()
+  }
+
+  const executePost = async () => {
+    if (!uploadedMedia) return
+
     setSaving(true)
     try {
       // Determine status based on postType
@@ -472,6 +485,11 @@ export function Upload() {
         ? prev.filter((p) => p !== platform)
         : [...prev, platform]
     )
+  }
+
+  const confirmPostNow = async () => {
+    setShowPostNowConfirm(false)
+    await executePost()
   }
 
   return (
@@ -1084,6 +1102,119 @@ export function Upload() {
           </>
         )}
       </div>
+
+      {/* Post Now Confirmation Modal */}
+      {showPostNowConfirm && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.7)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1300,
+            padding: '24px'
+          }}
+          onClick={() => setShowPostNowConfirm(false)}
+        >
+          <div
+            style={{
+              maxWidth: '450px',
+              background: '#1a1a1a',
+              border: '1px solid #27272a',
+              borderRadius: '16px',
+              padding: '40px',
+              boxShadow: '0 0 60px rgba(0, 0, 0, 0.8)',
+              textAlign: 'center'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Icon */}
+            <div style={{
+              width: '48px',
+              height: '48px',
+              margin: '0 auto 24px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '50%',
+              background: 'rgba(20, 184, 166, 0.1)'
+            }}>
+              <AlertCircle style={{ width: '28px', height: '28px', color: '#14b8a6' }} />
+            </div>
+
+            {/* Title */}
+            <h2 style={{
+              color: '#ffffff',
+              fontSize: '24px',
+              fontWeight: 700,
+              marginBottom: '16px'
+            }}>
+              Post Now?
+            </h2>
+
+            {/* Message */}
+            <p style={{
+              color: '#888',
+              fontSize: '15px',
+              lineHeight: 1.6,
+              marginBottom: '32px'
+            }}>
+              This will immediately post your content to the selected platforms. This action cannot be undone.
+            </p>
+
+            {/* Buttons */}
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+              <button
+                onClick={() => setShowPostNowConfirm(false)}
+                style={{
+                  background: '#2a2a2a',
+                  color: '#e5e5e5',
+                  padding: '12px 32px',
+                  borderRadius: '20px',
+                  fontWeight: 500,
+                  fontSize: '15px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#333'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmPostNow}
+                style={{
+                  background: '#14b8a6',
+                  color: 'white',
+                  padding: '12px 32px',
+                  borderRadius: '20px',
+                  fontWeight: 600,
+                  fontSize: '15px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#10a896'
+                  e.currentTarget.style.transform = 'scale(1.02)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#14b8a6'
+                  e.currentTarget.style.transform = 'scale(1)'
+                }}
+              >
+                Yes, Post Now
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </AppLayout>
   )
 }
