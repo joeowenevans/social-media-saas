@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Share2, ArrowLeft, HelpCircle, Book, MessageCircle, Mail, ChevronDown, ChevronUp } from 'lucide-react'
+import { Share2, ArrowLeft, HelpCircle, MessageCircle, Mail, ChevronDown, ChevronUp } from 'lucide-react'
 import { useState } from 'react'
 
 interface FAQItem {
