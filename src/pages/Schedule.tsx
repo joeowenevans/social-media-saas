@@ -83,7 +83,7 @@ export function Schedule() {
   const [postToDelete, setPostToDelete] = useState<string | null>(null)
 
   // Calendar view toggle (week/month)
-  const [calendarView, setCalendarView] = useState<'week' | 'month'>('month')
+  const [calendarView, setCalendarView] = useState<'week' | 'month'>('week')
   const [currentWeek, setCurrentWeek] = useState(new Date())
 
   // Handle URL parameter for status filter

@@ -186,7 +186,7 @@ export function Contact() {
                       Email
                     </p>
                     <p style={{ color: '#888', fontSize: '14px' }}>
-                      hello@socialai.com
+                      studio@dizzyotter.com
                     </p>
                   </div>
                 </div>
