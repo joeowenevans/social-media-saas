@@ -302,12 +302,12 @@ export function AppLayout({ children }: AppLayoutProps) {
                     gap: '16px',
                     width: '100%',
                     padding: '16px 24px',
-                    background: isActive(item.path) ? 'rgba(20, 184, 166, 0.1)' : 'transparent',
+                    background: isActive(item.path) ? '#14b8a6' : 'transparent',
                     border: 'none',
-                    borderLeft: isActive(item.path) ? '3px solid #14b8a6' : '3px solid transparent',
-                    color: isActive(item.path) ? '#14b8a6' : '#e5e5e5',
+                    borderRadius: isActive(item.path) ? '0' : '0',
+                    color: isActive(item.path) ? '#0a0a0a' : '#e5e5e5',
                     fontSize: '16px',
-                    fontWeight: 500,
+                    fontWeight: isActive(item.path) ? 600 : 500,
                     cursor: 'pointer',
                     textAlign: 'left',
                     minHeight: '52px',
@@ -360,8 +360,9 @@ export function AppLayout({ children }: AppLayoutProps) {
           .desktop-nav { display: none !important; }
           .mobile-menu-btn { display: flex !important; }
           .mobile-menu-overlay { display: flex !important; }
-          .header-inner { padding: 0 16px !important; }
+          .header-inner { padding: 0 12px !important; max-width: 100% !important; box-sizing: border-box !important; }
           .app-main { padding-left: 16px !important; padding-right: 16px !important; }
+          header { max-width: 100vw !important; overflow: hidden !important; }
         }
       `}</style>
 

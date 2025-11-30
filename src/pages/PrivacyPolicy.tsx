@@ -37,7 +37,7 @@ export function PrivacyPolicy() {
           }}
         >
           <Link
-            to="/"
+            to="/dashboard"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -51,7 +51,7 @@ export function PrivacyPolicy() {
             </span>
           </Link>
           <Link
-            to="/"
+            to="/dashboard"
             style={{
               display: 'flex',
               alignItems: 'center',

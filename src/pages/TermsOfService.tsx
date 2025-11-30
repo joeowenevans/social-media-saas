@@ -37,7 +37,7 @@ export function TermsOfService() {
           }}
         >
           <Link
-            to="/"
+            to="/dashboard"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -51,7 +51,7 @@ export function TermsOfService() {
             </span>
           </Link>
           <Link
-            to="/"
+            to="/dashboard"
             style={{
               display: 'flex',
               alignItems: 'center',
