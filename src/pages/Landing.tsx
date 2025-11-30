@@ -123,7 +123,7 @@ export function Landing() {
             </div>
             <h3 className="text-xl font-semibold mb-3 text-white">Brand Voice</h3>
             <p className="text-[#a1a1aa] leading-relaxed">
-              Customize your brand voice and preferences for consistent,
+              Customise your brand voice and preferences for consistent,
               on-brand content.
             </p>
           </div>
@@ -170,7 +170,7 @@ export function Landing() {
               </li>
               <li className="flex items-center gap-3 text-white">
                 <CheckCircle2 className="w-6 h-6 text-primary-400 shrink-0" />
-                <span className="font-medium">Brand voice customization</span>
+                <span className="font-medium">Brand voice customisation</span>
               </li>
               <li className="flex items-center gap-3 text-white">
                 <CheckCircle2 className="w-6 h-6 text-primary-400 shrink-0" />
@@ -201,7 +201,7 @@ export function Landing() {
                 <span className="text-lg font-semibold tracking-tight text-white">SocialAI</span>
               </div>
               <p className="text-sm text-[#a1a1aa] leading-relaxed">
-                AI-powered social media management made simple. Create, schedule, and optimize your content effortlessly.
+                AI-powered social media management made simple. Create, schedule, and optimise your content effortlessly.
               </p>
             </div>
 
@@ -209,10 +209,10 @@ export function Landing() {
             <div className="flex flex-col gap-4">
               <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Quick Links</h3>
               <div className="flex flex-col gap-2 text-sm">
-                <a href="#" className="text-[#a1a1aa] hover:text-primary-400 transition-colors duration-200">Privacy Policy</a>
-                <a href="#" className="text-[#a1a1aa] hover:text-primary-400 transition-colors duration-200">Terms of Service</a>
-                <a href="#" className="text-[#a1a1aa] hover:text-primary-400 transition-colors duration-200">Contact</a>
-                <a href="#" className="text-[#a1a1aa] hover:text-primary-400 transition-colors duration-200">Support</a>
+                <Link to="/privacy" className="text-[#a1a1aa] hover:text-primary-400 transition-colors duration-200">Privacy Policy</Link>
+                <Link to="/terms" className="text-[#a1a1aa] hover:text-primary-400 transition-colors duration-200">Terms of Service</Link>
+                <Link to="/contact" className="text-[#a1a1aa] hover:text-primary-400 transition-colors duration-200">Contact</Link>
+                <Link to="/support" className="text-[#a1a1aa] hover:text-primary-400 transition-colors duration-200">Support</Link>
               </div>
             </div>
 

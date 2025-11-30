@@ -6,6 +6,10 @@ import { Dashboard } from './pages/Dashboard'
 import { Upload } from './pages/Upload'
 import { Schedule } from './pages/Schedule'
 import { Settings } from './pages/Settings'
+import { PrivacyPolicy } from './pages/PrivacyPolicy'
+import { TermsOfService } from './pages/TermsOfService'
+import { Contact } from './pages/Contact'
+import { Support } from './pages/Support'
 import { ProtectedRoute } from './components/auth/ProtectedRoute'
 
 function App() {
@@ -86,6 +90,10 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsOfService />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/support" element={<Support />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

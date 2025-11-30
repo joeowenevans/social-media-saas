@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import {
   Share2,
@@ -49,7 +49,9 @@ export function AppLayout({ children }: AppLayoutProps) {
       style={{
         backgroundColor: '#0a0a0a',
         backgroundImage: 'radial-gradient(circle, rgba(75, 85, 99, 0.35) 1px, transparent 1px)',
-        backgroundSize: '24px 24px'
+        backgroundSize: '24px 24px',
+        overflowX: 'hidden',
+        maxWidth: '100vw'
       }}
     >
       {/* Header - Fixed Layout */}
@@ -359,7 +361,6 @@ export function AppLayout({ children }: AppLayoutProps) {
           .mobile-menu-btn { display: flex !important; }
           .mobile-menu-overlay { display: flex !important; }
           .header-inner { padding: 0 16px !important; }
-          .app-root { overflow-x: hidden !important; max-width: 100vw !important; }
           .app-main { padding-left: 16px !important; padding-right: 16px !important; }
         }
       `}</style>
@@ -398,10 +399,10 @@ export function AppLayout({ children }: AppLayoutProps) {
             SocialAI
           </div>
 
-          {/* Links - Stacked vertically, centered */}
+          {/* Links - Stacked vertically, centred */}
           <div className="flex flex-col items-center gap-4">
-            <a
-              href="#"
+            <Link
+              to="/privacy"
               className="transition-colors"
               style={{
                 color: '#888',
@@ -413,9 +414,9 @@ export function AppLayout({ children }: AppLayoutProps) {
               onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
             >
               Privacy Policy
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="/terms"
               className="transition-colors"
               style={{
                 color: '#888',
@@ -427,9 +428,9 @@ export function AppLayout({ children }: AppLayoutProps) {
               onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
             >
               Terms of Service
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="/contact"
               className="transition-colors"
               style={{
                 color: '#888',
@@ -441,9 +442,9 @@ export function AppLayout({ children }: AppLayoutProps) {
               onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
             >
               Contact
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="/support"
               className="transition-colors"
               style={{
                 color: '#888',
@@ -455,7 +456,7 @@ export function AppLayout({ children }: AppLayoutProps) {
               onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
             >
               Support
-            </a>
+            </Link>
           </div>
 
           {/* Copyright */}
