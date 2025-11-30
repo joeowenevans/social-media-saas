@@ -17,6 +17,10 @@ export interface Brand {
   num_emojis: number
   created_at: string
   updated_at?: string
+  // Social media credentials
+  facebook_page_id: string | null
+  instagram_account_id: string | null
+  facebook_access_token: string | null
   // Legacy fields (deprecated but kept for backwards compatibility)
   brand_voice?: string | null
   target_audience?: string | null

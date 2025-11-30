@@ -211,12 +211,29 @@ export function Schedule() {
 
       console.log('Post data fetched:', postData)
 
+      // Fetch brand credentials for social media posting
+      const { data: brandData, error: brandError } = await supabase
+        .from('brands')
+        .select('facebook_page_id, instagram_account_id, facebook_access_token')
+        .eq('id', postData.brand_id)
+        .single()
+
+      if (brandError) {
+        console.error('Error fetching brand credentials:', brandError)
+      }
+
+      console.log('Brand credentials fetched:', brandData ? 'Found' : 'Not found')
+
       // Prepare data for n8n webhook
       const webhookPayload = {
         caption: postData.final_caption || postData.generated_caption,
         media_url: postData.media?.cloudinary_url,
         media_type: postData.media?.media_type,
-        platforms: postData.platforms || []
+        platforms: postData.platforms || [],
+        // Brand credentials for social media APIs
+        facebook_page_id: brandData?.facebook_page_id || null,
+        instagram_account_id: brandData?.instagram_account_id || null,
+        facebook_access_token: brandData?.facebook_access_token || null
       }
 
       console.log('Calling n8n webhook:', webhookPayload)

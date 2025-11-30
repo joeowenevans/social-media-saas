@@ -304,7 +304,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                     padding: '16px 24px',
                     background: 'transparent',
                     border: 'none',
-                    color: isActive(item.path) ? '#ffffff' : '#14b8a6',
+                    color: isActive(item.path) ? '#14b8a6' : '#ffffff',
                     fontSize: '16px',
                     fontWeight: 500,
                     cursor: 'pointer',
@@ -312,8 +312,8 @@ export function AppLayout({ children }: AppLayoutProps) {
                     minHeight: '52px',
                     transition: 'all 0.2s ease',
                     textShadow: isActive(item.path)
-                      ? '0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4)'
-                      : '0 0 10px rgba(20, 184, 166, 0.6), 0 0 20px rgba(20, 184, 166, 0.3)'
+                      ? '0 0 10px rgba(20, 184, 166, 0.8), 0 0 20px rgba(20, 184, 166, 0.4)'
+                      : 'none'
                   }}
                 >
                   <item.icon style={{
@@ -321,8 +321,8 @@ export function AppLayout({ children }: AppLayoutProps) {
                     height: '22px',
                     flexShrink: 0,
                     filter: isActive(item.path)
-                      ? 'drop-shadow(0 0 6px rgba(255, 255, 255, 0.8))'
-                      : 'drop-shadow(0 0 6px rgba(20, 184, 166, 0.6))'
+                      ? 'drop-shadow(0 0 6px rgba(20, 184, 166, 0.8))'
+                      : 'none'
                   }} />
                   {item.label}
                 </button>
