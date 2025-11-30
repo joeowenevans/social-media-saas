@@ -5,7 +5,7 @@ import { useBrand } from '../hooks/useBrand'
 import { usePosts } from '../hooks/usePosts'
 import { AppLayout } from '../components/layout/AppLayout'
 import { useDropzone } from 'react-dropzone'
-import { Upload as UploadIcon, Wand2, Sparkles, Image as ImageIcon, Video, X, Send, Clock, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Upload as UploadIcon, Wand2, Sparkles, Image as ImageIcon, Video, X, Send, Clock, ChevronLeft, ChevronRight, Zap } from 'lucide-react'
 import type { Media } from '../types'
 import toast from 'react-hot-toast'
 import { supabase } from '../lib/supabase'
@@ -37,7 +37,7 @@ export function Upload() {
   const [saving, setSaving] = useState(false)
   const [scheduledTime, setScheduledTime] = useState<string>('')
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([])
-  const [postType, setPostType] = useState<'now' | 'scheduled'>('now')
+  const [postType, setPostType] = useState<'post_now' | 'draft' | 'scheduled'>('draft')
   const abortControllerRef = useRef<AbortController | null>(null)
 
   // Calendar state
@@ -372,23 +372,87 @@ export function Upload() {
       return
     }
 
+    if (postType === 'post_now' && !caption) {
+      toast.error('Please add a caption before posting')
+      return
+    }
+
     setSaving(true)
     try {
+      // Determine status based on postType
+      let status: string
+      if (postType === 'scheduled') {
+        status = 'scheduled'
+      } else if (postType === 'post_now') {
+        status = 'posting'
+      } else {
+        status = 'draft'
+      }
+
       const postData: any = {
         brand_id: brand.id,
         media_id: uploadedMedia.id,
         generated_caption: caption,
         final_caption: caption,
-        status: postType === 'scheduled' ? 'scheduled' : 'draft',
+        status: status,
         platforms: selectedPlatforms,
         scheduled_for: postType === 'scheduled' ? new Date(scheduledTime).toISOString() : null,
       }
 
-      const { error } = await supabase.from('posts').insert([postData])
+      const { data: insertedPost, error } = await supabase.from('posts').insert([postData]).select().single()
 
       if (error) throw error
 
-      if (postType === 'scheduled') {
+      // If posting now, call the webhook
+      if (postType === 'post_now' && insertedPost) {
+        try {
+          // Fetch brand credentials
+          const { data: brandData } = await supabase
+            .from('brands')
+            .select('facebook_page_id, instagram_account_id, facebook_access_token')
+            .eq('id', brand.id)
+            .single()
+
+          const webhookPayload = {
+            caption: caption,
+            media_url: uploadedMedia.cloudinary_url,
+            media_type: uploadedMedia.media_type,
+            platforms: selectedPlatforms,
+            facebook_page_id: brandData?.facebook_page_id || null,
+            instagram_account_id: brandData?.instagram_account_id || null,
+            facebook_access_token: brandData?.facebook_access_token || null
+          }
+
+          const response = await fetch('https://n8n-latest-8yp2.onrender.com/webhook/post-instant', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(webhookPayload)
+          })
+
+          if (response.ok) {
+            // Update post status to posted
+            await supabase
+              .from('posts')
+              .update({ status: 'posted', posted_at: new Date().toISOString() })
+              .eq('id', insertedPost.id)
+            toast.success('Post published successfully!')
+          } else {
+            // Update post status to failed
+            await supabase
+              .from('posts')
+              .update({ status: 'failed', error_message: 'Webhook failed' })
+              .eq('id', insertedPost.id)
+            toast.error('Failed to publish post')
+          }
+        } catch (webhookError) {
+          console.error('Webhook error:', webhookError)
+          await supabase
+            .from('posts')
+            .update({ status: 'failed', error_message: 'Webhook error' })
+            .eq('id', insertedPost.id)
+          toast.error('Failed to publish post')
+        }
+      } else if (postType === 'scheduled') {
         toast.success('Post scheduled successfully!')
       } else {
         toast.success('Draft saved!')
@@ -730,7 +794,7 @@ export function Upload() {
                 <div className="post-type-buttons" style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
                   <button
                     type="button"
-                    onClick={() => setPostType('now')}
+                    onClick={() => setPostType('post_now')}
                     style={{
                       flex: 1,
                       display: 'flex',
@@ -738,16 +802,40 @@ export function Upload() {
                       justifyContent: 'center',
                       gap: '12px',
                       padding: '16px',
-                      background: postType === 'now' ? 'rgba(20, 184, 166, 0.1)' : 'transparent',
-                      border: postType === 'now' ? '2px solid #14b8a6' : '2px solid #27272a',
+                      background: postType === 'post_now' ? 'rgba(20, 184, 166, 0.1)' : 'transparent',
+                      border: postType === 'post_now' ? '2px solid #14b8a6' : '2px solid #27272a',
                       borderRadius: '12px',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
-                      boxShadow: postType === 'now' ? '0 0 20px rgba(20, 184, 166, 0.3)' : 'none'
+                      boxShadow: postType === 'post_now' ? '0 0 20px rgba(20, 184, 166, 0.3)' : 'none'
+                    }}
+                  >
+                    <Zap style={{ width: '20px', height: '20px', color: '#14b8a6' }} />
+                    <span style={{ color: postType === 'post_now' ? '#14b8a6' : 'white', fontSize: '16px', fontWeight: 500 }}>
+                      Post Now
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setPostType('draft')}
+                    style={{
+                      flex: 1,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '12px',
+                      padding: '16px',
+                      background: postType === 'draft' ? 'rgba(20, 184, 166, 0.1)' : 'transparent',
+                      border: postType === 'draft' ? '2px solid #14b8a6' : '2px solid #27272a',
+                      borderRadius: '12px',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      boxShadow: postType === 'draft' ? '0 0 20px rgba(20, 184, 166, 0.3)' : 'none'
                     }}
                   >
                     <Send style={{ width: '20px', height: '20px', color: '#14b8a6' }} />
-                    <span style={{ color: postType === 'now' ? '#14b8a6' : 'white', fontSize: '16px', fontWeight: 500 }}>
+                    <span style={{ color: postType === 'draft' ? '#14b8a6' : 'white', fontSize: '16px', fontWeight: 500 }}>
                       Save as Draft
                     </span>
                   </button>
@@ -989,7 +1077,7 @@ export function Upload() {
                     transition: 'all 0.2s ease'
                   }}
                 >
-                  {saving ? 'Saving...' : postType === 'scheduled' ? 'Schedule Post' : 'Save as Draft'}
+                  {saving ? (postType === 'post_now' ? 'Posting...' : 'Saving...') : postType === 'scheduled' ? 'Schedule Post' : postType === 'post_now' ? 'Post Now' : 'Save as Draft'}
                 </button>
               </div>
             )}
