@@ -119,10 +119,10 @@ export function Schedule() {
     ? statusFilteredPosts
     : statusFilteredPosts.filter(p => p.platforms?.includes(selectedPlatform))
 
-  // Sort by date (earliest first)
+  // Sort by date created (newest first)
   const sortedPosts = [...filteredPosts].sort((a: any, b: any) => {
-    if (!a.scheduled_for || !b.scheduled_for) return 0
-    return new Date(a.scheduled_for).getTime() - new Date(b.scheduled_for).getTime()
+    if (!a.created_at || !b.created_at) return 0
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   })
 
   // Group posts by date for calendar (use filtered posts)
