@@ -51,27 +51,31 @@ export function LoginForm() {
 
         /* Mobile-only styles - does not affect desktop */
         @media (max-width: 639px) {
-          .auth-form-container { padding: 32px 24px !important; }
-          .auth-input { width: 100% !important; box-sizing: border-box !important; }
-          .auth-button { width: 80% !important; max-width: none !important; }
+          .auth-card-wrapper { max-width: calc(100% - 48px) !important; margin: 0 24px !important; }
+          .auth-form-container { padding: 28px 20px !important; }
+          .auth-input { width: 100% !important; max-width: 260px !important; box-sizing: border-box !important; }
+          .auth-button { width: 70% !important; max-width: 200px !important; }
+          .auth-logo { margin-bottom: 24px !important; }
+          .auth-logo-icon { width: 28px !important; height: 28px !important; }
+          .auth-logo-text { font-size: 26px !important; }
         }
       `}</style>
 
-      <div className="w-full" style={{ maxWidth: '400px' }}>
+      <div className="auth-card-wrapper w-full" style={{ maxWidth: '400px' }}>
         {/* Logo with Icon */}
-        <div style={{
+        <div className="auth-logo" style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           gap: '12px',
           marginBottom: '32px'
         }}>
-          <Share2 style={{
+          <Share2 className="auth-logo-icon" style={{
             color: 'white',
             width: '32px',
             height: '32px'
           }} />
-          <h1 style={{
+          <h1 className="auth-logo-text" style={{
             color: '#14b8a6',
             fontSize: '32px',
             fontWeight: 700,
