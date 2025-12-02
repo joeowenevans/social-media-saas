@@ -43,20 +43,20 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
 
   const inputStyle = {
     width: '100%',
-    background: '#1a1a1a',
-    border: '1px solid #27272a',
-    borderRadius: '12px',
+    background: 'rgba(26, 31, 54, 0.8)',
+    border: '1px solid rgba(41, 121, 255, 0.3)',
+    borderRadius: '8px',
     padding: '16px',
-    color: '#e5e5e5',
+    color: '#F2F4F8',
     fontSize: '15px',
     lineHeight: '1.6',
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+    fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
     outline: 'none',
-    transition: 'border-color 0.2s ease'
+    transition: 'border-color 0.2s ease, box-shadow 0.2s ease'
   }
 
   const labelStyle = {
-    color: '#e5e5e5',
+    color: '#F2F4F8',
     fontSize: '14px',
     fontWeight: 500,
     marginBottom: '8px',
@@ -64,7 +64,7 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
   } as const
 
   const helperTextStyle = {
-    color: '#888',
+    color: 'rgba(242, 244, 248, 0.6)',
     fontSize: '12px',
     marginTop: '4px'
   }
@@ -116,8 +116,14 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
           style={{ ...inputStyle, height: '44px' }}
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-          onBlur={(e) => e.target.style.borderColor = '#27272a'}
+          onFocus={(e) => {
+            e.target.style.borderColor = '#50E3C2'
+            e.target.style.boxShadow = '0 0 0 3px rgba(80, 227, 194, 0.2)'
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = 'rgba(41, 121, 255, 0.3)'
+            e.target.style.boxShadow = 'none'
+          }}
         />
       </div>
 
@@ -133,8 +139,14 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
           style={{ ...inputStyle, height: '44px' }}
           value={formData.industry_niche}
           onChange={(e) => setFormData({ ...formData, industry_niche: e.target.value })}
-          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-          onBlur={(e) => e.target.style.borderColor = '#27272a'}
+          onFocus={(e) => {
+            e.target.style.borderColor = '#50E3C2'
+            e.target.style.boxShadow = '0 0 0 3px rgba(80, 227, 194, 0.2)'
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = 'rgba(41, 121, 255, 0.3)'
+            e.target.style.boxShadow = 'none'
+          }}
         />
         <p style={helperTextStyle}>What industry or niche does your brand operate in?</p>
       </div>
@@ -150,8 +162,14 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
           placeholder="e.g., Friendly, professional, enthusiastic about pets"
           value={formData.voice_description}
           onChange={(e) => setFormData({ ...formData, voice_description: e.target.value })}
-          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-          onBlur={(e) => e.target.style.borderColor = '#27272a'}
+          onFocus={(e) => {
+            e.target.style.borderColor = '#50E3C2'
+            e.target.style.boxShadow = '0 0 0 3px rgba(80, 227, 194, 0.2)'
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = 'rgba(41, 121, 255, 0.3)'
+            e.target.style.boxShadow = 'none'
+          }}
         />
         <p style={helperTextStyle}>How should your brand sound? Describe the tone and personality.</p>
       </div>
@@ -167,8 +185,14 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
           placeholder="e.g., Pet owners looking for custom artwork, fans of animation"
           value={formData.audience_priorities}
           onChange={(e) => setFormData({ ...formData, audience_priorities: e.target.value })}
-          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-          onBlur={(e) => e.target.style.borderColor = '#27272a'}
+          onFocus={(e) => {
+            e.target.style.borderColor = '#50E3C2'
+            e.target.style.boxShadow = '0 0 0 3px rgba(80, 227, 194, 0.2)'
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = 'rgba(41, 121, 255, 0.3)'
+            e.target.style.boxShadow = 'none'
+          }}
         />
         <p style={helperTextStyle}>Who is your target audience? What do they care about?</p>
       </div>
@@ -184,8 +208,14 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
           placeholder="e.g., Quality craftsmanship, customer satisfaction, creativity"
           value={formData.brand_values}
           onChange={(e) => setFormData({ ...formData, brand_values: e.target.value })}
-          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-          onBlur={(e) => e.target.style.borderColor = '#27272a'}
+          onFocus={(e) => {
+            e.target.style.borderColor = '#50E3C2'
+            e.target.style.boxShadow = '0 0 0 3px rgba(80, 227, 194, 0.2)'
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = 'rgba(41, 121, 255, 0.3)'
+            e.target.style.boxShadow = 'none'
+          }}
         />
         <p style={helperTextStyle}>What values does your brand stand for?</p>
       </div>
@@ -209,8 +239,14 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
           }}
           value={formData.preferred_caption_length}
           onChange={(e) => setFormData({ ...formData, preferred_caption_length: e.target.value })}
-          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-          onBlur={(e) => e.target.style.borderColor = '#27272a'}
+          onFocus={(e) => {
+            e.target.style.borderColor = '#50E3C2'
+            e.target.style.boxShadow = '0 0 0 3px rgba(80, 227, 194, 0.2)'
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = 'rgba(41, 121, 255, 0.3)'
+            e.target.style.boxShadow = 'none'
+          }}
         >
           <option value="short" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Short (1-2 sentences)</option>
           <option value="medium" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Medium (3-5 sentences)</option>
@@ -230,8 +266,14 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
           style={{ ...inputStyle, height: '44px' }}
           value={formData.hashtag_topics}
           onChange={(e) => setFormData({ ...formData, hashtag_topics: e.target.value })}
-          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-          onBlur={(e) => e.target.style.borderColor = '#27272a'}
+          onFocus={(e) => {
+            e.target.style.borderColor = '#50E3C2'
+            e.target.style.boxShadow = '0 0 0 3px rgba(80, 227, 194, 0.2)'
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = 'rgba(41, 121, 255, 0.3)'
+            e.target.style.boxShadow = 'none'
+          }}
         />
         <p style={helperTextStyle}>Keywords for hashtag generation (comma-separated)</p>
       </div>
@@ -255,8 +297,14 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
           }}
           value={formData.cta_style}
           onChange={(e) => setFormData({ ...formData, cta_style: e.target.value })}
-          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-          onBlur={(e) => e.target.style.borderColor = '#27272a'}
+          onFocus={(e) => {
+            e.target.style.borderColor = '#50E3C2'
+            e.target.style.boxShadow = '0 0 0 3px rgba(80, 227, 194, 0.2)'
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = 'rgba(41, 121, 255, 0.3)'
+            e.target.style.boxShadow = 'none'
+          }}
         >
           <option value="direct" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Direct (e.g., 'Shop now', 'Book today')</option>
           <option value="soft" style={{ background: '#1a1a1a', color: '#e5e5e5' }}>Soft (e.g., 'Learn more', 'Discover')</option>
@@ -276,8 +324,14 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
           placeholder="Paste 2-3 example captions that match your desired style..."
           value={formData.example_captions}
           onChange={(e) => setFormData({ ...formData, example_captions: e.target.value })}
-          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-          onBlur={(e) => e.target.style.borderColor = '#27272a'}
+          onFocus={(e) => {
+            e.target.style.borderColor = '#50E3C2'
+            e.target.style.boxShadow = '0 0 0 3px rgba(80, 227, 194, 0.2)'
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = 'rgba(41, 121, 255, 0.3)'
+            e.target.style.boxShadow = 'none'
+          }}
         />
         <p style={helperTextStyle}>Provide examples of captions you love - AI will learn from these</p>
       </div>
@@ -294,8 +348,14 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
           style={{ ...inputStyle, height: '44px' }}
           value={formData.phrases_taglines}
           onChange={(e) => setFormData({ ...formData, phrases_taglines: e.target.value })}
-          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-          onBlur={(e) => e.target.style.borderColor = '#27272a'}
+          onFocus={(e) => {
+            e.target.style.borderColor = '#50E3C2'
+            e.target.style.boxShadow = '0 0 0 3px rgba(80, 227, 194, 0.2)'
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = 'rgba(41, 121, 255, 0.3)'
+            e.target.style.boxShadow = 'none'
+          }}
         />
         <p style={helperTextStyle}>Phrases you want occasionally included in captions</p>
       </div>
@@ -311,8 +371,14 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
           placeholder="e.g., Increase bookings for custom portraits, build community of pet lovers"
           value={formData.general_goals}
           onChange={(e) => setFormData({ ...formData, general_goals: e.target.value })}
-          onFocus={(e) => e.target.style.borderColor = '#14b8a6'}
-          onBlur={(e) => e.target.style.borderColor = '#27272a'}
+          onFocus={(e) => {
+            e.target.style.borderColor = '#50E3C2'
+            e.target.style.boxShadow = '0 0 0 3px rgba(80, 227, 194, 0.2)'
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = 'rgba(41, 121, 255, 0.3)'
+            e.target.style.boxShadow = 'none'
+          }}
         />
         <p style={helperTextStyle}>What are your overall social media goals?</p>
       </div>
@@ -362,25 +428,31 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
           type="submit"
           disabled={loading}
           style={{
-            padding: '12px 32px',
-            background: loading ? '#2a2a2a' : '#2a2a2a',
-            color: 'white',
+            padding: '12px 24px',
+            background: loading ? 'rgba(41, 121, 255, 0.5)' : '#2979FF',
+            color: '#FFFFFF',
             fontSize: '16px',
             fontWeight: 600,
             border: 'none',
-            borderRadius: '20px',
+            borderRadius: '8px',
             cursor: loading ? 'not-allowed' : 'pointer',
-            opacity: loading ? 0.6 : 1,
+            opacity: loading ? 0.5 : 1,
             transition: 'all 0.2s ease'
           }}
           onMouseEnter={(e) => {
             if (!loading) {
-              e.currentTarget.style.background = '#14b8a6'
-              e.currentTarget.style.transform = 'scale(1.05)'
+              e.currentTarget.style.background = '#50E3C2'
+              e.currentTarget.style.color = '#1A1F36'
             }
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = '#2a2a2a'
+            e.currentTarget.style.background = '#2979FF'
+            e.currentTarget.style.color = '#FFFFFF'
+          }}
+          onMouseDown={(e) => {
+            if (!loading) e.currentTarget.style.transform = 'scale(0.98)'
+          }}
+          onMouseUp={(e) => {
             e.currentTarget.style.transform = 'scale(1)'
           }}
         >
