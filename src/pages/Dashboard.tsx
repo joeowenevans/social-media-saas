@@ -89,10 +89,10 @@ export function Dashboard() {
 
   if (brandLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#1A1F36', backgroundImage: 'radial-gradient(circle, rgba(80, 227, 194, 0.08) 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
         <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 spinner border-primary-500"></div>
-          <p className="text-sm" style={{ color: '#e5e5e5' }}>Loading your dashboard...</p>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#50E3C2]"></div>
+          <p className="text-sm" style={{ color: 'rgba(242, 244, 248, 0.6)' }}>Loading your dashboard...</p>
         </div>
       </div>
     )
@@ -100,16 +100,16 @@ export function Dashboard() {
 
   if (!brand) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}>
-        <div className="max-w-md w-full bg-[#1a1a1a] rounded-xl text-center" style={{ borderRadius: '12px', padding: '32px' }}>
-          <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 mb-6">
-            <Sparkles className="w-8 h-8 text-white" />
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#1A1F36', backgroundImage: 'radial-gradient(circle, rgba(80, 227, 194, 0.08) 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
+        <div className="max-w-md w-full text-center" style={{ background: '#242A45', borderRadius: '16px', padding: '40px', border: '1px solid rgba(80, 227, 194, 0.2)', boxShadow: '0 0 40px rgba(80, 227, 194, 0.1)' }}>
+          <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-xl mb-6" style={{ background: 'rgba(80, 227, 194, 0.1)' }}>
+            <Sparkles className="w-8 h-8" style={{ color: '#50E3C2' }} />
           </div>
-          <h2 className="text-2xl font-semibold mb-2 text-white">Welcome to SocialAI!</h2>
-          <p className="text-[#a1a1aa] mb-6">
+          <h2 className="text-2xl font-semibold mb-2" style={{ color: '#F2F4F8' }}>Welcome to SocialAI!</h2>
+          <p style={{ color: 'rgba(242, 244, 248, 0.6)', marginBottom: '24px' }}>
             Let's set up your brand profile to get started with AI-powered social media management.
           </p>
-          <button onClick={() => navigate('/settings')} className="bg-primary-500 hover:bg-primary-600 text-white font-medium px-6 py-3 rounded-lg w-full transition-colors">
+          <button onClick={() => navigate('/settings')} style={{ background: '#2979FF', color: '#FFFFFF', fontWeight: 600, padding: '12px 24px', borderRadius: '8px', width: '100%', border: 'none', cursor: 'pointer', transition: 'all 0.2s ease' }}>
             Create Brand Profile
           </button>
         </div>
@@ -122,9 +122,9 @@ export function Dashboard() {
   const draftPosts = posts.filter(p => p.status === 'draft')
 
   const stats = [
-    { label: 'Scheduled', value: scheduledPosts.length, icon: Clock, filter: 'scheduled', color: '#14b8a6' },
-    { label: 'Posted', value: postedPosts.length, icon: CheckCircle2, filter: 'posted', color: '#14b8a6' },
-    { label: 'Drafts', value: draftPosts.length, icon: Edit3, filter: 'draft', color: '#14b8a6' },
+    { label: 'Scheduled', value: scheduledPosts.length, icon: Clock, filter: 'scheduled', color: '#50E3C2' },
+    { label: 'Posted', value: postedPosts.length, icon: CheckCircle2, filter: 'posted', color: '#50E3C2' },
+    { label: 'Drafts', value: draftPosts.length, icon: Edit3, filter: 'draft', color: '#50E3C2' },
   ]
 
   // Calendar generation for month view
@@ -597,17 +597,17 @@ export function Dashboard() {
 
           {postsLoading ? (
             <div className="flex justify-center py-12">
-              <div className="w-8 h-8 spinner border-primary-500"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#50E3C2]"></div>
             </div>
           ) : recentPosts.length === 0 ? (
             <div className="text-center py-12">
-              <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-xl bg-[#222] mb-4">
-                <FileText className="w-8 h-8 text-[#a1a1aa]" />
+              <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-xl mb-4" style={{ background: 'rgba(80, 227, 194, 0.1)' }}>
+                <FileText className="w-8 h-8" style={{ color: '#50E3C2' }} />
               </div>
-              <p className="text-[#a1a1aa] mb-4">
+              <p style={{ color: 'rgba(242, 244, 248, 0.6)', marginBottom: '16px' }}>
                 No posts yet. Start by uploading your first piece of content!
               </p>
-              <button onClick={() => navigate('/upload')} className="bg-primary-500 hover:bg-primary-600 text-white font-medium px-6 py-3 rounded-lg transition-colors">
+              <button onClick={() => navigate('/upload')} style={{ background: '#2979FF', color: '#FFFFFF', fontWeight: 600, padding: '12px 24px', borderRadius: '8px', border: 'none', cursor: 'pointer', transition: 'all 0.2s ease' }}>
                 Upload Content
               </button>
             </div>

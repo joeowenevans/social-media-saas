@@ -41,19 +41,19 @@ export default {
           20: 'rgba(242, 244, 248, 0.2)',
           10: 'rgba(242, 244, 248, 0.1)',
         },
-        // Legacy colors (kept for backwards compatibility)
+        // Primary colors mapped to Dizzy Otter brand
         primary: {
-          50: '#f0fdfa',
-          100: '#ccfbf1',
-          200: '#99f6e4',
-          300: '#5eead4',
-          400: '#2dd4bf',
-          500: '#14b8a6',
-          600: '#0d9488',
-          700: '#0f766e',
-          800: '#115e59',
-          900: '#134e4a',
-          950: '#042f2e',
+          50: 'rgba(80, 227, 194, 0.1)',
+          100: 'rgba(80, 227, 194, 0.2)',
+          200: 'rgba(80, 227, 194, 0.3)',
+          300: 'rgba(80, 227, 194, 0.5)',
+          400: 'rgba(80, 227, 194, 0.8)',
+          500: '#50E3C2',  // Highlight Teal
+          600: '#3dd4b0',  // Darker teal for hover
+          700: '#2bc5a0',
+          800: '#1ab390',
+          900: '#0a9f80',
+          950: '#008870',
         },
         charcoal: {
           50: '#fafafa',

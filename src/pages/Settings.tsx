@@ -269,7 +269,7 @@ export function Settings() {
                   width: '100%',
                   padding: '12px 16px',
                   background: 'rgba(26, 31, 54, 0.8)',
-                  border: deleteError ? '1px solid #ef4444' : '1px solid rgba(80, 227, 194, 0.3)',
+                  border: deleteError ? '1px solid #FF6B6B' : '1px solid rgba(80, 227, 194, 0.3)',
                   borderRadius: '8px',
                   color: '#F2F4F8',
                   fontSize: '14px',
