@@ -6,7 +6,7 @@ import { usePosts } from '../hooks/usePosts'
 import { useUpload } from '../contexts/UploadContext'
 import { AppLayout } from '../components/layout/AppLayout'
 import { useDropzone } from 'react-dropzone'
-import { Upload as UploadIcon, Wand2, Sparkles, Image as ImageIcon, Video, X, Send, Clock, ChevronLeft, ChevronRight, Zap, AlertCircle } from 'lucide-react'
+import { Upload as UploadIcon, Wand2, Sparkles, Image as ImageIcon, Video, Send, Clock, ChevronLeft, ChevronRight, Zap, AlertCircle } from 'lucide-react'
 import type { Media } from '../types'
 import toast from 'react-hot-toast'
 import { supabase } from '../lib/supabase'
@@ -637,35 +637,37 @@ export function Upload() {
             <div style={{ position: 'relative', background: '#242A45', padding: '24px', borderRadius: '12px', border: '1px solid rgba(80, 227, 194, 0.2)' }}>
               <button
                 onClick={clearPreview}
+                aria-label="Remove file"
                 style={{
                   position: 'absolute',
-                  top: '-12px',
-                  right: '-12px',
-                  width: '28px',
-                  height: '28px',
+                  top: '8px',
+                  right: '8px',
+                  width: '32px',
+                  height: '32px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  background: '#242A45',
-                  border: '2px solid rgba(80, 227, 194, 0.3)',
+                  background: 'rgba(255, 107, 107, 0.8)',
+                  border: 'none',
                   borderRadius: '50%',
                   cursor: 'pointer',
                   zIndex: 10,
                   transition: 'all 0.2s ease',
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+                  color: '#FFFFFF',
+                  fontSize: '20px',
+                  fontWeight: 'bold',
+                  lineHeight: 1
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = '#FF6B6B'
-                  e.currentTarget.style.borderColor = '#FF6B6B'
                   e.currentTarget.style.transform = 'scale(1.1)'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = '#242A45'
-                  e.currentTarget.style.borderColor = 'rgba(80, 227, 194, 0.3)'
+                  e.currentTarget.style.background = 'rgba(255, 107, 107, 0.8)'
                   e.currentTarget.style.transform = 'scale(1)'
                 }}
               >
-                <X style={{ width: '16px', height: '16px', color: '#F2F4F8' }} />
+                ×
               </button>
               {fileType === 'video' ? (
                 <video
