@@ -527,20 +527,20 @@ export function Schedule() {
           {/* Status Filter - Left */}
           <div className="status-filter" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             {[
-              { id: 'all', label: 'All', color: '#2979FF' },
-              { id: 'scheduled', label: 'Scheduled', color: '#2979FF' },
-              { id: 'posted', label: 'Posted', color: '#50E3C2' },
-              { id: 'draft', label: 'Drafts', color: '#2979FF' }
+              { id: 'all', label: 'All' },
+              { id: 'scheduled', label: 'Scheduled' },
+              { id: 'posted', label: 'Posted' },
+              { id: 'draft', label: 'Drafts' }
             ].map(status => (
               <button
                 key={status.id}
                 onClick={() => setSelectedStatus(status.id as any)}
                 style={{
-                  background: selectedStatus === status.id ? status.color : '#242A45',
-                  border: `1px solid ${selectedStatus === status.id ? status.color : 'rgba(80, 227, 194, 0.3)'}`,
+                  background: selectedStatus === status.id ? '#50E3C2' : '#242A45',
+                  border: `1px solid ${selectedStatus === status.id ? '#50E3C2' : 'rgba(80, 227, 194, 0.3)'}`,
                   borderRadius: '20px',
                   padding: '10px 24px',
-                  color: selectedStatus === status.id ? (status.id === 'posted' ? '#1A1F36' : '#FFFFFF') : 'rgba(242, 244, 248, 0.7)',
+                  color: selectedStatus === status.id ? '#1A1F36' : 'rgba(242, 244, 248, 0.7)',
                   fontSize: '14px',
                   fontWeight: 600,
                   cursor: 'pointer',
