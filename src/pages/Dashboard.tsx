@@ -160,7 +160,8 @@ export function Dashboard() {
       <style>{`
         @media (max-width: 639px) {
           .dashboard-container { padding: 24px 16px !important; max-width: 100vw !important; overflow-x: hidden !important; }
-          .stats-grid { grid-template-columns: 1fr !important; }
+          .dashboard-welcome { font-size: 2rem !important; }
+          .stats-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
           .posts-gallery { display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; }
           .posts-gallery > div { width: 100% !important; margin: 0 !important; }
           .calendar-section { max-width: 100% !important; overflow: hidden !important; }
@@ -180,18 +181,30 @@ export function Dashboard() {
           .calendar-post-info { display: none !important; }
           .calendar-more { font-size: 9px !important; }
         }
+        @media (min-width: 640px) and (max-width: 1023px) {
+          .dashboard-welcome { font-size: 3rem !important; }
+        }
       `}</style>
       <div className="dashboard-container" style={{ padding: '48px 32px' }}>
         {/* Welcome Title */}
-        <h1 style={{
-          color: '#ffffff',
-          fontSize: '32px',
-          fontWeight: 700,
-          textAlign: 'center',
-          marginBottom: '64px'
-        }}>
-          Welcome back, {firstName}!
-        </h1>
+        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+          <h1 className="dashboard-welcome" style={{
+            color: '#50E3C2',
+            fontSize: '4.5rem',
+            fontWeight: 700,
+            marginBottom: '16px',
+            textShadow: '0 0 20px rgba(80, 227, 194, 0.6), 0 0 40px rgba(80, 227, 194, 0.4), 0 0 60px rgba(80, 227, 194, 0.2)'
+          }}>
+            Welcome back, {firstName}!
+          </h1>
+          <p style={{
+            color: 'rgba(242, 244, 248, 0.7)',
+            fontSize: '18px',
+            margin: 0
+          }}>
+            {format(new Date(), 'EEEE, MMMM d, yyyy')}
+          </p>
+        </div>
 
         {/* AI Caption Generation Section */}
         <div style={{
@@ -253,7 +266,7 @@ export function Dashboard() {
         <div className="stats-grid" style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '16px',
+          gap: '24px',
           marginBottom: '64px'
         }}>
           {stats.map((stat) => (
@@ -387,7 +400,7 @@ export function Dashboard() {
                   transition: 'all 0.2s ease'
                 }}
               >
-                <ChevronLeft style={{ width: '20px', height: '20px', color: '#F2F4F8' }} />
+                <ChevronLeft style={{ width: '20px', height: '20px', color: '#50E3C2' }} />
               </button>
 
               <h3 style={{ color: '#F2F4F8', fontSize: '18px', fontWeight: 600 }}>
@@ -414,7 +427,7 @@ export function Dashboard() {
                   transition: 'all 0.2s ease'
                 }}
               >
-                <ChevronRight style={{ width: '20px', height: '20px', color: '#F2F4F8' }} />
+                <ChevronRight style={{ width: '20px', height: '20px', color: '#50E3C2' }} />
               </button>
             </div>
 
@@ -423,7 +436,7 @@ export function Dashboard() {
               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
                 <div key={day} style={{
                   textAlign: 'center',
-                  color: 'rgba(242, 244, 248, 0.6)',
+                  color: 'rgba(242, 244, 248, 0.7)',
                   fontSize: '12px',
                   fontWeight: 600,
                   padding: '8px 0'
@@ -447,8 +460,8 @@ export function Dashboard() {
                     key={dateKey}
                     className="calendar-day"
                     style={{
-                      background: isTodayDate ? 'rgba(80, 227, 194, 0.1)' : 'rgba(26, 31, 54, 0.8)',
-                      border: isTodayDate ? '2px solid #50E3C2' : '1px solid rgba(80, 227, 194, 0.15)',
+                      background: isTodayDate ? '#2979FF' : 'rgba(26, 31, 54, 0.8)',
+                      border: isTodayDate ? '2px solid #2979FF' : '1px solid rgba(80, 227, 194, 0.15)',
                       borderRadius: '8px',
                       padding: '12px',
                       minHeight: calendarView === 'week' ? '150px' : '100px',
@@ -456,7 +469,7 @@ export function Dashboard() {
                     }}
                   >
                     <div className="calendar-day-date" style={{
-                      color: isTodayDate ? '#50E3C2' : 'rgba(242, 244, 248, 0.6)',
+                      color: isTodayDate ? '#FFFFFF' : 'rgba(242, 244, 248, 0.6)',
                       fontSize: '12px',
                       marginBottom: '8px',
                       fontWeight: isTodayDate ? 600 : 400
@@ -550,14 +563,37 @@ export function Dashboard() {
 
         {/* Recent Posts Gallery */}
         <div style={{ marginBottom: '64px' }}>
-          <h2 style={{
-            color: '#50E3C2',
-            fontSize: '24px',
-            fontWeight: 600,
-            marginBottom: '24px'
-          }}>
-            Recent Posts
-          </h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <h2 style={{
+              color: '#F2F4F8',
+              fontSize: '24px',
+              fontWeight: 600,
+              margin: 0
+            }}>
+              Recent Posts
+            </h2>
+            <button
+              onClick={() => navigate('/schedule')}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#50E3C2',
+                fontSize: '15px',
+                fontWeight: 500,
+                cursor: 'pointer',
+                padding: 0,
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.textDecoration = 'underline'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.textDecoration = 'none'
+              }}
+            >
+              View all
+            </button>
+          </div>
 
           {postsLoading ? (
             <div className="flex justify-center py-12">
