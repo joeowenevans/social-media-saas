@@ -462,6 +462,7 @@ export function Dashboard() {
                       fontWeight: isTodayDate ? 600 : 400
                     }}>
                       {calendarView === 'week' ? format(date, 'MMM d') : format(date, 'd')}
+                    </div>
 
                     {dayPosts.slice(0, maxPosts).map((post: any) => (
                       <div
