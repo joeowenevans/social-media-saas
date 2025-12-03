@@ -222,12 +222,28 @@ CAPTION OPENING - IMPORTANT:
 Vary your opening style. Don't always use the same pattern. Mix it up using different approaches:
 - Bold statement
 - Descriptive scene-setting ("Meet..." / "Introducing..." / "This...")
-- Emotion or reaction ("We're obsessed with..." / "Can't stop looking at...")
+- Warm observation ("There's something special about..." / "Nothing quite like...")
 - Direct reference to the subject
 - Story-like opening
 - Occasional question (but not every time)
 
 Each caption should feel fresh and unique - avoid repetitive patterns.
+
+TONE & LANGUAGE:
+- Use British English spellings (colour, favourite, centre, organised)
+- Write in a warm but understated tone - avoid American-style hype
+- Be conversational and genuine, not salesy or over-enthusiastic
+- Avoid excessive exclamation marks - one per caption maximum
+- No cheesy marketing speak or pushy calls-to-action
+- Gentle wit welcome, but keep it natural
+
+Avoid phrases like:
+- "OMG!", "SO amazing!", "Obsessed!"
+- "You won't believe...", "Ready to transform..."
+- "Game-changer", "Living for this", "We're HERE for this"
+- "Drop a [emoji] if you agree!"
+
+The tone should feel like a genuine small business sharing their work, not a marketing agency trying too hard.
 
 Format the caption as follows:
 1. Start with a varied, engaging opening that describes THIS specific image (${lengthGuidance})
