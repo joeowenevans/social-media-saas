@@ -639,34 +639,33 @@ export function Upload() {
                 onClick={clearPreview}
                 style={{
                   position: 'absolute',
-                  top: '12px',
-                  right: '12px',
-                  width: '32px',
-                  height: '32px',
+                  top: '-12px',
+                  right: '-12px',
+                  width: '28px',
+                  height: '28px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  background: 'rgba(26, 31, 54, 0.9)',
-                  border: '1px solid rgba(255, 107, 107, 0.5)',
+                  background: '#242A45',
+                  border: '2px solid rgba(80, 227, 194, 0.3)',
                   borderRadius: '50%',
                   cursor: 'pointer',
                   zIndex: 10,
-                  transition: 'all 0.2s ease'
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = '#FF6B6B'
+                  e.currentTarget.style.borderColor = '#FF6B6B'
                   e.currentTarget.style.transform = 'scale(1.1)'
-                  const icon = e.currentTarget.querySelector('svg') as SVGElement
-                  if (icon) icon.style.color = '#FFFFFF'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'rgba(26, 31, 54, 0.9)'
+                  e.currentTarget.style.background = '#242A45'
+                  e.currentTarget.style.borderColor = 'rgba(80, 227, 194, 0.3)'
                   e.currentTarget.style.transform = 'scale(1)'
-                  const icon = e.currentTarget.querySelector('svg') as SVGElement
-                  if (icon) icon.style.color = '#FF6B6B'
                 }}
               >
-                <X style={{ width: '18px', height: '18px', color: '#FF6B6B', transition: 'color 0.2s ease' }} />
+                <X style={{ width: '16px', height: '16px', color: '#F2F4F8' }} />
               </button>
               {fileType === 'video' ? (
                 <video
