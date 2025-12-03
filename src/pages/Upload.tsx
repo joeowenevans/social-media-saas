@@ -76,11 +76,11 @@ export function Upload() {
 
   // Get platform color
   const getPlatformColor = (platforms: string[]) => {
-    if (!platforms || platforms.length === 0) return '#14b8a6'
+    if (!platforms || platforms.length === 0) return '#50E3C2'
     if (platforms.includes('instagram')) return '#E1306C'
     if (platforms.includes('facebook')) return '#1877F2'
     if (platforms.includes('pinterest')) return '#E60023'
-    return '#14b8a6'
+    return '#50E3C2'
   }
 
   // Format the selected date/time for display
@@ -238,8 +238,8 @@ export function Upload() {
       <AppLayout>
         <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 200px)' }}>
           <div className="flex flex-col items-center gap-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#14b8a6]"></div>
-            <p style={{ color: '#a1a1aa', fontSize: '14px' }}>Loading...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#50E3C2]"></div>
+            <p style={{ color: 'rgba(242, 244, 248, 0.6)', fontSize: '14px' }}>Loading...</p>
           </div>
         </div>
       </AppLayout>
@@ -250,7 +250,7 @@ export function Upload() {
     return (
       <AppLayout>
         <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 200px)' }}>
-          <div style={{ maxWidth: '500px', background: '#1a1a1a', borderRadius: '12px', padding: '48px', textAlign: 'center' }}>
+          <div style={{ maxWidth: '500px', background: '#242A45', borderRadius: '12px', padding: '48px', textAlign: 'center', border: '1px solid rgba(80, 227, 194, 0.2)' }}>
             <div style={{
               width: '64px',
               height: '64px',
@@ -259,12 +259,12 @@ export function Upload() {
               alignItems: 'center',
               justifyContent: 'center',
               borderRadius: '12px',
-              background: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)'
+              background: 'linear-gradient(135deg, #50E3C2 0%, #3dd4b0 100%)'
             }}>
-              <Sparkles style={{ width: '32px', height: '32px', color: 'white' }} />
+              <Sparkles style={{ width: '32px', height: '32px', color: '#1A1F36' }} />
             </div>
-            <h2 style={{ color: 'white', fontSize: '24px', fontWeight: 600, marginBottom: '16px' }}>Brand Profile Required</h2>
-            <p style={{ color: '#888', fontSize: '16px', marginBottom: '32px' }}>
+            <h2 style={{ color: '#F2F4F8', fontSize: '24px', fontWeight: 600, marginBottom: '16px' }}>Brand Profile Required</h2>
+            <p style={{ color: 'rgba(242, 244, 248, 0.6)', fontSize: '16px', marginBottom: '32px' }}>
               Please create a brand profile first to use this feature.
             </p>
             <button
@@ -272,8 +272,8 @@ export function Upload() {
               style={{
                 width: '100%',
                 padding: '12px 24px',
-                background: '#14b8a6',
-                color: 'white',
+                background: '#50E3C2',
+                color: '#1A1F36',
                 fontSize: '16px',
                 fontWeight: 600,
                 border: 'none',
@@ -519,16 +519,16 @@ export function Upload() {
         {/* Page Title with Teal Text Glow */}
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
           <h1 style={{
-            color: '#14b8a6',
+            color: '#50E3C2',
             fontSize: '32px',
             fontWeight: 700,
             marginBottom: '12px',
-            textShadow: '0 0 20px rgba(20, 184, 166, 0.6), 0 0 40px rgba(20, 184, 166, 0.4), 0 0 60px rgba(20, 184, 166, 0.2)'
+            textShadow: '0 0 20px rgba(80, 227, 194, 0.6), 0 0 40px rgba(80, 227, 194, 0.4), 0 0 60px rgba(80, 227, 194, 0.2)'
           }}>
             Upload Content
           </h1>
           <p style={{
-            color: '#888',
+            color: 'rgba(242, 244, 248, 0.6)',
             fontSize: '16px',
             margin: 0
           }}>
@@ -539,7 +539,7 @@ export function Upload() {
         {/* Upload Media Section */}
         <div style={{ marginBottom: '64px' }}>
           <h2 style={{
-            color: 'white',
+            color: '#F2F4F8',
             fontSize: '18px',
             fontWeight: 600,
             marginBottom: '24px'
@@ -551,10 +551,10 @@ export function Upload() {
             <div
               {...getRootProps()}
               style={{
-                background: '#1a1a1a',
+                background: '#242A45',
                 padding: '48px',
                 borderRadius: '12px',
-                border: isDragActive ? '2px dashed #14b8a6' : '2px dashed #27272a',
+                border: isDragActive ? '2px dashed #50E3C2' : '2px dashed rgba(80, 227, 194, 0.3)',
                 textAlign: 'center',
                 cursor: uploading ? 'not-allowed' : 'pointer',
                 transition: 'all 0.2s ease',
@@ -566,23 +566,23 @@ export function Upload() {
               {uploading ? (
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#14b8a6]"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#50E3C2]"></div>
                   </div>
-                  <p style={{ color: '#888', fontSize: '16px', marginBottom: '16px' }}>
+                  <p style={{ color: 'rgba(242, 244, 248, 0.6)', fontSize: '16px', marginBottom: '16px' }}>
                     Uploading... {uploadProgress}%
                   </p>
                   <div style={{
                     maxWidth: '300px',
                     margin: '0 auto',
                     height: '4px',
-                    background: '#27272a',
+                    background: 'rgba(80, 227, 194, 0.2)',
                     borderRadius: '2px',
                     overflow: 'hidden'
                   }}>
                     <div
                       style={{
                         height: '100%',
-                        background: '#14b8a6',
+                        background: '#50E3C2',
                         width: `${uploadProgress}%`,
                         transition: 'width 0.3s ease'
                       }}
@@ -592,17 +592,17 @@ export function Upload() {
               ) : (
                 <>
                   <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginBottom: '24px' }}>
-                    <ImageIcon style={{ width: '48px', height: '48px', color: '#14b8a6' }} />
-                    <Video style={{ width: '48px', height: '48px', color: '#14b8a6' }} />
+                    <ImageIcon style={{ width: '48px', height: '48px', color: '#50E3C2' }} />
+                    <Video style={{ width: '48px', height: '48px', color: '#50E3C2' }} />
                   </div>
-                  <UploadIcon style={{ width: '32px', height: '32px', color: '#888', margin: '0 auto 16px' }} />
-                  <p style={{ color: 'white', fontSize: '18px', fontWeight: 500, marginBottom: '8px' }}>
+                  <UploadIcon style={{ width: '32px', height: '32px', color: 'rgba(242, 244, 248, 0.5)', margin: '0 auto 16px' }} />
+                  <p style={{ color: '#F2F4F8', fontSize: '18px', fontWeight: 500, marginBottom: '8px' }}>
                     {isDragActive ? 'Drop your file here...' : 'Drop your image or video here'}
                   </p>
-                  <p style={{ color: '#888', fontSize: '14px', marginBottom: '24px' }}>
+                  <p style={{ color: 'rgba(242, 244, 248, 0.6)', fontSize: '14px', marginBottom: '24px' }}>
                     or click to browse
                   </p>
-                  <p style={{ color: '#666', fontSize: '12px' }}>
+                  <p style={{ color: 'rgba(242, 244, 248, 0.4)', fontSize: '12px' }}>
                     Supports: JPG, PNG, GIF, MP4, MOV
                     <br />
                     Max size: 10MB for images, 100MB for videos
@@ -611,7 +611,7 @@ export function Upload() {
               )}
             </div>
           ) : (
-            <div style={{ position: 'relative', background: '#1a1a1a', padding: '24px', borderRadius: '12px' }}>
+            <div style={{ position: 'relative', background: '#242A45', padding: '24px', borderRadius: '12px', border: '1px solid rgba(80, 227, 194, 0.2)' }}>
               <button
                 onClick={clearPreview}
                 style={{
@@ -632,7 +632,7 @@ export function Upload() {
                 onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
                 onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
               >
-                <X style={{ width: '32px', height: '32px', color: '#14b8a6' }} />
+                <X style={{ width: '32px', height: '32px', color: '#50E3C2' }} />
               </button>
               {fileType === 'video' ? (
                 <video
@@ -666,7 +666,7 @@ export function Upload() {
             <div style={{ marginBottom: '64px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
                 <h2 style={{
-                  color: 'white',
+                  color: '#F2F4F8',
                   fontSize: '18px',
                   fontWeight: 600,
                   margin: 0
@@ -681,10 +681,10 @@ export function Upload() {
                     alignItems: 'center',
                     gap: '8px',
                     padding: '8px 16px',
-                    background: '#1a1a1a',
-                    border: '1px solid #27272a',
+                    background: '#242A45',
+                    border: '1px solid rgba(80, 227, 194, 0.3)',
                     borderRadius: '8px',
-                    color: '#14b8a6',
+                    color: '#50E3C2',
                     fontSize: '14px',
                     fontWeight: 500,
                     cursor: generating ? 'not-allowed' : 'pointer',
@@ -698,10 +698,11 @@ export function Upload() {
 
               {generating ? (
                 <div style={{
-                  background: '#1a1a1a',
+                  background: '#242A45',
                   padding: '48px',
                   borderRadius: '12px',
-                  textAlign: 'center'
+                  textAlign: 'center',
+                  border: '1px solid rgba(80, 227, 194, 0.2)'
                 }}>
                   <div style={{
                     width: '64px',
@@ -711,14 +712,14 @@ export function Upload() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     borderRadius: '12px',
-                    background: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)'
+                    background: 'linear-gradient(135deg, #50E3C2 0%, #3dd4b0 100%)'
                   }}>
-                    <Sparkles style={{ width: '32px', height: '32px', color: 'white' }} className="animate-pulse" />
+                    <Sparkles style={{ width: '32px', height: '32px', color: '#1A1F36' }} className="animate-pulse" />
                   </div>
-                  <p style={{ color: 'white', fontSize: '16px', fontWeight: 500, marginBottom: '8px' }}>
+                  <p style={{ color: '#F2F4F8', fontSize: '16px', fontWeight: 500, marginBottom: '8px' }}>
                     AI is crafting your perfect caption...
                   </p>
-                  <p style={{ color: '#888', fontSize: '14px' }}>
+                  <p style={{ color: 'rgba(242, 244, 248, 0.6)', fontSize: '14px' }}>
                     This may take a few seconds
                   </p>
                 </div>
@@ -731,10 +732,10 @@ export function Upload() {
                     width: '100%',
                     height: '200px',
                     padding: '16px',
-                    background: '#1a1a1a',
-                    border: '1px solid #27272a',
+                    background: '#242A45',
+                    border: '1px solid rgba(80, 227, 194, 0.3)',
                     borderRadius: '12px',
-                    color: '#e5e5e5',
+                    color: '#F2F4F8',
                     fontSize: '15px',
                     lineHeight: '1.6',
                     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
@@ -749,7 +750,7 @@ export function Upload() {
             {!generating && (
               <div style={{ marginBottom: '64px' }}>
                 <h2 style={{
-                  color: 'white',
+                  color: '#F2F4F8',
                   fontSize: '18px',
                   fontWeight: 600,
                   marginBottom: '24px'
@@ -775,16 +776,16 @@ export function Upload() {
                           alignItems: 'center',
                           justifyContent: 'center',
                           padding: '16px',
-                          background: isSelected ? 'rgba(20, 184, 166, 0.1)' : 'transparent',
-                          border: isSelected ? '2px solid #14b8a6' : '2px solid #27272a',
+                          background: isSelected ? 'rgba(80, 227, 194, 0.1)' : 'transparent',
+                          border: isSelected ? '2px solid #50E3C2' : '2px solid rgba(80, 227, 194, 0.3)',
                           borderRadius: '12px',
                           cursor: 'pointer',
                           transition: 'all 0.2s ease',
-                          boxShadow: isSelected ? '0 0 20px rgba(20, 184, 166, 0.3)' : 'none'
+                          boxShadow: isSelected ? '0 0 20px rgba(80, 227, 194, 0.3)' : 'none'
                         }}
                       >
                         <span style={{
-                          color: isSelected ? '#14b8a6' : 'white',
+                          color: isSelected ? '#50E3C2' : '#F2F4F8',
                           fontSize: '16px',
                           fontWeight: 500
                         }}>
@@ -801,7 +802,7 @@ export function Upload() {
             {!generating && (
               <div style={{ marginBottom: '64px' }}>
                 <h2 style={{
-                  color: 'white',
+                  color: '#F2F4F8',
                   fontSize: '18px',
                   fontWeight: 600,
                   marginBottom: '24px'
@@ -820,16 +821,16 @@ export function Upload() {
                       justifyContent: 'center',
                       gap: '12px',
                       padding: '16px',
-                      background: postType === 'post_now' ? 'rgba(20, 184, 166, 0.1)' : 'transparent',
-                      border: postType === 'post_now' ? '2px solid #14b8a6' : '2px solid #27272a',
+                      background: postType === 'post_now' ? 'rgba(80, 227, 194, 0.1)' : 'transparent',
+                      border: postType === 'post_now' ? '2px solid #50E3C2' : '2px solid rgba(80, 227, 194, 0.3)',
                       borderRadius: '12px',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
-                      boxShadow: postType === 'post_now' ? '0 0 20px rgba(20, 184, 166, 0.3)' : 'none'
+                      boxShadow: postType === 'post_now' ? '0 0 20px rgba(80, 227, 194, 0.3)' : 'none'
                     }}
                   >
-                    <Zap style={{ width: '20px', height: '20px', color: '#14b8a6' }} />
-                    <span style={{ color: postType === 'post_now' ? '#14b8a6' : 'white', fontSize: '16px', fontWeight: 500 }}>
+                    <Zap style={{ width: '20px', height: '20px', color: '#50E3C2' }} />
+                    <span style={{ color: postType === 'post_now' ? '#50E3C2' : '#F2F4F8', fontSize: '16px', fontWeight: 500 }}>
                       Post Now
                     </span>
                   </button>
@@ -844,16 +845,16 @@ export function Upload() {
                       justifyContent: 'center',
                       gap: '12px',
                       padding: '16px',
-                      background: postType === 'draft' ? 'rgba(20, 184, 166, 0.1)' : 'transparent',
-                      border: postType === 'draft' ? '2px solid #14b8a6' : '2px solid #27272a',
+                      background: postType === 'draft' ? 'rgba(80, 227, 194, 0.1)' : 'transparent',
+                      border: postType === 'draft' ? '2px solid #50E3C2' : '2px solid rgba(80, 227, 194, 0.3)',
                       borderRadius: '12px',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
-                      boxShadow: postType === 'draft' ? '0 0 20px rgba(20, 184, 166, 0.3)' : 'none'
+                      boxShadow: postType === 'draft' ? '0 0 20px rgba(80, 227, 194, 0.3)' : 'none'
                     }}
                   >
-                    <Send style={{ width: '20px', height: '20px', color: '#14b8a6' }} />
-                    <span style={{ color: postType === 'draft' ? '#14b8a6' : 'white', fontSize: '16px', fontWeight: 500 }}>
+                    <Send style={{ width: '20px', height: '20px', color: '#50E3C2' }} />
+                    <span style={{ color: postType === 'draft' ? '#50E3C2' : '#F2F4F8', fontSize: '16px', fontWeight: 500 }}>
                       Save as Draft
                     </span>
                   </button>
@@ -868,16 +869,16 @@ export function Upload() {
                       justifyContent: 'center',
                       gap: '12px',
                       padding: '16px',
-                      background: postType === 'scheduled' ? 'rgba(20, 184, 166, 0.1)' : 'transparent',
-                      border: postType === 'scheduled' ? '2px solid #14b8a6' : '2px solid #27272a',
+                      background: postType === 'scheduled' ? 'rgba(80, 227, 194, 0.1)' : 'transparent',
+                      border: postType === 'scheduled' ? '2px solid #50E3C2' : '2px solid rgba(80, 227, 194, 0.3)',
                       borderRadius: '12px',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
-                      boxShadow: postType === 'scheduled' ? '0 0 20px rgba(20, 184, 166, 0.3)' : 'none'
+                      boxShadow: postType === 'scheduled' ? '0 0 20px rgba(80, 227, 194, 0.3)' : 'none'
                     }}
                   >
-                    <Clock style={{ width: '20px', height: '20px', color: '#14b8a6' }} />
-                    <span style={{ color: postType === 'scheduled' ? '#14b8a6' : 'white', fontSize: '16px', fontWeight: 500 }}>
+                    <Clock style={{ width: '20px', height: '20px', color: '#50E3C2' }} />
+                    <span style={{ color: postType === 'scheduled' ? '#50E3C2' : '#F2F4F8', fontSize: '16px', fontWeight: 500 }}>
                       Schedule for Later
                     </span>
                   </button>
@@ -888,14 +889,14 @@ export function Upload() {
                     {/* Selected Date/Time Display */}
                     {formattedDateTime && (
                       <div style={{
-                        background: 'rgba(20, 184, 166, 0.1)',
-                        border: '1px solid #14b8a6',
+                        background: 'rgba(80, 227, 194, 0.1)',
+                        border: '1px solid #50E3C2',
                         borderRadius: '12px',
                         padding: '16px',
                         marginBottom: '24px',
                         textAlign: 'center'
                       }}>
-                        <p style={{ color: '#f3f4f6', fontSize: '18px', fontWeight: 600, margin: 0 }}>
+                        <p style={{ color: '#F2F4F8', fontSize: '18px', fontWeight: 600, margin: 0 }}>
                           {formattedDateTime}
                         </p>
                       </div>
@@ -903,7 +904,7 @@ export function Upload() {
 
                     {/* Time Picker Dropdown */}
                     <div style={{ marginBottom: '24px' }}>
-                      <label style={{ color: '#888', fontSize: '14px', fontWeight: 500, display: 'block', marginBottom: '8px' }}>
+                      <label style={{ color: 'rgba(242, 244, 248, 0.6)', fontSize: '14px', fontWeight: 500, display: 'block', marginBottom: '8px' }}>
                         Select Time
                       </label>
                       <select
@@ -912,21 +913,21 @@ export function Upload() {
                         style={{
                           width: '100%',
                           padding: '12px 16px',
-                          background: '#1a1a1a',
-                          border: '1px solid #374151',
+                          background: '#242A45',
+                          border: '1px solid rgba(80, 227, 194, 0.3)',
                           borderRadius: '8px',
-                          color: 'white',
+                          color: '#F2F4F8',
                           fontSize: '14px',
                           outline: 'none',
                           cursor: 'pointer',
                           appearance: 'none',
-                          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2314b8a6' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`,
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2350E3C2' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`,
                           backgroundRepeat: 'no-repeat',
                           backgroundPosition: 'right 16px center'
                         }}
                       >
                         {timeOptions.map((option) => (
-                          <option key={option.value} value={option.value} style={{ background: '#1a1a1a', color: 'white' }}>
+                          <option key={option.value} value={option.value} style={{ background: '#242A45', color: '#F2F4F8' }}>
                             {option.label}
                           </option>
                         ))}
@@ -934,15 +935,15 @@ export function Upload() {
                     </div>
 
                     {/* Calendar View */}
-                    <div className="upload-calendar" style={{ background: '#1a1a1a', padding: '24px', borderRadius: '12px' }}>
+                    <div className="upload-calendar" style={{ background: '#242A45', padding: '24px', borderRadius: '12px', border: '1px solid rgba(80, 227, 194, 0.2)' }}>
                       {/* Calendar Header */}
                       <div className="upload-calendar-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                         <button
                           type="button"
                           onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
                           style={{
-                            background: '#0d0d0d',
-                            border: '1px solid #27272a',
+                            background: '#1A1F36',
+                            border: '1px solid rgba(80, 227, 194, 0.3)',
                             borderRadius: '8px',
                             padding: '8px',
                             cursor: 'pointer',
@@ -951,10 +952,10 @@ export function Upload() {
                             justifyContent: 'center'
                           }}
                         >
-                          <ChevronLeft style={{ width: '20px', height: '20px', color: '#e5e5e5' }} />
+                          <ChevronLeft style={{ width: '20px', height: '20px', color: '#F2F4F8' }} />
                         </button>
 
-                        <h3 style={{ color: 'white', fontSize: '16px', fontWeight: 600, margin: 0 }}>
+                        <h3 style={{ color: '#F2F4F8', fontSize: '16px', fontWeight: 600, margin: 0 }}>
                           {format(currentMonth, 'MMMM yyyy')}
                         </h3>
 
@@ -962,8 +963,8 @@ export function Upload() {
                           type="button"
                           onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
                           style={{
-                            background: '#0d0d0d',
-                            border: '1px solid #27272a',
+                            background: '#1A1F36',
+                            border: '1px solid rgba(80, 227, 194, 0.3)',
                             borderRadius: '8px',
                             padding: '8px',
                             cursor: 'pointer',
@@ -972,7 +973,7 @@ export function Upload() {
                             justifyContent: 'center'
                           }}
                         >
-                          <ChevronRight style={{ width: '20px', height: '20px', color: '#e5e5e5' }} />
+                          <ChevronRight style={{ width: '20px', height: '20px', color: '#F2F4F8' }} />
                         </button>
                       </div>
 
@@ -981,7 +982,7 @@ export function Upload() {
                         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
                           <div key={day} style={{
                             textAlign: 'center',
-                            color: '#888',
+                            color: 'rgba(242, 244, 248, 0.5)',
                             fontSize: '11px',
                             fontWeight: 600,
                             padding: '8px 0'
@@ -1009,8 +1010,8 @@ export function Upload() {
                               onClick={() => !isPast && setSelectedDate(date)}
                               disabled={isPast}
                               style={{
-                                background: isSelected ? '#14b8a6' : '#0d0d0d',
-                                border: isTodayDate && !isSelected ? '2px solid #14b8a6' : '1px solid #27272a',
+                                background: isSelected ? '#50E3C2' : '#1A1F36',
+                                border: isTodayDate && !isSelected ? '2px solid #50E3C2' : '1px solid rgba(80, 227, 194, 0.2)',
                                 borderRadius: '8px',
                                 padding: '8px',
                                 minHeight: '60px',
@@ -1023,7 +1024,7 @@ export function Upload() {
                               }}
                             >
                               <div style={{
-                                color: isSelected ? 'white' : (isTodayDate ? '#14b8a6' : '#888'),
+                                color: isSelected ? '#1A1F36' : (isTodayDate ? '#50E3C2' : 'rgba(242, 244, 248, 0.6)'),
                                 fontSize: '12px',
                                 fontWeight: isSelected || isTodayDate ? 600 : 400,
                                 marginBottom: '4px'
@@ -1046,7 +1047,7 @@ export function Upload() {
                                     />
                                   ))}
                                   {dayPosts.length > 3 && (
-                                    <span style={{ color: '#888', fontSize: '8px' }}>+{dayPosts.length - 3}</span>
+                                    <span style={{ color: 'rgba(242, 244, 248, 0.5)', fontSize: '8px' }}>+{dayPosts.length - 3}</span>
                                   )}
                                 </div>
                               )}
@@ -1059,15 +1060,15 @@ export function Upload() {
                       <div className="upload-legend" style={{ marginTop: '16px', display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#E1306C' }} />
-                          <span style={{ color: '#888', fontSize: '11px' }}>Instagram</span>
+                          <span style={{ color: 'rgba(242, 244, 248, 0.5)', fontSize: '11px' }}>Instagram</span>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#1877F2' }} />
-                          <span style={{ color: '#888', fontSize: '11px' }}>Facebook</span>
+                          <span style={{ color: 'rgba(242, 244, 248, 0.5)', fontSize: '11px' }}>Facebook</span>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#E60023' }} />
-                          <span style={{ color: '#888', fontSize: '11px' }}>Pinterest</span>
+                          <span style={{ color: 'rgba(242, 244, 248, 0.5)', fontSize: '11px' }}>Pinterest</span>
                         </div>
                       </div>
                     </div>
@@ -1084,8 +1085,8 @@ export function Upload() {
                   disabled={saving}
                   style={{
                     padding: '16px 48px',
-                    background: '#14b8a6',
-                    color: 'white',
+                    background: '#50E3C2',
+                    color: '#1A1F36',
                     fontSize: '16px',
                     fontWeight: 600,
                     border: 'none',
@@ -1112,7 +1113,8 @@ export function Upload() {
             left: 0,
             right: 0,
             bottom: 0,
-            background: 'rgba(0, 0, 0, 0.7)',
+            background: 'rgba(26, 31, 54, 0.85)',
+            backdropFilter: 'blur(4px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -1124,11 +1126,11 @@ export function Upload() {
           <div
             style={{
               maxWidth: '450px',
-              background: '#1a1a1a',
-              border: '1px solid #27272a',
+              background: '#1A1F36',
+              border: '1px solid rgba(80, 227, 194, 0.2)',
               borderRadius: '16px',
               padding: '40px',
-              boxShadow: '0 0 60px rgba(0, 0, 0, 0.8)',
+              boxShadow: '0 0 60px rgba(80, 227, 194, 0.15)',
               textAlign: 'center'
             }}
             onClick={(e) => e.stopPropagation()}
@@ -1142,14 +1144,14 @@ export function Upload() {
               alignItems: 'center',
               justifyContent: 'center',
               borderRadius: '50%',
-              background: 'rgba(20, 184, 166, 0.1)'
+              background: 'rgba(80, 227, 194, 0.1)'
             }}>
-              <AlertCircle style={{ width: '28px', height: '28px', color: '#14b8a6' }} />
+              <AlertCircle style={{ width: '28px', height: '28px', color: '#50E3C2' }} />
             </div>
 
             {/* Title */}
             <h2 style={{
-              color: '#ffffff',
+              color: '#F2F4F8',
               fontSize: '24px',
               fontWeight: 700,
               marginBottom: '16px'
@@ -1159,7 +1161,7 @@ export function Upload() {
 
             {/* Message */}
             <p style={{
-              color: '#888',
+              color: 'rgba(242, 244, 248, 0.6)',
               fontSize: '15px',
               lineHeight: 1.6,
               marginBottom: '32px'
@@ -1172,28 +1174,28 @@ export function Upload() {
               <button
                 onClick={() => setShowPostNowConfirm(false)}
                 style={{
-                  background: '#2a2a2a',
-                  color: '#e5e5e5',
+                  background: '#242A45',
+                  color: '#F2F4F8',
                   padding: '12px 32px',
-                  borderRadius: '20px',
+                  borderRadius: '8px',
                   fontWeight: 500,
                   fontSize: '15px',
-                  border: 'none',
+                  border: '1px solid rgba(80, 227, 194, 0.3)',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.background = '#333'}
-                onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#2d3454'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#242A45'}
               >
                 Cancel
               </button>
               <button
                 onClick={confirmPostNow}
                 style={{
-                  background: '#14b8a6',
-                  color: 'white',
+                  background: '#50E3C2',
+                  color: '#1A1F36',
                   padding: '12px 32px',
-                  borderRadius: '20px',
+                  borderRadius: '8px',
                   fontWeight: 600,
                   fontSize: '15px',
                   border: 'none',
@@ -1201,11 +1203,11 @@ export function Upload() {
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#10a896'
+                  e.currentTarget.style.background = '#3dd4b0'
                   e.currentTarget.style.transform = 'scale(1.02)'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = '#14b8a6'
+                  e.currentTarget.style.background = '#50E3C2'
                   e.currentTarget.style.transform = 'scale(1)'
                 }}
               >
