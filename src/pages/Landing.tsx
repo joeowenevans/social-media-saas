@@ -75,9 +75,6 @@ export function Landing() {
           .feature-card { padding: 24px !important; }
           .section-title { font-size: 1.75rem !important; }
           .section-subtitle { font-size: 1rem !important; }
-          .stats-section { padding: 40px 20px !important; }
-          .stats-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
-          .stat-value { font-size: 2.5rem !important; }
           .cta-section { padding: 60px 20px !important; }
           .cta-card { padding: 32px 24px !important; }
           .cta-title { font-size: 1.5rem !important; }
@@ -302,37 +299,6 @@ export function Landing() {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="stats-section" style={{ padding: '60px 24px', background: 'rgba(36, 42, 69, 0.4)' }}>
-        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-          <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '40px', textAlign: 'center' }}>
-            {[
-              { value: '10K+', label: 'Posts Scheduled' },
-              { value: '500+', label: 'Happy Users' },
-              { value: '99.9%', label: 'Uptime' }
-            ].map((stat, i) => (
-              <div key={i}>
-                <div
-                  className="stat-value"
-                  style={{
-                    fontSize: '3.5rem',
-                    fontWeight: 800,
-                    color: '#50E3C2',
-                    marginBottom: '8px',
-                    textShadow: '0 0 30px rgba(80, 227, 194, 0.5)'
-                  }}
-                >
-                  {stat.value}
-                </div>
-                <div style={{ color: 'rgba(242, 244, 248, 0.6)', fontSize: '16px', fontWeight: 500 }}>
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section - Vague about pricing */}
       <section className="cta-section" style={{ padding: '100px 24px', position: 'relative' }}>
         <div style={{ maxWidth: '700px', margin: '0 auto' }}>
@@ -360,7 +326,7 @@ export function Landing() {
               Ready to streamline your social media?
             </h2>
             <p style={{ fontSize: '1.1rem', color: 'rgba(242, 244, 248, 0.6)', marginBottom: '32px', lineHeight: 1.7 }}>
-              Join thousands of creators and businesses managing their social presence with ease.
+              Take control of your social presence and start creating with ease.
             </p>
 
             {/* Features List */}
