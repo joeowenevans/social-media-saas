@@ -639,23 +639,34 @@ export function Upload() {
                 onClick={clearPreview}
                 style={{
                   position: 'absolute',
-                  top: '16px',
-                  right: '16px',
-                  width: '36px',
-                  height: '36px',
+                  top: '12px',
+                  right: '12px',
+                  width: '32px',
+                  height: '32px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  background: 'transparent',
-                  border: 'none',
+                  background: 'rgba(26, 31, 54, 0.9)',
+                  border: '1px solid rgba(255, 107, 107, 0.5)',
+                  borderRadius: '50%',
                   cursor: 'pointer',
                   zIndex: 10,
-                  transition: 'transform 0.2s ease'
+                  transition: 'all 0.2s ease'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#FF6B6B'
+                  e.currentTarget.style.transform = 'scale(1.1)'
+                  const icon = e.currentTarget.querySelector('svg') as SVGElement
+                  if (icon) icon.style.color = '#FFFFFF'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(26, 31, 54, 0.9)'
+                  e.currentTarget.style.transform = 'scale(1)'
+                  const icon = e.currentTarget.querySelector('svg') as SVGElement
+                  if (icon) icon.style.color = '#FF6B6B'
+                }}
               >
-                <X style={{ width: '32px', height: '32px', color: '#FF6B6B' }} />
+                <X style={{ width: '18px', height: '18px', color: '#FF6B6B', transition: 'color 0.2s ease' }} />
               </button>
               {fileType === 'video' ? (
                 <video
