@@ -670,7 +670,8 @@ export function Schedule() {
                   aspectRatio: '1 / 1',
                   overflow: 'hidden',
                   position: 'relative',
-                  background: 'rgba(26, 31, 54, 0.8)'
+                  background: 'rgba(26, 31, 54, 0.8)',
+                  borderRadius: '16px 16px 0 0'
                 }}>
                   {post.media?.media_type === 'video' ? (
                     <video
@@ -678,7 +679,8 @@ export function Schedule() {
                       style={{
                         width: '100%',
                         height: '100%',
-                        objectFit: 'cover'
+                        objectFit: 'cover',
+                        borderRadius: '12px 12px 0 0'
                       }}
                     />
                   ) : (
@@ -688,7 +690,8 @@ export function Schedule() {
                       style={{
                         width: '100%',
                         height: '100%',
-                        objectFit: 'cover'
+                        objectFit: 'cover',
+                        borderRadius: '12px 12px 0 0'
                       }}
                     />
                   )}
@@ -714,9 +717,11 @@ export function Schedule() {
                       letterSpacing: '0.5px',
                       background: post.status === 'posted' ? 'rgba(80, 227, 194, 0.2)' :
                                   post.status === 'scheduled' ? 'rgba(41, 121, 255, 0.2)' :
+                                  post.status === 'failed' ? 'rgba(255, 107, 107, 0.2)' :
                                   'rgba(242, 244, 248, 0.1)',
                       color: post.status === 'posted' ? '#50E3C2' :
                              post.status === 'scheduled' ? '#2979FF' :
+                             post.status === 'failed' ? '#FF6B6B' :
                              'rgba(242, 244, 248, 0.6)'
                     }}>
                       {post.status}
@@ -1256,7 +1261,7 @@ export function Schedule() {
 
             {/* Caption */}
             <div style={{ marginBottom: '32px' }}>
-              <label style={{ color: 'white', fontSize: '16px', fontWeight: 600, display: 'block', marginBottom: '12px' }}>
+              <label style={{ color: '#F2F4F8', fontSize: '16px', fontWeight: 600, display: 'block', marginBottom: '12px' }}>
                 Caption
               </label>
               <textarea
@@ -1266,11 +1271,12 @@ export function Schedule() {
                 style={{
                   width: '100%',
                   minHeight: '150px',
-                  background: editingPost.status === 'posted' ? '#0a0a0a' : '#0d0d0d',
-                  border: '1px solid #374151',
+                  background: editingPost.status === 'posted' ? 'rgba(26, 31, 54, 0.5)' : '#1A1F36',
+                  border: '1px solid rgba(80, 227, 194, 0.3)',
+                  borderLeft: '4px solid #50E3C2',
                   borderRadius: '12px',
                   padding: '16px',
-                  color: editingPost.status === 'posted' ? '#888' : '#e5e5e5',
+                  color: editingPost.status === 'posted' ? 'rgba(242, 244, 248, 0.5)' : '#F2F4F8',
                   fontSize: '15px',
                   lineHeight: '1.6',
                   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
@@ -1283,7 +1289,7 @@ export function Schedule() {
 
             {/* Platforms */}
             <div style={{ marginBottom: '32px' }}>
-              <label style={{ color: 'white', fontSize: '16px', fontWeight: 600, display: 'block', marginBottom: '12px' }}>
+              <label style={{ color: '#F2F4F8', fontSize: '16px', fontWeight: 600, display: 'block', marginBottom: '12px' }}>
                 {editingPost.status === 'posted' ? 'Posted To' : 'Select Platforms'}
               </label>
               <div style={{ display: 'flex', gap: '12px' }}>
@@ -1305,17 +1311,17 @@ export function Schedule() {
                         alignItems: 'center',
                         justifyContent: 'center',
                         padding: '14px',
-                        background: isSelected ? 'rgba(20, 184, 166, 0.1)' : 'transparent',
-                        border: isSelected ? '2px solid #14b8a6' : '2px solid #27272a',
+                        background: isSelected ? 'rgba(80, 227, 194, 0.1)' : 'transparent',
+                        border: isSelected ? '2px solid #50E3C2' : '2px solid rgba(80, 227, 194, 0.3)',
                         borderRadius: '12px',
                         cursor: editingPost.status === 'posted' ? 'not-allowed' : 'pointer',
                         transition: 'all 0.2s ease',
-                        boxShadow: isSelected ? '0 0 20px rgba(20, 184, 166, 0.3)' : 'none',
+                        boxShadow: isSelected ? '0 0 20px rgba(80, 227, 194, 0.3)' : 'none',
                         opacity: editingPost.status === 'posted' && !isSelected ? 0.5 : 1
                       }}
                     >
                       <span style={{
-                        color: isSelected ? '#14b8a6' : 'white',
+                        color: isSelected ? '#50E3C2' : '#F2F4F8',
                         fontSize: '14px',
                         fontWeight: 500
                       }}>
@@ -1330,21 +1336,21 @@ export function Schedule() {
             {/* Scheduling Section - Only show for non-posted */}
             {editingPost.status !== 'posted' && (
               <div style={{ marginBottom: '32px' }}>
-                <label style={{ color: 'white', fontSize: '16px', fontWeight: 600, display: 'block', marginBottom: '12px' }}>
+                <label style={{ color: '#F2F4F8', fontSize: '16px', fontWeight: 600, display: 'block', marginBottom: '12px' }}>
                   Schedule
                 </label>
 
                 {/* Selected Date/Time Display */}
                 {editFormattedDateTime && (
                   <div style={{
-                    background: 'rgba(20, 184, 166, 0.1)',
-                    border: '1px solid #14b8a6',
+                    background: 'rgba(80, 227, 194, 0.1)',
+                    border: '1px solid #50E3C2',
                     borderRadius: '12px',
                     padding: '16px',
                     marginBottom: '20px',
                     textAlign: 'center'
                   }}>
-                    <p style={{ color: '#f3f4f6', fontSize: '18px', fontWeight: 600, margin: 0 }}>
+                    <p style={{ color: '#F2F4F8', fontSize: '18px', fontWeight: 600, margin: 0 }}>
                       {editFormattedDateTime}
                     </p>
                   </div>
@@ -1352,7 +1358,7 @@ export function Schedule() {
 
                 {/* Time Picker Dropdown */}
                 <div style={{ marginBottom: '20px' }}>
-                  <label style={{ color: '#888', fontSize: '14px', fontWeight: 500, display: 'block', marginBottom: '8px' }}>
+                  <label style={{ color: 'rgba(242, 244, 248, 0.6)', fontSize: '14px', fontWeight: 500, display: 'block', marginBottom: '8px' }}>
                     Select Time
                   </label>
                   <select
@@ -1361,21 +1367,21 @@ export function Schedule() {
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#1a1a1a',
-                      border: '1px solid #374151',
+                      background: '#1A1F36',
+                      border: '1px solid rgba(80, 227, 194, 0.3)',
                       borderRadius: '8px',
-                      color: 'white',
+                      color: '#F2F4F8',
                       fontSize: '14px',
                       outline: 'none',
                       cursor: 'pointer',
                       appearance: 'none',
-                      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2314b8a6' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`,
+                      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2350E3C2' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`,
                       backgroundRepeat: 'no-repeat',
                       backgroundPosition: 'right 16px center'
                     }}
                   >
                     {editTimeOptions.map((option) => (
-                      <option key={option.value} value={option.value} style={{ background: '#1a1a1a', color: 'white' }}>
+                      <option key={option.value} value={option.value} style={{ background: '#1A1F36', color: '#F2F4F8' }}>
                         {option.label}
                       </option>
                     ))}
@@ -1383,15 +1389,15 @@ export function Schedule() {
                 </div>
 
                 {/* Calendar View */}
-                <div style={{ background: '#0d0d0d', padding: '20px', borderRadius: '12px' }}>
+                <div style={{ background: '#1A1F36', padding: '20px', borderRadius: '12px', border: '1px solid rgba(80, 227, 194, 0.2)' }}>
                   {/* Calendar Header */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                     <button
                       type="button"
                       onClick={() => setEditCalendarMonth(subMonths(editCalendarMonth, 1))}
                       style={{
-                        background: '#1a1a1a',
-                        border: '1px solid #27272a',
+                        background: '#242A45',
+                        border: '1px solid rgba(80, 227, 194, 0.3)',
                         borderRadius: '8px',
                         padding: '8px',
                         cursor: 'pointer',
@@ -1400,10 +1406,10 @@ export function Schedule() {
                         justifyContent: 'center'
                       }}
                     >
-                      <ChevronLeft style={{ width: '18px', height: '18px', color: '#e5e5e5' }} />
+                      <ChevronLeft style={{ width: '18px', height: '18px', color: '#50E3C2' }} />
                     </button>
 
-                    <h3 style={{ color: 'white', fontSize: '15px', fontWeight: 600, margin: 0 }}>
+                    <h3 style={{ color: '#F2F4F8', fontSize: '15px', fontWeight: 600, margin: 0 }}>
                       {format(editCalendarMonth, 'MMMM yyyy')}
                     </h3>
 
@@ -1411,8 +1417,8 @@ export function Schedule() {
                       type="button"
                       onClick={() => setEditCalendarMonth(addMonths(editCalendarMonth, 1))}
                       style={{
-                        background: '#1a1a1a',
-                        border: '1px solid #27272a',
+                        background: '#242A45',
+                        border: '1px solid rgba(80, 227, 194, 0.3)',
                         borderRadius: '8px',
                         padding: '8px',
                         cursor: 'pointer',
@@ -1421,7 +1427,7 @@ export function Schedule() {
                         justifyContent: 'center'
                       }}
                     >
-                      <ChevronRight style={{ width: '18px', height: '18px', color: '#e5e5e5' }} />
+                      <ChevronRight style={{ width: '18px', height: '18px', color: '#50E3C2' }} />
                     </button>
                   </div>
 
@@ -1430,7 +1436,7 @@ export function Schedule() {
                     {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
                       <div key={day} style={{
                         textAlign: 'center',
-                        color: '#888',
+                        color: 'rgba(242, 244, 248, 0.7)',
                         fontSize: '11px',
                         fontWeight: 600,
                         padding: '6px 0'
@@ -1457,8 +1463,8 @@ export function Schedule() {
                           onClick={() => !isPast && setEditSelectedDate(date)}
                           disabled={isPast}
                           style={{
-                            background: isSelected ? '#14b8a6' : '#1a1a1a',
-                            border: isTodayDate && !isSelected ? '2px solid #14b8a6' : '1px solid #27272a',
+                            background: isSelected ? '#50E3C2' : isTodayDate ? '#2979FF' : '#242A45',
+                            border: isTodayDate && !isSelected ? '2px solid #2979FF' : '1px solid rgba(80, 227, 194, 0.2)',
                             borderRadius: '6px',
                             padding: '6px',
                             minHeight: '50px',
@@ -1471,7 +1477,7 @@ export function Schedule() {
                           }}
                         >
                           <div style={{
-                            color: isSelected ? 'white' : (isTodayDate ? '#14b8a6' : '#888'),
+                            color: isSelected ? '#1A1F36' : (isTodayDate ? '#FFFFFF' : 'rgba(242, 244, 248, 0.6)'),
                             fontSize: '11px',
                             fontWeight: isSelected || isTodayDate ? 600 : 400,
                             marginBottom: '2px'
@@ -1504,15 +1510,15 @@ export function Schedule() {
                   <div style={{ marginTop: '12px', display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                       <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#E1306C' }} />
-                      <span style={{ color: '#888', fontSize: '10px' }}>Instagram</span>
+                      <span style={{ color: 'rgba(242, 244, 248, 0.5)', fontSize: '10px' }}>Instagram</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                       <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#1877F2' }} />
-                      <span style={{ color: '#888', fontSize: '10px' }}>Facebook</span>
+                      <span style={{ color: 'rgba(242, 244, 248, 0.5)', fontSize: '10px' }}>Facebook</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                       <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#E60023' }} />
-                      <span style={{ color: '#888', fontSize: '10px' }}>Pinterest</span>
+                      <span style={{ color: 'rgba(242, 244, 248, 0.5)', fontSize: '10px' }}>Pinterest</span>
                     </div>
                   </div>
                 </div>
@@ -1546,17 +1552,17 @@ export function Schedule() {
                   onClick={() => setEditingPost(null)}
                   style={{
                     padding: '12px 32px',
-                    background: '#2a2a2a',
-                    color: 'white',
+                    background: '#242A45',
+                    color: '#F2F4F8',
                     fontSize: '15px',
                     fontWeight: 600,
-                    border: 'none',
+                    border: '1px solid rgba(80, 227, 194, 0.3)',
                     borderRadius: '8px',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease'
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = '#333'}
-                  onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
+                  onMouseEnter={(e) => e.currentTarget.style.background = '#2d3454'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = '#242A45'}
                 >
                   Close
                 </button>
@@ -1573,21 +1579,21 @@ export function Schedule() {
                     style={{
                       padding: '12px 24px',
                       background: 'transparent',
-                      color: '#ef4444',
+                      color: '#FF6B6B',
                       fontSize: '15px',
                       fontWeight: 600,
-                      border: '2px solid #ef4444',
+                      border: '2px solid #FF6B6B',
                       borderRadius: '8px',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#ef4444'
+                      e.currentTarget.style.background = '#FF6B6B'
                       e.currentTarget.style.color = 'white'
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.background = 'transparent'
-                      e.currentTarget.style.color = '#ef4444'
+                      e.currentTarget.style.color = '#FF6B6B'
                     }}
                   >
                     Delete
@@ -1599,11 +1605,11 @@ export function Schedule() {
                     disabled={posting === editingPost.id}
                     style={{
                       padding: '12px 24px',
-                      background: '#2a2a2a',
-                      color: 'white',
+                      background: '#242A45',
+                      color: '#F2F4F8',
                       fontSize: '15px',
                       fontWeight: 600,
-                      border: '2px solid #27272a',
+                      border: '2px solid rgba(80, 227, 194, 0.3)',
                       borderRadius: '8px',
                       cursor: posting === editingPost.id ? 'not-allowed' : 'pointer',
                       opacity: posting === editingPost.id ? 0.6 : 1,
@@ -1614,13 +1620,13 @@ export function Schedule() {
                     }}
                     onMouseEnter={(e) => {
                       if (posting !== editingPost.id) {
-                        e.currentTarget.style.background = '#14b8a6'
-                        e.currentTarget.style.borderColor = '#14b8a6'
+                        e.currentTarget.style.background = '#2979FF'
+                        e.currentTarget.style.borderColor = '#2979FF'
                       }
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.background = '#2a2a2a'
-                      e.currentTarget.style.borderColor = '#27272a'
+                      e.currentTarget.style.background = '#242A45'
+                      e.currentTarget.style.borderColor = 'rgba(80, 227, 194, 0.3)'
                     }}
                   >
                     {posting === editingPost.id ? (
@@ -1642,17 +1648,17 @@ export function Schedule() {
                     onClick={() => setEditingPost(null)}
                     style={{
                       padding: '12px 24px',
-                      background: '#2a2a2a',
-                      color: 'white',
+                      background: '#242A45',
+                      color: '#F2F4F8',
                       fontSize: '15px',
                       fontWeight: 600,
-                      border: 'none',
+                      border: '1px solid rgba(80, 227, 194, 0.3)',
                       borderRadius: '8px',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = '#333'}
-                    onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
+                    onMouseEnter={(e) => e.currentTarget.style.background = '#2d3454'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = '#242A45'}
                   >
                     Cancel
                   </button>
@@ -1660,8 +1666,8 @@ export function Schedule() {
                     onClick={handleSaveEdit}
                     style={{
                       padding: '12px 32px',
-                      background: '#14b8a6',
-                      color: 'white',
+                      background: '#50E3C2',
+                      color: '#1A1F36',
                       fontSize: '15px',
                       fontWeight: 600,
                       border: 'none',
@@ -1669,8 +1675,8 @@ export function Schedule() {
                       cursor: 'pointer',
                       transition: 'all 0.2s ease'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = '#10a896'}
-                    onMouseLeave={(e) => e.currentTarget.style.background = '#14b8a6'}
+                    onMouseEnter={(e) => e.currentTarget.style.background = '#3dd4b0'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = '#50E3C2'}
                   >
                     Save Changes
                   </button>
@@ -1751,7 +1757,8 @@ export function Schedule() {
             left: 0,
             right: 0,
             bottom: 0,
-            background: 'rgba(0, 0, 0, 0.8)',
+            background: 'rgba(26, 31, 54, 0.9)',
+            backdropFilter: 'blur(8px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -1762,21 +1769,22 @@ export function Schedule() {
         >
           <div
             style={{
-              background: '#1a1a1a',
+              background: '#242A45',
               borderRadius: '16px',
               padding: '32px',
               maxWidth: '400px',
               width: '100%',
               textAlign: 'center',
-              boxShadow: '0 0 60px rgba(0, 0, 0, 0.5)'
+              boxShadow: '0 0 60px rgba(255, 107, 107, 0.15)',
+              border: '1px solid rgba(255, 107, 107, 0.3)'
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <AlertCircle style={{ width: '48px', height: '48px', color: '#ef4444', margin: '0 auto 16px' }} />
-            <h3 style={{ color: 'white', fontSize: '20px', fontWeight: 600, marginBottom: '12px' }}>
+            <AlertCircle style={{ width: '48px', height: '48px', color: '#FF6B6B', margin: '0 auto 16px' }} />
+            <h3 style={{ color: '#F2F4F8', fontSize: '20px', fontWeight: 600, marginBottom: '12px' }}>
               Delete Post?
             </h3>
-            <p style={{ color: '#888', fontSize: '14px', marginBottom: '24px' }}>
+            <p style={{ color: 'rgba(242, 244, 248, 0.6)', fontSize: '14px', marginBottom: '24px' }}>
               Are you sure you want to delete this post? This action cannot be undone.
             </p>
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
@@ -1784,17 +1792,17 @@ export function Schedule() {
                 onClick={() => setDeleteConfirmOpen(false)}
                 style={{
                   padding: '12px 24px',
-                  background: '#2a2a2a',
-                  color: 'white',
+                  background: '#1A1F36',
+                  color: '#F2F4F8',
                   fontSize: '15px',
                   fontWeight: 600,
-                  border: 'none',
+                  border: '1px solid rgba(80, 227, 194, 0.3)',
                   borderRadius: '8px',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.background = '#333'}
-                onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#242A45'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#1A1F36'}
               >
                 Cancel
               </button>
@@ -1808,7 +1816,7 @@ export function Schedule() {
                 }}
                 style={{
                   padding: '12px 24px',
-                  background: '#ef4444',
+                  background: '#FF6B6B',
                   color: 'white',
                   fontSize: '15px',
                   fontWeight: 600,
@@ -1817,8 +1825,8 @@ export function Schedule() {
                   cursor: 'pointer',
                   transition: 'all 0.2s ease'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.background = '#dc2626'}
-                onMouseLeave={(e) => e.currentTarget.style.background = '#ef4444'}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#e85a5a'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#FF6B6B'}
               >
                 Confirm Delete
               </button>
