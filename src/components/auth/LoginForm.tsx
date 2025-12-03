@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Share2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -64,7 +64,6 @@ export function LoginForm() {
           .auth-logo-text { font-size: 26px !important; }
         }
 
-        .auth-link:hover { text-decoration: underline !important; }
       `}</style>
 
       <div className="auth-card-wrapper w-full" style={{ maxWidth: '420px' }}>
@@ -213,8 +212,7 @@ export function LoginForm() {
                 borderRadius: '8px',
                 cursor: loading ? 'not-allowed' : 'pointer',
                 opacity: loading ? 0.5 : 1,
-                transition: 'all 0.2s ease',
-                marginBottom: '24px'
+                transition: 'all 0.2s ease'
               }}
               onMouseEnter={(e) => {
                 if (!loading) {
@@ -236,51 +234,6 @@ export function LoginForm() {
               {loading ? 'Signing in...' : 'Sign in'}
             </button>
 
-            {/* Divider */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              width: '100%',
-              marginBottom: '24px'
-            }}>
-              <div style={{
-                flex: 1,
-                height: '1px',
-                background: 'rgba(80, 227, 194, 0.2)'
-              }} />
-              <span style={{
-                padding: '0 16px',
-                color: 'rgba(242, 244, 248, 0.5)',
-                fontSize: '13px'
-              }}>
-                or
-              </span>
-              <div style={{
-                flex: 1,
-                height: '1px',
-                background: 'rgba(80, 227, 194, 0.2)'
-              }} />
-            </div>
-
-            {/* Sign Up Link */}
-            <div style={{ textAlign: 'center' }}>
-              <span style={{ color: 'rgba(242, 244, 248, 0.6)', fontSize: '14px' }}>
-                Don't have an account?{' '}
-              </span>
-              <Link
-                to="/signup"
-                className="auth-link"
-                style={{
-                  color: '#50E3C2',
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  textDecoration: 'none',
-                  transition: 'color 0.2s ease'
-                }}
-              >
-                Sign up
-              </Link>
-            </div>
           </form>
         </div>
       </div>
