@@ -81,7 +81,7 @@ export function Landing() {
           .cta-section { padding: 60px 20px !important; }
           .cta-card { padding: 32px 24px !important; }
           .cta-title { font-size: 1.5rem !important; }
-          .cta-button { padding: 16px 32px !important; font-size: 16px !important; width: 100% !important; justify-content: center !important; }
+          .cta-button { padding: 14px 28px !important; font-size: 16px !important; }
           .header-button { padding: 10px 20px !important; font-size: 14px !important; }
           .footer-grid { grid-template-columns: 1fr !important; gap: 32px !important; text-align: center !important; }
           .footer-social { justify-content: center !important; }
@@ -228,7 +228,7 @@ export function Landing() {
       </section>
 
       {/* Features Section */}
-      <section className="features-section" style={{ padding: '80px 24px 120px', position: 'relative' }}>
+      <section className="features-section" style={{ padding: '40px 24px 120px', position: 'relative' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           {/* Section Header */}
           <div style={{ textAlign: 'center', marginBottom: '64px' }}>
