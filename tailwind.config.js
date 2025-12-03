@@ -8,18 +8,52 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Dizzy Otter Brand Colors
+        'primary-navy': {
+          DEFAULT: '#1A1F36',
+          80: 'rgba(26, 31, 54, 0.8)',
+          60: 'rgba(26, 31, 54, 0.6)',
+          40: 'rgba(26, 31, 54, 0.4)',
+          20: 'rgba(26, 31, 54, 0.2)',
+          10: 'rgba(26, 31, 54, 0.1)',
+        },
+        'accent-blue': {
+          DEFAULT: '#2979FF',
+          80: 'rgba(41, 121, 255, 0.8)',
+          60: 'rgba(41, 121, 255, 0.6)',
+          40: 'rgba(41, 121, 255, 0.4)',
+          20: 'rgba(41, 121, 255, 0.2)',
+          10: 'rgba(41, 121, 255, 0.1)',
+        },
+        'highlight-teal': {
+          DEFAULT: '#50E3C2',
+          80: 'rgba(80, 227, 194, 0.8)',
+          60: 'rgba(80, 227, 194, 0.6)',
+          40: 'rgba(80, 227, 194, 0.4)',
+          20: 'rgba(80, 227, 194, 0.2)',
+          10: 'rgba(80, 227, 194, 0.1)',
+        },
+        'secondary-light': {
+          DEFAULT: '#F2F4F8',
+          80: 'rgba(242, 244, 248, 0.8)',
+          60: 'rgba(242, 244, 248, 0.6)',
+          40: 'rgba(242, 244, 248, 0.4)',
+          20: 'rgba(242, 244, 248, 0.2)',
+          10: 'rgba(242, 244, 248, 0.1)',
+        },
+        // Primary colors mapped to Dizzy Otter brand
         primary: {
-          50: '#f0fdfa',
-          100: '#ccfbf1',
-          200: '#99f6e4',
-          300: '#5eead4',
-          400: '#2dd4bf',
-          500: '#14b8a6',
-          600: '#0d9488',
-          700: '#0f766e',
-          800: '#115e59',
-          900: '#134e4a',
-          950: '#042f2e',
+          50: 'rgba(80, 227, 194, 0.1)',
+          100: 'rgba(80, 227, 194, 0.2)',
+          200: 'rgba(80, 227, 194, 0.3)',
+          300: 'rgba(80, 227, 194, 0.5)',
+          400: 'rgba(80, 227, 194, 0.8)',
+          500: '#50E3C2',  // Highlight Teal
+          600: '#3dd4b0',  // Darker teal for hover
+          700: '#2bc5a0',
+          800: '#1ab390',
+          900: '#0a9f80',
+          950: '#008870',
         },
         charcoal: {
           50: '#fafafa',
@@ -39,15 +73,32 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'Roboto', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
-      boxShadow: {
-        'card': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
-        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-        'lg-dark': '0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2)',
+      fontSize: {
+        // Dizzy Otter Typography Scale
+        'h1': ['4.5rem', { lineHeight: '1.1', fontWeight: '800' }],      // 72px
+        'h2': ['2.5rem', { lineHeight: '1.2', fontWeight: '700' }],      // 40px
+        'h3': ['1.8rem', { lineHeight: '1.3', fontWeight: '600' }],      // 28.8px
+        'body': ['1.1rem', { lineHeight: '1.6', fontWeight: '400' }],    // 17.6px
+        'small': ['0.875rem', { lineHeight: '1.5', fontWeight: '400' }], // 14px
+      },
+      borderRadius: {
+        'sm': '4px',
+        DEFAULT: '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
       },
       spacing: {
         '18': '4.5rem',
+        'card': '1.5rem',     // 24px - card padding
+        'section': '2rem',    // 32px - section spacing
+      },
+      boxShadow: {
+        'card': '0 4px 6px -1px rgba(26, 31, 54, 0.1), 0 2px 4px -1px rgba(26, 31, 54, 0.06)',
+        'card-hover': '0 10px 15px -3px rgba(26, 31, 54, 0.15), 0 4px 6px -2px rgba(26, 31, 54, 0.1)',
+        'lg-dark': '0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2)',
       },
       transitionProperty: {
         'height': 'height',

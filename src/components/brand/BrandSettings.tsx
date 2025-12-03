@@ -11,7 +11,7 @@ export function BrandSettings({ brand, onSave, onComplete }: BrandSettingsProps)
   return (
     <div>
       <h2 style={{
-        color: '#14b8a6',
+        color: '#50E3C2',
         fontSize: '24px',
         fontWeight: 600,
         marginBottom: '32px',

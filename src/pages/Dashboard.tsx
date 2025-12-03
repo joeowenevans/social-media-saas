@@ -89,10 +89,10 @@ export function Dashboard() {
 
   if (brandLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#1A1F36', backgroundImage: 'radial-gradient(circle, rgba(80, 227, 194, 0.08) 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
         <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 spinner border-primary-500"></div>
-          <p className="text-sm" style={{ color: '#e5e5e5' }}>Loading your dashboard...</p>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#50E3C2]"></div>
+          <p className="text-sm" style={{ color: 'rgba(242, 244, 248, 0.6)' }}>Loading your dashboard...</p>
         </div>
       </div>
     )
@@ -100,16 +100,21 @@ export function Dashboard() {
 
   if (!brand) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #111111 0%, #0a0a0a 100%)' }}>
-        <div className="max-w-md w-full bg-[#1a1a1a] rounded-xl text-center" style={{ borderRadius: '12px', padding: '32px' }}>
-          <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 mb-6">
-            <Sparkles className="w-8 h-8 text-white" />
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#1A1F36', backgroundImage: 'radial-gradient(circle, rgba(80, 227, 194, 0.08) 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
+        <div className="max-w-md w-full text-center" style={{ background: '#242A45', borderRadius: '16px', padding: '40px', border: '1px solid rgba(80, 227, 194, 0.2)', boxShadow: '0 0 40px rgba(80, 227, 194, 0.1)' }}>
+          <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-xl mb-6" style={{ background: 'rgba(80, 227, 194, 0.1)' }}>
+            <Sparkles className="w-8 h-8" style={{ color: '#50E3C2' }} />
           </div>
-          <h2 className="text-2xl font-semibold mb-2 text-white">Welcome to SocialAI!</h2>
-          <p className="text-[#a1a1aa] mb-6">
+          <h2 className="text-2xl font-semibold mb-2" style={{ color: '#F2F4F8' }}>Welcome to SocialAI!</h2>
+          <p style={{ color: 'rgba(242, 244, 248, 0.6)', marginBottom: '24px' }}>
             Let's set up your brand profile to get started with AI-powered social media management.
           </p>
-          <button onClick={() => navigate('/settings')} className="bg-primary-500 hover:bg-primary-600 text-white font-medium px-6 py-3 rounded-lg w-full transition-colors">
+          <button
+            onClick={() => navigate('/settings')}
+            style={{ background: '#50E3C2', color: '#1A1F36', fontWeight: 600, padding: '12px 24px', borderRadius: '8px', width: '100%', border: 'none', cursor: 'pointer', transition: 'all 0.2s ease' }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = '#2979FF'; e.currentTarget.style.color = '#FFFFFF' }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = '#50E3C2'; e.currentTarget.style.color = '#1A1F36' }}
+          >
             Create Brand Profile
           </button>
         </div>
@@ -122,9 +127,9 @@ export function Dashboard() {
   const draftPosts = posts.filter(p => p.status === 'draft')
 
   const stats = [
-    { label: 'Scheduled', value: scheduledPosts.length, icon: Clock, filter: 'scheduled', color: '#14b8a6' },
-    { label: 'Posted', value: postedPosts.length, icon: CheckCircle2, filter: 'posted', color: '#14b8a6' },
-    { label: 'Drafts', value: draftPosts.length, icon: Edit3, filter: 'draft', color: '#14b8a6' },
+    { label: 'Scheduled', value: scheduledPosts.length, icon: Clock, filter: 'scheduled', color: '#50E3C2' },
+    { label: 'Posted', value: postedPosts.length, icon: CheckCircle2, filter: 'posted', color: '#50E3C2' },
+    { label: 'Drafts', value: draftPosts.length, icon: Edit3, filter: 'draft', color: '#50E3C2' },
   ]
 
   // Calendar generation for month view
@@ -160,7 +165,8 @@ export function Dashboard() {
       <style>{`
         @media (max-width: 639px) {
           .dashboard-container { padding: 24px 16px !important; max-width: 100vw !important; overflow-x: hidden !important; }
-          .stats-grid { grid-template-columns: 1fr !important; }
+          .dashboard-welcome { font-size: 2rem !important; }
+          .stats-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
           .posts-gallery { display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; }
           .posts-gallery > div { width: 100% !important; margin: 0 !important; }
           .calendar-section { max-width: 100% !important; overflow: hidden !important; }
@@ -180,54 +186,67 @@ export function Dashboard() {
           .calendar-post-info { display: none !important; }
           .calendar-more { font-size: 9px !important; }
         }
+        @media (min-width: 640px) and (max-width: 1023px) {
+          .dashboard-welcome { font-size: 3rem !important; }
+        }
       `}</style>
       <div className="dashboard-container" style={{ padding: '48px 32px' }}>
         {/* Welcome Title */}
-        <h1 style={{
-          color: '#ffffff',
-          fontSize: '32px',
-          fontWeight: 700,
-          textAlign: 'center',
-          marginBottom: '64px'
-        }}>
-          Welcome back, {firstName}!
-        </h1>
+        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+          <h1 className="dashboard-welcome" style={{
+            color: '#50E3C2',
+            fontSize: '4.5rem',
+            fontWeight: 700,
+            marginBottom: '16px',
+            textShadow: '0 0 20px rgba(80, 227, 194, 0.6), 0 0 40px rgba(80, 227, 194, 0.4), 0 0 60px rgba(80, 227, 194, 0.2)'
+          }}>
+            Welcome back, {firstName}!
+          </h1>
+          <p style={{
+            color: 'rgba(242, 244, 248, 0.7)',
+            fontSize: '18px',
+            margin: 0
+          }}>
+            {format(new Date(), 'EEEE, MMMM d, yyyy')}
+          </p>
+        </div>
 
-        {/* AI Caption Generation Section */}
+        {/* AI Content Creation & Scheduling Section */}
         <div style={{
-          background: '#1a1a1a',
+          background: '#242A45',
           padding: '32px',
-          borderRadius: '12px',
+          borderRadius: '16px',
           marginBottom: '64px',
           textAlign: 'center',
-          boxShadow: '0 0 40px rgba(20, 184, 166, 0.2), 0 0 80px rgba(20, 184, 166, 0.1)'
+          border: '1px solid rgba(80, 227, 194, 0.2)',
+          boxShadow: '0 0 40px rgba(80, 227, 194, 0.15), 0 0 80px rgba(41, 121, 255, 0.1)'
         }}>
           <h2 style={{
-            color: '#14b8a6',
+            color: '#50E3C2',
             fontSize: '24px',
             fontWeight: 600,
             marginBottom: '16px'
           }}>
-            AI-Powered Caption Generation
+            Create, Caption & Schedule
           </h2>
           <p style={{
-            color: '#e5e5e5',
+            color: '#F2F4F8',
             fontSize: '16px',
             lineHeight: '1.7',
             marginTop: '16px',
             marginBottom: '24px'
           }}>
-            Upload your media and let our AI create engaging captions optimised for your brand voice and target audience.
+            Upload your media, let our AI generate engaging captions tailored to your brand, and schedule posts across all your social platforms.
           </p>
           <button
             onClick={() => navigate('/upload')}
             style={{
               width: '200px',
               height: '48px',
-              background: '#2a2a2a',
-              color: 'white',
+              background: '#50E3C2',
+              color: '#1A1F36',
               border: 'none',
-              borderRadius: '24px',
+              borderRadius: '8px',
               fontSize: '15px',
               fontWeight: 600,
               cursor: 'pointer',
@@ -236,12 +255,12 @@ export function Dashboard() {
               display: 'block'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#14b8a6'
-              e.currentTarget.style.transform = 'scale(1.05)'
+              e.currentTarget.style.background = '#2979FF'
+              e.currentTarget.style.color = '#FFFFFF'
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = '#2a2a2a'
-              e.currentTarget.style.transform = 'scale(1)'
+              e.currentTarget.style.background = '#50E3C2'
+              e.currentTarget.style.color = '#1A1F36'
             }}
           >
             Get Started
@@ -252,7 +271,7 @@ export function Dashboard() {
         <div className="stats-grid" style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '16px',
+          gap: '24px',
           marginBottom: '64px'
         }}>
           {stats.map((stat) => (
@@ -263,31 +282,43 @@ export function Dashboard() {
                 setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100)
               }}
               style={{
-                background: '#1a1a1a',
-                borderRadius: '10px',
-                padding: '16px 20px',
-                boxShadow: '0 0 20px rgba(255, 255, 255, 0.05)',
+                background: '#242A45',
+                borderRadius: '16px',
+                padding: '24px',
+                border: '1px solid rgba(80, 227, 194, 0.2)',
+                boxShadow: '0 4px 20px rgba(26, 31, 54, 0.5)',
                 transition: 'all 0.3s ease',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
+                position: 'relative',
+                overflow: 'hidden'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'scale(1.02)'
-                e.currentTarget.style.boxShadow = '0 0 30px rgba(255, 255, 255, 0.12)'
+                e.currentTarget.style.transform = 'translateY(-2px)'
+                e.currentTarget.style.boxShadow = '0 8px 30px rgba(80, 227, 194, 0.2), 0 0 40px rgba(41, 121, 255, 0.1)'
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'scale(1)'
-                e.currentTarget.style.boxShadow = '0 0 20px rgba(255, 255, 255, 0.05)'
+                e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.boxShadow = '0 4px 20px rgba(26, 31, 54, 0.5)'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <stat.icon style={{ width: '24px', height: '24px', color: stat.color, flexShrink: 0 }} />
+              {/* Gradient left border accent */}
+              <div style={{
+                position: 'absolute',
+                left: 0,
+                top: 0,
+                bottom: 0,
+                width: '3px',
+                background: 'linear-gradient(180deg, #50E3C2 0%, #2979FF 100%)'
+              }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingLeft: '8px' }}>
+                <stat.icon style={{ width: '24px', height: '24px', color: '#50E3C2', flexShrink: 0 }} />
                 <p style={{
                   fontSize: '13px',
                   fontWeight: 500,
-                  color: '#a1a1aa',
+                  color: 'rgba(242, 244, 248, 0.7)',
                   textTransform: 'uppercase',
                   letterSpacing: '0.05em'
                 }}>
@@ -297,7 +328,7 @@ export function Dashboard() {
               <p style={{
                 fontSize: '28px',
                 fontWeight: 700,
-                color: 'white',
+                color: '#F2F4F8',
                 lineHeight: 1
               }}>
                 {stat.value}
@@ -310,7 +341,7 @@ export function Dashboard() {
         <div className="calendar-section" style={{ marginBottom: '64px' }}>
           <div className="calendar-title-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
             <h2 style={{
-              color: '#14b8a6',
+              color: '#50E3C2',
               fontSize: '24px',
               fontWeight: 600
             }}>
@@ -323,10 +354,10 @@ export function Dashboard() {
                 onClick={() => setCalendarView('week')}
                 style={{
                   padding: '8px 16px',
-                  background: calendarView === 'week' ? '#14b8a6' : '#0d0d0d',
-                  border: `1px solid ${calendarView === 'week' ? '#14b8a6' : '#27272a'}`,
-                  borderRadius: '6px',
-                  color: calendarView === 'week' ? 'white' : '#888',
+                  background: calendarView === 'week' ? '#2979FF' : 'transparent',
+                  border: `1px solid ${calendarView === 'week' ? '#2979FF' : 'rgba(80, 227, 194, 0.3)'}`,
+                  borderRadius: '8px',
+                  color: calendarView === 'week' ? '#FFFFFF' : 'rgba(242, 244, 248, 0.7)',
                   fontSize: '13px',
                   fontWeight: 500,
                   cursor: 'pointer',
@@ -339,10 +370,10 @@ export function Dashboard() {
                 onClick={() => setCalendarView('month')}
                 style={{
                   padding: '8px 16px',
-                  background: calendarView === 'month' ? '#14b8a6' : '#0d0d0d',
-                  border: `1px solid ${calendarView === 'month' ? '#14b8a6' : '#27272a'}`,
-                  borderRadius: '6px',
-                  color: calendarView === 'month' ? 'white' : '#888',
+                  background: calendarView === 'month' ? '#2979FF' : 'transparent',
+                  border: `1px solid ${calendarView === 'month' ? '#2979FF' : 'rgba(80, 227, 194, 0.3)'}`,
+                  borderRadius: '8px',
+                  color: calendarView === 'month' ? '#FFFFFF' : 'rgba(242, 244, 248, 0.7)',
                   fontSize: '13px',
                   fontWeight: 500,
                   cursor: 'pointer',
@@ -354,7 +385,7 @@ export function Dashboard() {
             </div>
           </div>
 
-          <div className="calendar-container" style={{ background: '#1a1a1a', padding: '32px', borderRadius: '12px' }}>
+          <div className="calendar-container" style={{ background: '#242A45', padding: '32px', borderRadius: '16px', border: '1px solid rgba(80, 227, 194, 0.2)' }}>
             {/* Calendar Header */}
             <div className="calendar-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <button
@@ -363,20 +394,21 @@ export function Dashboard() {
                   : setCurrentWeek(subWeeks(currentWeek, 1))
                 }
                 style={{
-                  background: '#0d0d0d',
-                  border: '1px solid #27272a',
+                  background: 'rgba(26, 31, 54, 0.8)',
+                  border: '1px solid rgba(80, 227, 194, 0.3)',
                   borderRadius: '8px',
                   padding: '8px',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
+                  transition: 'all 0.2s ease'
                 }}
               >
-                <ChevronLeft style={{ width: '20px', height: '20px', color: '#e5e5e5' }} />
+                <ChevronLeft style={{ width: '20px', height: '20px', color: '#50E3C2' }} />
               </button>
 
-              <h3 style={{ color: 'white', fontSize: '18px', fontWeight: 600 }}>
+              <h3 style={{ color: '#F2F4F8', fontSize: '18px', fontWeight: 600 }}>
                 {calendarView === 'month'
                   ? format(currentMonth, 'MMMM yyyy')
                   : `${format(weekStart, 'MMM d')} - ${format(weekEnd, 'MMM d, yyyy')}`
@@ -389,17 +421,18 @@ export function Dashboard() {
                   : setCurrentWeek(addWeeks(currentWeek, 1))
                 }
                 style={{
-                  background: '#0d0d0d',
-                  border: '1px solid #27272a',
+                  background: 'rgba(26, 31, 54, 0.8)',
+                  border: '1px solid rgba(80, 227, 194, 0.3)',
                   borderRadius: '8px',
                   padding: '8px',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
+                  transition: 'all 0.2s ease'
                 }}
               >
-                <ChevronRight style={{ width: '20px', height: '20px', color: '#e5e5e5' }} />
+                <ChevronRight style={{ width: '20px', height: '20px', color: '#50E3C2' }} />
               </button>
             </div>
 
@@ -408,7 +441,7 @@ export function Dashboard() {
               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
                 <div key={day} style={{
                   textAlign: 'center',
-                  color: '#888',
+                  color: 'rgba(242, 244, 248, 0.7)',
                   fontSize: '12px',
                   fontWeight: 600,
                   padding: '8px 0'
@@ -432,8 +465,8 @@ export function Dashboard() {
                     key={dateKey}
                     className="calendar-day"
                     style={{
-                      background: isTodayDate ? 'rgba(20, 184, 166, 0.1)' : '#0d0d0d',
-                      border: isTodayDate ? '2px solid #14b8a6' : '1px solid #27272a',
+                      background: isTodayDate ? '#2979FF' : 'rgba(26, 31, 54, 0.8)',
+                      border: isTodayDate ? '2px solid #2979FF' : '1px solid rgba(80, 227, 194, 0.15)',
                       borderRadius: '8px',
                       padding: '12px',
                       minHeight: calendarView === 'week' ? '150px' : '100px',
@@ -441,7 +474,7 @@ export function Dashboard() {
                     }}
                   >
                     <div className="calendar-day-date" style={{
-                      color: isTodayDate ? '#14b8a6' : '#888',
+                      color: isTodayDate ? '#FFFFFF' : 'rgba(242, 244, 248, 0.6)',
                       fontSize: '12px',
                       marginBottom: '8px',
                       fontWeight: isTodayDate ? 600 : 400
@@ -476,16 +509,16 @@ export function Dashboard() {
                               width: '10px',
                               height: '10px',
                               borderRadius: '50%',
-                              background: post.status === 'posted' ? '#10b981' :
-                                         post.status === 'scheduled' ? '#14b8a6' :
-                                         '#6b7280',
-                              border: '2px solid #0d0d0d'
+                              background: post.status === 'posted' ? '#50E3C2' :
+                                         post.status === 'scheduled' ? '#2979FF' :
+                                         'rgba(242, 244, 248, 0.4)',
+                              border: '2px solid rgba(26, 31, 54, 0.8)'
                             }} />
                           </div>
                           <div className="calendar-post-info" style={{ flex: 1, minWidth: 0 }}>
                             {/* Platform names as text */}
                             <div style={{
-                              color: '#666',
+                              color: 'rgba(242, 244, 248, 0.5)',
                               fontSize: '10px',
                               marginBottom: '2px',
                               overflow: 'hidden',
@@ -499,7 +532,7 @@ export function Dashboard() {
                             </div>
                             {/* Media type */}
                             <div style={{
-                              color: '#666',
+                              color: 'rgba(242, 244, 248, 0.5)',
                               fontSize: '10px',
                               marginBottom: '2px'
                             }}>
@@ -507,7 +540,7 @@ export function Dashboard() {
                             </div>
                             {calendarView === 'week' && (
                               <div style={{
-                                color: '#888',
+                                color: 'rgba(242, 244, 248, 0.6)',
                                 fontSize: '11px',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
@@ -522,7 +555,7 @@ export function Dashboard() {
                     ))}
 
                     {dayPosts.length > maxPosts && (
-                      <div className="calendar-more" style={{ color: '#14b8a6', fontSize: '11px', fontWeight: 500 }}>
+                      <div className="calendar-more" style={{ color: '#50E3C2', fontSize: '11px', fontWeight: 500 }}>
                         +{dayPosts.length - maxPosts} more
                       </div>
                     )}
@@ -535,28 +568,56 @@ export function Dashboard() {
 
         {/* Recent Posts Gallery */}
         <div style={{ marginBottom: '64px' }}>
-          <h2 style={{
-            color: '#14b8a6',
-            fontSize: '24px',
-            fontWeight: 600,
-            marginBottom: '24px'
-          }}>
-            Recent Posts
-          </h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <h2 style={{
+              color: '#F2F4F8',
+              fontSize: '24px',
+              fontWeight: 600,
+              margin: 0
+            }}>
+              Recent Posts
+            </h2>
+            <button
+              onClick={() => navigate('/schedule')}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#50E3C2',
+                fontSize: '15px',
+                fontWeight: 500,
+                cursor: 'pointer',
+                padding: 0,
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.textDecoration = 'underline'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.textDecoration = 'none'
+              }}
+            >
+              View all
+            </button>
+          </div>
 
           {postsLoading ? (
             <div className="flex justify-center py-12">
-              <div className="w-8 h-8 spinner border-primary-500"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#50E3C2]"></div>
             </div>
           ) : recentPosts.length === 0 ? (
             <div className="text-center py-12">
-              <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-xl bg-[#222] mb-4">
-                <FileText className="w-8 h-8 text-[#a1a1aa]" />
+              <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-xl mb-4" style={{ background: 'rgba(80, 227, 194, 0.1)' }}>
+                <FileText className="w-8 h-8" style={{ color: '#50E3C2' }} />
               </div>
-              <p className="text-[#a1a1aa] mb-4">
+              <p style={{ color: 'rgba(242, 244, 248, 0.6)', marginBottom: '16px' }}>
                 No posts yet. Start by uploading your first piece of content!
               </p>
-              <button onClick={() => navigate('/upload')} className="bg-primary-500 hover:bg-primary-600 text-white font-medium px-6 py-3 rounded-lg transition-colors">
+              <button
+                onClick={() => navigate('/upload')}
+                style={{ background: '#50E3C2', color: '#1A1F36', fontWeight: 600, padding: '12px 24px', borderRadius: '8px', border: 'none', cursor: 'pointer', transition: 'all 0.2s ease' }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = '#2979FF'; e.currentTarget.style.color = '#FFFFFF' }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = '#50E3C2'; e.currentTarget.style.color = '#1A1F36' }}
+              >
                 Upload Content
               </button>
             </div>
@@ -573,24 +634,25 @@ export function Dashboard() {
                   style={{
                     width: '18%',
                     margin: '0.5%',
-                    borderRadius: '8px',
+                    borderRadius: '16px',
                     overflow: 'hidden',
-                    background: '#1a1a1a',
+                    background: '#242A45',
+                    border: '1px solid rgba(80, 227, 194, 0.2)',
                     cursor: 'pointer',
                     transition: 'all 0.3s ease',
-                    boxShadow: '0 0 10px rgba(255, 255, 255, 0.05)'
+                    boxShadow: '0 4px 20px rgba(26, 31, 54, 0.5)'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.02)'
-                    e.currentTarget.style.boxShadow = '0 0 20px rgba(20, 184, 166, 0.3), 0 0 40px rgba(20, 184, 166, 0.1)'
+                    e.currentTarget.style.transform = 'translateY(-2px)'
+                    e.currentTarget.style.boxShadow = '0 8px 30px rgba(80, 227, 194, 0.2), 0 0 40px rgba(41, 121, 255, 0.1)'
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)'
-                    e.currentTarget.style.boxShadow = '0 0 10px rgba(255, 255, 255, 0.05)'
+                    e.currentTarget.style.transform = 'translateY(0)'
+                    e.currentTarget.style.boxShadow = '0 4px 20px rgba(26, 31, 54, 0.5)'
                   }}
                 >
                   {/* Image/Video Thumbnail */}
-                  <div style={{ aspectRatio: '1 / 1', position: 'relative', background: '#0d0d0d' }}>
+                  <div style={{ aspectRatio: '1 / 1', position: 'relative', background: 'rgba(26, 31, 54, 0.8)' }}>
                     {post.media ? (
                       <img
                         src={getMediaThumbnail(post.media)}
@@ -613,11 +675,11 @@ export function Dashboard() {
                         position: 'absolute',
                         top: '8px',
                         right: '8px',
-                        background: 'rgba(0, 0, 0, 0.7)',
+                        background: 'rgba(26, 31, 54, 0.9)',
                         borderRadius: '4px',
                         padding: '4px 8px',
                         fontSize: '10px',
-                        color: '#14b8a6',
+                        color: '#50E3C2',
                         fontWeight: 500
                       }}>
                         VIDEO
@@ -627,12 +689,12 @@ export function Dashboard() {
 
                   {/* Info Card */}
                   <div style={{
-                    background: '#1a1a1a',
+                    background: '#242A45',
                     padding: '12px'
                   }}>
                     {/* Caption Preview */}
                     <p style={{
-                      color: '#e5e5e5',
+                      color: '#F2F4F8',
                       fontSize: '12px',
                       lineHeight: 1.4,
                       overflow: 'hidden',
@@ -650,12 +712,12 @@ export function Dashboard() {
                         borderRadius: '10px',
                         fontSize: '10px',
                         fontWeight: 500,
-                        background: post.status === 'posted' ? 'rgba(16, 185, 129, 0.2)' :
-                                    post.status === 'scheduled' ? 'rgba(20, 184, 166, 0.2)' :
-                                    'rgba(107, 114, 128, 0.2)',
-                        color: post.status === 'posted' ? '#10b981' :
-                               post.status === 'scheduled' ? '#14b8a6' :
-                               '#888'
+                        background: post.status === 'posted' ? 'rgba(80, 227, 194, 0.2)' :
+                                    post.status === 'scheduled' ? 'rgba(41, 121, 255, 0.2)' :
+                                    'rgba(242, 244, 248, 0.1)',
+                        color: post.status === 'posted' ? '#50E3C2' :
+                               post.status === 'scheduled' ? '#2979FF' :
+                               'rgba(242, 244, 248, 0.6)'
                       }}>
                         {post.status.charAt(0).toUpperCase() + post.status.slice(1)}
                       </span>
@@ -664,7 +726,7 @@ export function Dashboard() {
                       {post.platforms && post.platforms.length > 0 && (
                         <span style={{
                           fontSize: '10px',
-                          color: '#888',
+                          color: 'rgba(242, 244, 248, 0.6)',
                           fontWeight: 500,
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
@@ -687,20 +749,21 @@ export function Dashboard() {
         {/* Modal/Lightbox for Post Details */}
         {selectedPost && (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            style={{ backgroundColor: 'rgba(26, 31, 54, 0.9)', backdropFilter: 'blur(8px)' }}
             onClick={() => setSelectedPost(null)}
           >
             <div
-              className="bg-[#1a1a1a] max-w-3xl w-full max-h-[90vh] overflow-y-auto"
-              style={{ borderRadius: '12px' }}
+              style={{ background: '#242A45', borderRadius: '16px', border: '1px solid rgba(80, 227, 194, 0.2)', boxShadow: '0 0 60px rgba(80, 227, 194, 0.15)' }}
+              className="max-w-3xl w-full max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="sticky top-0 bg-[#1a1a1a] border-b border-[#27272a] flex items-center justify-between z-10" style={{ padding: '32px' }}>
-                <h3 className="text-lg font-semibold text-white">Post Details</h3>
+              <div className="sticky top-0 flex items-center justify-between z-10" style={{ padding: '32px', background: '#242A45', borderBottom: '1px solid rgba(80, 227, 194, 0.2)' }}>
+                <h3 style={{ fontSize: '18px', fontWeight: 600, color: '#F2F4F8' }}>Post Details</h3>
                 <button
                   onClick={() => setSelectedPost(null)}
-                  className="unstyled p-2 hover:bg-[#222] rounded-lg transition-colors text-[#a1a1aa] hover:text-white"
-                  style={{ background: 'transparent', border: 'none' }}
+                  className="unstyled p-2 rounded-lg transition-colors"
+                  style={{ background: 'transparent', border: 'none', color: 'rgba(242, 244, 248, 0.6)' }}
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -708,7 +771,7 @@ export function Dashboard() {
 
               <div className="p-6 space-y-6">
                 {selectedPost.media && (
-                  <div className="rounded-xl overflow-hidden bg-[#0d0d0d]">
+                  <div style={{ borderRadius: '12px', overflow: 'hidden', background: 'rgba(26, 31, 54, 0.8)' }}>
                     <img
                       src={`${selectedPost.media.cloudinary_url}?w=1200&h=800&c_limit&q=90&f_auto`}
                       alt="Post media"
@@ -718,12 +781,25 @@ export function Dashboard() {
                 )}
 
                 <div>
-                  <label className="text-xs font-semibold text-[#a1a1aa] uppercase tracking-wide block mb-2">Status</label>
-                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${
-                    selectedPost.status === 'posted' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
-                    selectedPost.status === 'scheduled' ? 'bg-primary-500/20 text-primary-400 border border-primary-500/30' :
-                    'bg-[#27272a] text-[#a1a1aa] border border-[#3a3a3a]'
-                  }`}>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: 'rgba(242, 244, 248, 0.6)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '8px' }}>Status</label>
+                  <span style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '6px 12px',
+                    borderRadius: '20px',
+                    fontSize: '12px',
+                    fontWeight: 500,
+                    background: selectedPost.status === 'posted' ? 'rgba(80, 227, 194, 0.2)' :
+                               selectedPost.status === 'scheduled' ? 'rgba(41, 121, 255, 0.2)' :
+                               'rgba(242, 244, 248, 0.1)',
+                    color: selectedPost.status === 'posted' ? '#50E3C2' :
+                           selectedPost.status === 'scheduled' ? '#2979FF' :
+                           'rgba(242, 244, 248, 0.6)',
+                    border: `1px solid ${selectedPost.status === 'posted' ? 'rgba(80, 227, 194, 0.3)' :
+                                          selectedPost.status === 'scheduled' ? 'rgba(41, 121, 255, 0.3)' :
+                                          'rgba(242, 244, 248, 0.2)'}`
+                  }}>
                     {selectedPost.status === 'posted' && <CheckCircle2 className="w-3 h-3" />}
                     {selectedPost.status === 'scheduled' && <Clock className="w-3 h-3" />}
                     {selectedPost.status.charAt(0).toUpperCase() + selectedPost.status.slice(1)}
@@ -731,21 +807,29 @@ export function Dashboard() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-[#a1a1aa] uppercase tracking-wide block mb-2">Caption</label>
-                  <p className="text-white whitespace-pre-wrap leading-relaxed">
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: 'rgba(242, 244, 248, 0.6)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '8px' }}>Caption</label>
+                  <p style={{ color: '#F2F4F8', whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
                     {selectedPost.final_caption || selectedPost.generated_caption || 'No caption available'}
                   </p>
                 </div>
 
                 {selectedPost.hashtags && selectedPost.hashtags.length > 0 && (
                   <div>
-                    <label className="text-xs font-semibold text-[#a1a1aa] uppercase tracking-wide block mb-2 flex items-center gap-1">
+                    <label style={{ fontSize: '12px', fontWeight: 600, color: 'rgba(242, 244, 248, 0.6)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '8px' }}>
                       <Hash className="w-3 h-3" />
                       Hashtags
                     </label>
                     <div className="flex flex-wrap gap-2">
                       {selectedPost.hashtags.map((tag: string, idx: number) => (
-                        <span key={idx} className="px-3 py-1 rounded-full text-xs font-medium bg-primary-500/20 text-primary-400 border border-primary-500/30">
+                        <span key={idx} style={{
+                          padding: '6px 12px',
+                          borderRadius: '20px',
+                          fontSize: '12px',
+                          fontWeight: 500,
+                          background: 'rgba(41, 121, 255, 0.2)',
+                          color: '#2979FF',
+                          border: '1px solid rgba(41, 121, 255, 0.3)'
+                        }}>
                           #{tag}
                         </span>
                       ))}
@@ -755,8 +839,8 @@ export function Dashboard() {
 
                 {selectedPost.scheduled_for && (
                   <div>
-                    <label className="text-xs font-semibold text-[#a1a1aa] uppercase tracking-wide block mb-2">Scheduled For</label>
-                    <p className="text-white">
+                    <label style={{ fontSize: '12px', fontWeight: 600, color: 'rgba(242, 244, 248, 0.6)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '8px' }}>Scheduled For</label>
+                    <p style={{ color: '#F2F4F8' }}>
                       {new Date(selectedPost.scheduled_for).toLocaleString()}
                     </p>
                   </div>

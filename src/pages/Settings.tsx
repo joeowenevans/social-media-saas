@@ -23,8 +23,8 @@ export function Settings() {
       <AppLayout>
         <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 200px)' }}>
           <div className="flex flex-col items-center gap-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#14b8a6]"></div>
-            <p style={{ color: '#a1a1aa', fontSize: '14px' }}>Loading settings...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#50E3C2]"></div>
+            <p style={{ color: 'rgba(242, 244, 248, 0.6)', fontSize: '14px' }}>Loading settings...</p>
           </div>
         </div>
       </AppLayout>
@@ -91,16 +91,16 @@ export function Settings() {
         {/* Page Title with Teal Text Glow */}
         <div style={{ textAlign: 'center', marginBottom: '64px' }}>
           <h1 style={{
-            color: '#14b8a6',
+            color: '#50E3C2',
             fontSize: '32px',
             fontWeight: 700,
             marginBottom: '12px',
-            textShadow: '0 0 20px rgba(20, 184, 166, 0.6), 0 0 40px rgba(20, 184, 166, 0.4), 0 0 60px rgba(20, 184, 166, 0.2)'
+            textShadow: '0 0 20px rgba(80, 227, 194, 0.6), 0 0 40px rgba(80, 227, 194, 0.4), 0 0 60px rgba(80, 227, 194, 0.2)'
           }}>
             Brand Settings
           </h1>
           <p style={{
-            color: '#888',
+            color: 'rgba(242, 244, 248, 0.6)',
             fontSize: '16px',
             margin: 0
           }}>
@@ -114,12 +114,12 @@ export function Settings() {
         <div className="danger-zone" style={{
           marginTop: '80px',
           padding: '32px',
-          background: '#1a1a1a',
-          borderRadius: '12px',
-          border: '1px solid rgba(239, 68, 68, 0.3)'
+          background: 'rgba(255, 107, 107, 0.05)',
+          borderRadius: '16px',
+          border: '1px solid rgba(255, 107, 107, 0.3)'
         }}>
           <h2 style={{
-            color: '#ef4444',
+            color: '#FF6B6B',
             fontSize: '20px',
             fontWeight: 600,
             marginBottom: '12px'
@@ -127,7 +127,7 @@ export function Settings() {
             Danger Zone
           </h2>
           <p style={{
-            color: '#888',
+            color: 'rgba(242, 244, 248, 0.6)',
             fontSize: '14px',
             marginBottom: '24px',
             lineHeight: 1.6
@@ -139,21 +139,21 @@ export function Settings() {
             style={{
               padding: '12px 24px',
               background: 'transparent',
-              color: '#ef4444',
+              color: '#FF6B6B',
               fontSize: '15px',
               fontWeight: 600,
-              border: '2px solid #ef4444',
+              border: '2px solid #FF6B6B',
               borderRadius: '8px',
               cursor: 'pointer',
               transition: 'all 0.2s ease'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#ef4444'
+              e.currentTarget.style.background = '#FF6B6B'
               e.currentTarget.style.color = 'white'
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.background = 'transparent'
-              e.currentTarget.style.color = '#ef4444'
+              e.currentTarget.style.color = '#FF6B6B'
             }}
           >
             Delete Account
@@ -170,7 +170,8 @@ export function Settings() {
             left: 0,
             right: 0,
             bottom: 0,
-            background: 'rgba(0, 0, 0, 0.8)',
+            background: 'rgba(26, 31, 54, 0.9)',
+            backdropFilter: 'blur(8px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -181,12 +182,13 @@ export function Settings() {
         >
           <div
             style={{
-              background: '#1a1a1a',
+              background: '#242A45',
               borderRadius: '16px',
               padding: '32px',
               maxWidth: '450px',
               width: '100%',
-              boxShadow: '0 0 60px rgba(0, 0, 0, 0.5)'
+              boxShadow: '0 0 60px rgba(255, 107, 107, 0.15)',
+              border: '1px solid rgba(255, 107, 107, 0.3)'
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -200,12 +202,12 @@ export function Settings() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   borderRadius: '50%',
-                  background: 'rgba(239, 68, 68, 0.1)'
+                  background: 'rgba(255, 107, 107, 0.1)'
                 }}>
-                  <AlertCircle style={{ width: '28px', height: '28px', color: '#ef4444' }} />
+                  <AlertCircle style={{ width: '28px', height: '28px', color: '#FF6B6B' }} />
                 </div>
                 <h2 style={{
-                  color: '#ef4444',
+                  color: '#FF6B6B',
                   fontSize: '22px',
                   fontWeight: 700,
                   margin: 0
@@ -222,14 +224,14 @@ export function Settings() {
                   padding: '4px'
                 }}
               >
-                <X style={{ width: '20px', height: '20px', color: '#888' }} />
+                <X style={{ width: '20px', height: '20px', color: 'rgba(242, 244, 248, 0.6)' }} />
               </button>
             </div>
 
             {/* Warning */}
             <div style={{
-              background: 'rgba(239, 68, 68, 0.1)',
-              border: '1px solid rgba(239, 68, 68, 0.3)',
+              background: 'rgba(255, 107, 107, 0.1)',
+              border: '1px solid rgba(255, 107, 107, 0.3)',
               borderRadius: '8px',
               padding: '16px',
               marginBottom: '24px'
@@ -247,7 +249,7 @@ export function Settings() {
             {/* Password Input */}
             <div style={{ marginBottom: '24px' }}>
               <label style={{
-                color: 'white',
+                color: '#F2F4F8',
                 fontSize: '14px',
                 fontWeight: 500,
                 display: 'block',
@@ -266,10 +268,10 @@ export function Settings() {
                 style={{
                   width: '100%',
                   padding: '12px 16px',
-                  background: '#0d0d0d',
-                  border: deleteError ? '1px solid #ef4444' : '1px solid #374151',
+                  background: 'rgba(26, 31, 54, 0.8)',
+                  border: deleteError ? '1px solid #FF6B6B' : '1px solid rgba(80, 227, 194, 0.3)',
                   borderRadius: '8px',
-                  color: 'white',
+                  color: '#F2F4F8',
                   fontSize: '14px',
                   outline: 'none',
                   boxSizing: 'border-box'
@@ -277,7 +279,7 @@ export function Settings() {
               />
               {deleteError && (
                 <p style={{
-                  color: '#ef4444',
+                  color: '#FF6B6B',
                   fontSize: '13px',
                   marginTop: '8px',
                   margin: '8px 0 0 0'
@@ -294,18 +296,18 @@ export function Settings() {
                 disabled={deleting}
                 style={{
                   padding: '12px 24px',
-                  background: '#2a2a2a',
-                  color: 'white',
+                  background: 'rgba(26, 31, 54, 0.8)',
+                  color: '#F2F4F8',
                   fontSize: '15px',
                   fontWeight: 600,
-                  border: 'none',
+                  border: '1px solid rgba(80, 227, 194, 0.3)',
                   borderRadius: '8px',
                   cursor: deleting ? 'not-allowed' : 'pointer',
                   opacity: deleting ? 0.6 : 1,
                   transition: 'all 0.2s ease'
                 }}
-                onMouseEnter={(e) => !deleting && (e.currentTarget.style.background = '#333')}
-                onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
+                onMouseEnter={(e) => !deleting && (e.currentTarget.style.background = 'rgba(26, 31, 54, 1)')}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(26, 31, 54, 0.8)'}
               >
                 Cancel
               </button>
@@ -314,7 +316,7 @@ export function Settings() {
                 disabled={!deletePassword || deleting}
                 style={{
                   padding: '12px 24px',
-                  background: !deletePassword || deleting ? '#4b5563' : '#ef4444',
+                  background: !deletePassword || deleting ? '#4b5563' : '#FF6B6B',
                   color: 'white',
                   fontSize: '15px',
                   fontWeight: 600,
@@ -329,12 +331,12 @@ export function Settings() {
                 }}
                 onMouseEnter={(e) => {
                   if (deletePassword && !deleting) {
-                    e.currentTarget.style.background = '#dc2626'
+                    e.currentTarget.style.background = '#e85a5a'
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (deletePassword && !deleting) {
-                    e.currentTarget.style.background = '#ef4444'
+                    e.currentTarget.style.background = '#FF6B6B'
                   }
                 }}
               >
