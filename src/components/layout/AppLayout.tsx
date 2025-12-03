@@ -47,8 +47,8 @@ export function AppLayout({ children }: AppLayoutProps) {
     <div
       className="app-root min-h-screen flex flex-col"
       style={{
-        backgroundColor: '#0a0a0a',
-        backgroundImage: 'radial-gradient(circle, rgba(75, 85, 99, 0.35) 1px, transparent 1px)',
+        backgroundColor: '#1A1F36',
+        backgroundImage: 'radial-gradient(circle, rgba(80, 227, 194, 0.08) 1px, transparent 1px)',
         backgroundSize: '24px 24px',
         overflowX: 'hidden',
         maxWidth: '100vw'
@@ -57,8 +57,8 @@ export function AppLayout({ children }: AppLayoutProps) {
       {/* Header - Fixed Layout */}
       <header
         style={{
-          background: '#0f0f0f',
-          borderBottom: '1px solid #1a1a1a',
+          background: '#151929',
+          borderBottom: '1px solid rgba(80, 227, 194, 0.1)',
           height: '64px',
           width: '100%',
           position: 'sticky',
@@ -99,14 +99,14 @@ export function AppLayout({ children }: AppLayoutProps) {
             >
               <Share2
                 style={{
-                  color: 'white',
+                  color: '#50E3C2',
                   width: '24px',
                   height: '24px'
                 }}
               />
               <span
                 style={{
-                  color: '#14b8a6',
+                  color: '#50E3C2',
                   fontSize: '20px',
                   fontWeight: 700
                 }}
@@ -132,7 +132,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                 onClick={() => navigate(item.path)}
                 className="unstyled"
                 style={{
-                  color: isActive(item.path) ? '#14b8a6' : '#e5e5e5',
+                  color: isActive(item.path) ? '#50E3C2' : '#F2F4F8',
                   fontSize: '15px',
                   fontWeight: 600,
                   background: 'transparent',
@@ -141,17 +141,17 @@ export function AppLayout({ children }: AppLayoutProps) {
                   cursor: 'pointer',
                   transition: 'all 0.3s ease',
                   textShadow: isActive(item.path)
-                    ? '0 0 12px rgba(20, 184, 166, 0.8), 0 0 24px rgba(20, 184, 166, 0.5)'
+                    ? '0 0 12px rgba(80, 227, 194, 0.8), 0 0 24px rgba(80, 227, 194, 0.5)'
                     : 'none'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#14b8a6'
-                  e.currentTarget.style.textShadow = '0 0 10px rgba(20, 184, 166, 0.8)'
+                  e.currentTarget.style.color = '#50E3C2'
+                  e.currentTarget.style.textShadow = '0 0 10px rgba(80, 227, 194, 0.8)'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = isActive(item.path) ? '#14b8a6' : '#e5e5e5'
+                  e.currentTarget.style.color = isActive(item.path) ? '#50E3C2' : '#F2F4F8'
                   e.currentTarget.style.textShadow = isActive(item.path)
-                    ? '0 0 12px rgba(20, 184, 166, 0.8), 0 0 24px rgba(20, 184, 166, 0.5)'
+                    ? '0 0 12px rgba(80, 227, 194, 0.8), 0 0 24px rgba(80, 227, 194, 0.5)'
                     : 'none'
                 }}
               >
@@ -162,7 +162,7 @@ export function AppLayout({ children }: AppLayoutProps) {
               onClick={handleSignOut}
               className="unstyled"
               style={{
-                color: '#e5e5e5',
+                color: '#F2F4F8',
                 fontSize: '15px',
                 fontWeight: 600,
                 background: 'transparent',
@@ -173,11 +173,11 @@ export function AppLayout({ children }: AppLayoutProps) {
                 textShadow: 'none'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.color = '#14b8a6'
-                e.currentTarget.style.textShadow = '0 0 10px rgba(20, 184, 166, 0.8)'
+                e.currentTarget.style.color = '#50E3C2'
+                e.currentTarget.style.textShadow = '0 0 10px rgba(80, 227, 194, 0.8)'
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.color = '#e5e5e5'
+                e.currentTarget.style.color = '#F2F4F8'
                 e.currentTarget.style.textShadow = 'none'
               }}
             >
@@ -202,7 +202,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             }}
             aria-label="Open menu"
           >
-            <Menu style={{ color: '#14b8a6', width: '28px', height: '28px' }} />
+            <Menu style={{ color: '#50E3C2', width: '28px', height: '28px' }} />
           </button>
         </div>
       </header>
@@ -230,8 +230,8 @@ export function AppLayout({ children }: AppLayoutProps) {
               left: 0,
               right: 0,
               bottom: 0,
-              background: 'rgba(0, 0, 0, 0.5)',
-              backdropFilter: 'blur(4px)'
+              background: 'rgba(26, 31, 54, 0.8)',
+              backdropFilter: 'blur(8px)'
             }}
           />
 
@@ -244,8 +244,8 @@ export function AppLayout({ children }: AppLayoutProps) {
               bottom: 0,
               width: '280px',
               maxWidth: '80vw',
-              background: '#1a1a1a',
-              borderLeft: '1px solid #2a2a2a',
+              background: '#1A1F36',
+              borderLeft: '1px solid rgba(80, 227, 194, 0.2)',
               display: 'flex',
               flexDirection: 'column',
               animation: 'slideInRight 0.2s ease-out'
@@ -258,12 +258,12 @@ export function AppLayout({ children }: AppLayoutProps) {
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 padding: '16px 20px',
-                borderBottom: '1px solid #2a2a2a'
+                borderBottom: '1px solid rgba(80, 227, 194, 0.2)'
               }}
             >
               <span
                 style={{
-                  color: '#14b8a6',
+                  color: '#50E3C2',
                   fontSize: '18px',
                   fontWeight: 700
                 }}
@@ -286,7 +286,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                 }}
                 aria-label="Close menu"
               >
-                <X style={{ color: '#e5e5e5', width: '24px', height: '24px' }} />
+                <X style={{ color: '#50E3C2', width: '24px', height: '24px' }} />
               </button>
             </div>
 
@@ -304,7 +304,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                     padding: '16px 24px',
                     background: 'transparent',
                     border: 'none',
-                    color: isActive(item.path) ? '#14b8a6' : '#ffffff',
+                    color: isActive(item.path) ? '#50E3C2' : '#F2F4F8',
                     fontSize: '16px',
                     fontWeight: 500,
                     cursor: 'pointer',
@@ -312,7 +312,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                     minHeight: '52px',
                     transition: 'all 0.2s ease',
                     textShadow: isActive(item.path)
-                      ? '0 0 10px rgba(20, 184, 166, 0.8), 0 0 20px rgba(20, 184, 166, 0.4)'
+                      ? '0 0 10px rgba(80, 227, 194, 0.8), 0 0 20px rgba(80, 227, 194, 0.4)'
                       : 'none'
                   }}
                 >
@@ -321,7 +321,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                     height: '22px',
                     flexShrink: 0,
                     filter: isActive(item.path)
-                      ? 'drop-shadow(0 0 6px rgba(20, 184, 166, 0.8))'
+                      ? 'drop-shadow(0 0 6px rgba(80, 227, 194, 0.8))'
                       : 'none'
                   }} />
                   {item.label}
@@ -330,7 +330,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             </nav>
 
             {/* Sign Out Button at Bottom */}
-            <div style={{ padding: '16px 20px', borderTop: '1px solid #2a2a2a' }}>
+            <div style={{ padding: '16px 20px', borderTop: '1px solid rgba(80, 227, 194, 0.2)' }}>
               <button
                 onClick={handleSignOut}
                 style={{
@@ -340,10 +340,10 @@ export function AppLayout({ children }: AppLayoutProps) {
                   gap: '8px',
                   width: '100%',
                   padding: '14px 20px',
-                  background: '#2a2a2a',
-                  border: 'none',
+                  background: '#242A45',
+                  border: '1px solid rgba(80, 227, 194, 0.3)',
                   borderRadius: '8px',
-                  color: '#e5e5e5',
+                  color: '#F2F4F8',
                   fontSize: '15px',
                   fontWeight: 600,
                   cursor: 'pointer',
@@ -385,8 +385,8 @@ export function AppLayout({ children }: AppLayoutProps) {
       {/* Footer - New Design System */}
       <footer
         style={{
-          background: '#0f0f0f',
-          borderTop: '1px solid #1a1a1a',
+          background: '#151929',
+          borderTop: '1px solid rgba(80, 227, 194, 0.1)',
           marginTop: '64px'
         }}
       >
@@ -400,7 +400,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           {/* Logo */}
           <div
             style={{
-              color: '#14b8a6',
+              color: '#50E3C2',
               fontWeight: 700,
               fontSize: '18px',
               marginBottom: '16px'
@@ -415,13 +415,13 @@ export function AppLayout({ children }: AppLayoutProps) {
               to="/privacy"
               className="transition-colors"
               style={{
-                color: '#888',
+                color: 'rgba(242, 244, 248, 0.6)',
                 fontSize: '14px',
                 textDecoration: 'none',
                 transition: 'color 0.2s'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
-              onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#50E3C2'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(242, 244, 248, 0.6)'}
             >
               Privacy Policy
             </Link>
@@ -429,13 +429,13 @@ export function AppLayout({ children }: AppLayoutProps) {
               to="/terms"
               className="transition-colors"
               style={{
-                color: '#888',
+                color: 'rgba(242, 244, 248, 0.6)',
                 fontSize: '14px',
                 textDecoration: 'none',
                 transition: 'color 0.2s'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
-              onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#50E3C2'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(242, 244, 248, 0.6)'}
             >
               Terms of Service
             </Link>
@@ -443,13 +443,13 @@ export function AppLayout({ children }: AppLayoutProps) {
               to="/contact"
               className="transition-colors"
               style={{
-                color: '#888',
+                color: 'rgba(242, 244, 248, 0.6)',
                 fontSize: '14px',
                 textDecoration: 'none',
                 transition: 'color 0.2s'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
-              onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#50E3C2'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(242, 244, 248, 0.6)'}
             >
               Contact
             </Link>
@@ -457,13 +457,13 @@ export function AppLayout({ children }: AppLayoutProps) {
               to="/support"
               className="transition-colors"
               style={{
-                color: '#888',
+                color: 'rgba(242, 244, 248, 0.6)',
                 fontSize: '14px',
                 textDecoration: 'none',
                 transition: 'color 0.2s'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
-              onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#50E3C2'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(242, 244, 248, 0.6)'}
             >
               Support
             </Link>
@@ -471,13 +471,13 @@ export function AppLayout({ children }: AppLayoutProps) {
               href="mailto:studio@dizzyotter.com"
               className="transition-colors"
               style={{
-                color: '#888',
+                color: 'rgba(242, 244, 248, 0.6)',
                 fontSize: '14px',
                 textDecoration: 'none',
                 transition: 'color 0.2s'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.color = '#14b8a6'}
-              onMouseLeave={(e) => e.currentTarget.style.color = '#888'}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#50E3C2'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(242, 244, 248, 0.6)'}
             >
               studio@dizzyotter.com
             </a>
@@ -486,7 +486,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           {/* Copyright */}
           <div
             style={{
-              color: '#888',
+              color: 'rgba(242, 244, 248, 0.5)',
               fontSize: '14px',
               marginTop: '24px'
             }}
