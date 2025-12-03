@@ -551,10 +551,10 @@ export function Upload() {
             <div
               {...getRootProps()}
               style={{
-                background: '#242A45',
+                background: isDragActive ? 'rgba(80, 227, 194, 0.08)' : 'rgba(41, 121, 255, 0.05)',
                 padding: '48px',
-                borderRadius: '12px',
-                border: isDragActive ? '2px dashed #50E3C2' : '2px dashed rgba(80, 227, 194, 0.3)',
+                borderRadius: '16px',
+                border: isDragActive ? '2px dashed #50E3C2' : '2px dashed rgba(80, 227, 194, 0.4)',
                 textAlign: 'center',
                 cursor: uploading ? 'not-allowed' : 'pointer',
                 transition: 'all 0.2s ease',
@@ -595,14 +595,14 @@ export function Upload() {
                     <ImageIcon style={{ width: '48px', height: '48px', color: '#50E3C2' }} />
                     <Video style={{ width: '48px', height: '48px', color: '#50E3C2' }} />
                   </div>
-                  <UploadIcon style={{ width: '32px', height: '32px', color: 'rgba(242, 244, 248, 0.5)', margin: '0 auto 16px' }} />
+                  <UploadIcon style={{ width: '48px', height: '48px', color: '#50E3C2', margin: '0 auto 16px' }} />
                   <p style={{ color: '#F2F4F8', fontSize: '18px', fontWeight: 500, marginBottom: '8px' }}>
-                    {isDragActive ? 'Drop your file here...' : 'Drop your image or video here'}
+                    {isDragActive ? 'Drop your file here...' : 'Drag and drop files here'}
                   </p>
                   <p style={{ color: 'rgba(242, 244, 248, 0.6)', fontSize: '14px', marginBottom: '24px' }}>
                     or click to browse
                   </p>
-                  <p style={{ color: 'rgba(242, 244, 248, 0.4)', fontSize: '12px' }}>
+                  <p style={{ color: 'rgba(242, 244, 248, 0.6)', fontSize: '12px' }}>
                     Supports: JPG, PNG, GIF, MP4, MOV
                     <br />
                     Max size: 10MB for images, 100MB for videos
@@ -632,7 +632,7 @@ export function Upload() {
                 onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
                 onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
               >
-                <X style={{ width: '32px', height: '32px', color: '#50E3C2' }} />
+                <X style={{ width: '32px', height: '32px', color: '#FF6B6B' }} />
               </button>
               {fileType === 'video' ? (
                 <video
@@ -641,7 +641,7 @@ export function Upload() {
                   style={{
                     width: '100%',
                     maxHeight: '400px',
-                    borderRadius: '8px'
+                    borderRadius: '12px'
                   }}
                 />
               ) : (
@@ -652,7 +652,7 @@ export function Upload() {
                     width: '100%',
                     maxHeight: '400px',
                     objectFit: 'contain',
-                    borderRadius: '8px'
+                    borderRadius: '12px'
                   }}
                 />
               )}
@@ -734,6 +734,7 @@ export function Upload() {
                     padding: '16px',
                     background: '#242A45',
                     border: '1px solid rgba(80, 227, 194, 0.3)',
+                    borderLeft: '4px solid #50E3C2',
                     borderRadius: '12px',
                     color: '#F2F4F8',
                     fontSize: '15px',
