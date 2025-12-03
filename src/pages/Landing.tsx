@@ -67,10 +67,10 @@ export function Landing() {
 
         /* Mobile styles */
         @media (max-width: 768px) {
-          .hero-section { padding: 60px 20px 80px !important; }
+          .hero-section { padding: 60px 20px 40px !important; }
           .hero-title { font-size: 2.25rem !important; line-height: 1.2 !important; }
           .hero-subtitle { font-size: 1rem !important; margin-bottom: 32px !important; }
-          .features-section { padding: 60px 20px !important; }
+          .features-section { padding: 40px 20px 60px !important; }
           .features-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
           .feature-card { padding: 24px !important; }
           .section-title { font-size: 1.75rem !important; }
@@ -82,6 +82,7 @@ export function Landing() {
           .cta-card { padding: 32px 24px !important; }
           .cta-title { font-size: 1.5rem !important; }
           .cta-button { padding: 16px 32px !important; font-size: 16px !important; width: 100% !important; justify-content: center !important; }
+          .header-button { padding: 10px 20px !important; font-size: 14px !important; }
           .footer-grid { grid-template-columns: 1fr !important; gap: 32px !important; text-align: center !important; }
           .footer-social { justify-content: center !important; }
           .footer-links { align-items: center !important; }
@@ -130,6 +131,7 @@ export function Landing() {
             {/* Nav - Just Sign In */}
             <Link
               to="/login"
+              className="header-button"
               style={{
                 padding: '12px 28px',
                 background: '#50E3C2',
@@ -159,7 +161,7 @@ export function Landing() {
       </header>
 
       {/* Hero Section */}
-      <section className="hero-section" style={{ position: 'relative', padding: '80px 24px 100px', textAlign: 'center' }}>
+      <section className="hero-section" style={{ position: 'relative', padding: '80px 24px 60px', textAlign: 'center' }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
           {/* Main Title */}
           <h1
