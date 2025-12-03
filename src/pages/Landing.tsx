@@ -225,7 +225,7 @@ export function Landing() {
       </section>
 
       {/* Features Section */}
-      <section className="features-section" style={{ padding: '40px 24px 120px', position: 'relative' }}>
+      <section className="features-section" style={{ padding: '40px 24px 60px', position: 'relative' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           {/* Section Header */}
           <div style={{ textAlign: 'center', marginBottom: '64px' }}>
@@ -300,7 +300,7 @@ export function Landing() {
       </section>
 
       {/* CTA Section - Vague about pricing */}
-      <section className="cta-section" style={{ padding: '100px 24px', position: 'relative' }}>
+      <section className="cta-section" style={{ padding: '40px 24px 100px', position: 'relative' }}>
         <div style={{ maxWidth: '700px', margin: '0 auto' }}>
           <div
             className="cta-card"
