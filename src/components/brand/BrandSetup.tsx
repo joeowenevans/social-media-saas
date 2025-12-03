@@ -429,8 +429,8 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
           disabled={loading}
           style={{
             padding: '12px 24px',
-            background: loading ? 'rgba(41, 121, 255, 0.5)' : '#2979FF',
-            color: '#FFFFFF',
+            background: loading ? 'rgba(80, 227, 194, 0.5)' : '#50E3C2',
+            color: '#1A1F36',
             fontSize: '16px',
             fontWeight: 600,
             border: 'none',
@@ -441,13 +441,13 @@ export function BrandSetup({ onComplete, onSave, initialData }: BrandSetupProps)
           }}
           onMouseEnter={(e) => {
             if (!loading) {
-              e.currentTarget.style.background = '#50E3C2'
-              e.currentTarget.style.color = '#1A1F36'
+              e.currentTarget.style.background = '#2979FF'
+              e.currentTarget.style.color = '#FFFFFF'
             }
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = '#2979FF'
-            e.currentTarget.style.color = '#FFFFFF'
+            e.currentTarget.style.background = '#50E3C2'
+            e.currentTarget.style.color = '#1A1F36'
           }}
           onMouseDown={(e) => {
             if (!loading) e.currentTarget.style.transform = 'scale(0.98)'

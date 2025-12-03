@@ -11,9 +11,11 @@ import { TermsOfService } from './pages/TermsOfService'
 import { Contact } from './pages/Contact'
 import { Support } from './pages/Support'
 import { ProtectedRoute } from './components/auth/ProtectedRoute'
+import { UploadProvider } from './contexts/UploadContext'
 
 function App() {
   return (
+    <UploadProvider>
     <BrowserRouter>
       <Toaster
         position="top-right"
@@ -97,6 +99,7 @@ function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
+    </UploadProvider>
   )
 }
 

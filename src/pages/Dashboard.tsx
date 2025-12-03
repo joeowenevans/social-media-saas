@@ -109,7 +109,12 @@ export function Dashboard() {
           <p style={{ color: 'rgba(242, 244, 248, 0.6)', marginBottom: '24px' }}>
             Let's set up your brand profile to get started with AI-powered social media management.
           </p>
-          <button onClick={() => navigate('/settings')} style={{ background: '#2979FF', color: '#FFFFFF', fontWeight: 600, padding: '12px 24px', borderRadius: '8px', width: '100%', border: 'none', cursor: 'pointer', transition: 'all 0.2s ease' }}>
+          <button
+            onClick={() => navigate('/settings')}
+            style={{ background: '#50E3C2', color: '#1A1F36', fontWeight: 600, padding: '12px 24px', borderRadius: '8px', width: '100%', border: 'none', cursor: 'pointer', transition: 'all 0.2s ease' }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = '#2979FF'; e.currentTarget.style.color = '#FFFFFF' }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = '#50E3C2'; e.currentTarget.style.color = '#1A1F36' }}
+          >
             Create Brand Profile
           </button>
         </div>
@@ -206,7 +211,7 @@ export function Dashboard() {
           </p>
         </div>
 
-        {/* AI Caption Generation Section */}
+        {/* AI Content Creation & Scheduling Section */}
         <div style={{
           background: '#242A45',
           padding: '32px',
@@ -222,7 +227,7 @@ export function Dashboard() {
             fontWeight: 600,
             marginBottom: '16px'
           }}>
-            AI-Powered Caption Generation
+            Create, Caption & Schedule
           </h2>
           <p style={{
             color: '#F2F4F8',
@@ -231,15 +236,15 @@ export function Dashboard() {
             marginTop: '16px',
             marginBottom: '24px'
           }}>
-            Upload your media and let our AI create engaging captions optimised for your brand voice and target audience.
+            Upload your media, let our AI generate engaging captions tailored to your brand, and schedule posts across all your social platforms.
           </p>
           <button
             onClick={() => navigate('/upload')}
             style={{
               width: '200px',
               height: '48px',
-              background: '#2979FF',
-              color: '#FFFFFF',
+              background: '#50E3C2',
+              color: '#1A1F36',
               border: 'none',
               borderRadius: '8px',
               fontSize: '15px',
@@ -250,12 +255,12 @@ export function Dashboard() {
               display: 'block'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#50E3C2'
-              e.currentTarget.style.color = '#1A1F36'
-            }}
-            onMouseLeave={(e) => {
               e.currentTarget.style.background = '#2979FF'
               e.currentTarget.style.color = '#FFFFFF'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = '#50E3C2'
+              e.currentTarget.style.color = '#1A1F36'
             }}
           >
             Get Started
@@ -607,7 +612,12 @@ export function Dashboard() {
               <p style={{ color: 'rgba(242, 244, 248, 0.6)', marginBottom: '16px' }}>
                 No posts yet. Start by uploading your first piece of content!
               </p>
-              <button onClick={() => navigate('/upload')} style={{ background: '#2979FF', color: '#FFFFFF', fontWeight: 600, padding: '12px 24px', borderRadius: '8px', border: 'none', cursor: 'pointer', transition: 'all 0.2s ease' }}>
+              <button
+                onClick={() => navigate('/upload')}
+                style={{ background: '#50E3C2', color: '#1A1F36', fontWeight: 600, padding: '12px 24px', borderRadius: '8px', border: 'none', cursor: 'pointer', transition: 'all 0.2s ease' }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = '#2979FF'; e.currentTarget.style.color = '#FFFFFF' }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = '#50E3C2'; e.currentTarget.style.color = '#1A1F36' }}
+              >
                 Upload Content
               </button>
             </div>

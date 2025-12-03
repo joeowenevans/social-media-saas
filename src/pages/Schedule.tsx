@@ -613,8 +613,8 @@ export function Schedule() {
               onClick={() => navigate('/upload')}
               style={{
                 padding: '12px 32px',
-                background: '#2979FF',
-                color: 'white',
+                background: '#50E3C2',
+                color: '#1A1F36',
                 fontSize: '16px',
                 fontWeight: 600,
                 border: 'none',
@@ -623,12 +623,12 @@ export function Schedule() {
                 transition: 'all 0.2s ease'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#50E3C2'
-                e.currentTarget.style.color = '#1A1F36'
+                e.currentTarget.style.background = '#2979FF'
+                e.currentTarget.style.color = '#FFFFFF'
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#2979FF'
-                e.currentTarget.style.color = 'white'
+                e.currentTarget.style.background = '#50E3C2'
+                e.currentTarget.style.color = '#1A1F36'
               }}
             >
               Schedule a Post
@@ -1104,8 +1104,8 @@ export function Schedule() {
               <button
                 onClick={confirmPostNow}
                 style={{
-                  background: '#2979FF',
-                  color: 'white',
+                  background: '#50E3C2',
+                  color: '#1A1F36',
                   padding: '12px 32px',
                   borderRadius: '20px',
                   fontWeight: 600,
@@ -1115,13 +1115,13 @@ export function Schedule() {
                   transition: 'all 0.2s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#50E3C2'
-                  e.currentTarget.style.color = '#1A1F36'
+                  e.currentTarget.style.background = '#2979FF'
+                  e.currentTarget.style.color = '#FFFFFF'
                   e.currentTarget.style.transform = 'scale(1.02)'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = '#2979FF'
-                  e.currentTarget.style.color = 'white'
+                  e.currentTarget.style.background = '#50E3C2'
+                  e.currentTarget.style.color = '#1A1F36'
                   e.currentTarget.style.transform = 'scale(1)'
                 }}
               >

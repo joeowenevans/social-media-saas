@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { useBrand } from '../hooks/useBrand'
 import { usePosts } from '../hooks/usePosts'
+import { useUpload } from '../contexts/UploadContext'
 import { AppLayout } from '../components/layout/AppLayout'
 import { useDropzone } from 'react-dropzone'
 import { Upload as UploadIcon, Wand2, Sparkles, Image as ImageIcon, Video, X, Send, Clock, ChevronLeft, ChevronRight, Zap, AlertCircle } from 'lucide-react'
@@ -31,20 +32,33 @@ export function Upload() {
   const { brand, loading } = useBrand(user?.id)
   const { posts } = usePosts(brand?.id)
   const navigate = useNavigate()
-  const [uploadedMedia, setUploadedMedia] = useState<Media | null>(null)
-  const [caption, setCaption] = useState('')
+
+  // Use persisted upload state from context
+  const {
+    uploadedMedia,
+    caption,
+    selectedPlatforms,
+    postType,
+    scheduledTime,
+    selectedDate,
+    selectedTime,
+    setUploadedMedia,
+    setCaption,
+    setSelectedPlatforms,
+    setPostType,
+    setScheduledTime,
+    setSelectedDate,
+    setSelectedTime,
+    clearUploadState
+  } = useUpload()
+
   const [generating, setGenerating] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [scheduledTime, setScheduledTime] = useState<string>('')
-  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([])
-  const [postType, setPostType] = useState<'post_now' | 'draft' | 'scheduled'>('draft')
   const [showPostNowConfirm, setShowPostNowConfirm] = useState(false)
   const abortControllerRef = useRef<AbortController | null>(null)
 
   // Calendar state
   const [currentMonth, setCurrentMonth] = useState(new Date())
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-  const [selectedTime, setSelectedTime] = useState<string>('12:00')
 
   // Sync selectedDate and selectedTime with scheduledTime
   useEffect(() => {
@@ -134,6 +148,14 @@ export function Upload() {
       }
     }
   }, [])
+
+  // Restore preview from persisted uploadedMedia on mount
+  useEffect(() => {
+    if (uploadedMedia && !preview) {
+      setPreview(uploadedMedia.cloudinary_url)
+      setFileType(uploadedMedia.media_type)
+    }
+  }, [uploadedMedia, preview])
 
   const onDrop = async (acceptedFiles: File[]) => {
     if (acceptedFiles.length === 0) return
@@ -229,8 +251,7 @@ export function Upload() {
   const clearPreview = () => {
     setPreview(null)
     setFileType(null)
-    setUploadedMedia(null)
-    setCaption('')
+    clearUploadState()
   }
 
   if (loading) {
@@ -470,6 +491,8 @@ export function Upload() {
       } else {
         toast.success('Draft saved!')
       }
+      // Clear persisted upload state after successful save
+      clearUploadState()
       navigate('/dashboard')
     } catch (error: any) {
       console.error('Save error:', error)
@@ -480,11 +503,11 @@ export function Upload() {
   }
 
   const togglePlatform = (platform: string) => {
-    setSelectedPlatforms((prev) =>
-      prev.includes(platform)
-        ? prev.filter((p) => p !== platform)
-        : [...prev, platform]
-    )
+    if (selectedPlatforms.includes(platform)) {
+      setSelectedPlatforms(selectedPlatforms.filter((p) => p !== platform))
+    } else {
+      setSelectedPlatforms([...selectedPlatforms, platform])
+    }
   }
 
   const confirmPostNow = async () => {
