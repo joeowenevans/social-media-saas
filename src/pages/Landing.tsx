@@ -19,22 +19,18 @@ export function Landing() {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-10px); }
         }
-        @keyframes pulse-glow {
-          0%, 100% { box-shadow: 0 0 20px rgba(80, 227, 194, 0.3), 0 0 40px rgba(80, 227, 194, 0.2); }
-          50% { box-shadow: 0 0 30px rgba(80, 227, 194, 0.5), 0 0 60px rgba(80, 227, 194, 0.3); }
+        @keyframes subtle-glow {
+          0%, 100% { box-shadow: 0 0 15px rgba(80, 227, 194, 0.15), 0 0 30px rgba(80, 227, 194, 0.1); }
+          50% { box-shadow: 0 0 20px rgba(80, 227, 194, 0.25), 0 0 40px rgba(80, 227, 194, 0.15); }
         }
         @keyframes text-glow {
-          0%, 100% { text-shadow: 0 0 20px rgba(80, 227, 194, 0.6), 0 0 40px rgba(80, 227, 194, 0.4); }
-          50% { text-shadow: 0 0 30px rgba(80, 227, 194, 0.8), 0 0 60px rgba(80, 227, 194, 0.5), 0 0 80px rgba(80, 227, 194, 0.3); }
+          0%, 100% { text-shadow: 0 0 20px rgba(80, 227, 194, 0.5), 0 0 40px rgba(80, 227, 194, 0.3); }
+          50% { text-shadow: 0 0 25px rgba(80, 227, 194, 0.6), 0 0 50px rgba(80, 227, 194, 0.4); }
         }
         @keyframes gradient-shift {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
           100% { background-position: 0% 50%; }
-        }
-        @keyframes fade-in-up {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
         }
         .feature-card {
           animation: float 6s ease-in-out infinite;
@@ -48,10 +44,10 @@ export function Landing() {
           box-shadow: 0 20px 40px rgba(80, 227, 194, 0.2), 0 0 60px rgba(80, 227, 194, 0.1);
         }
         .hero-title {
-          animation: text-glow 3s ease-in-out infinite;
+          animation: text-glow 4s ease-in-out infinite;
         }
         .cta-button {
-          animation: pulse-glow 2s ease-in-out infinite;
+          animation: subtle-glow 3s ease-in-out infinite;
         }
         .gradient-text {
           background: linear-gradient(135deg, #50E3C2 0%, #2979FF 50%, #50E3C2 100%);
@@ -68,12 +64,29 @@ export function Landing() {
           opacity: 0.4;
           pointer-events: none;
         }
+
+        /* Mobile styles */
         @media (max-width: 768px) {
-          .hero-title { font-size: 2.5rem !important; }
-          .hero-subtitle { font-size: 1.125rem !important; }
-          .features-grid { grid-template-columns: 1fr !important; }
-          .cta-buttons { flex-direction: column !important; width: 100% !important; }
-          .cta-buttons a { width: 100% !important; }
+          .hero-section { padding: 60px 20px 80px !important; }
+          .hero-title { font-size: 2.25rem !important; line-height: 1.2 !important; }
+          .hero-subtitle { font-size: 1rem !important; margin-bottom: 32px !important; }
+          .features-section { padding: 60px 20px !important; }
+          .features-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+          .feature-card { padding: 24px !important; }
+          .section-title { font-size: 1.75rem !important; }
+          .section-subtitle { font-size: 1rem !important; }
+          .stats-section { padding: 40px 20px !important; }
+          .stats-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+          .stat-value { font-size: 2.5rem !important; }
+          .cta-section { padding: 60px 20px !important; }
+          .cta-card { padding: 32px 24px !important; }
+          .cta-title { font-size: 1.5rem !important; }
+          .cta-button { padding: 16px 32px !important; font-size: 16px !important; width: 100% !important; justify-content: center !important; }
+          .footer-grid { grid-template-columns: 1fr !important; gap: 32px !important; text-align: center !important; }
+          .footer-social { justify-content: center !important; }
+          .footer-links { align-items: center !important; }
+          .orb { opacity: 0.25 !important; }
+          .header-inner { padding: 0 16px !important; }
         }
       `}</style>
 
@@ -93,7 +106,7 @@ export function Landing() {
           borderBottom: '1px solid rgba(80, 227, 194, 0.1)'
         }}
       >
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+        <div className="header-inner" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '72px' }}>
             {/* Logo */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -114,74 +127,40 @@ export function Landing() {
               <span style={{ fontSize: '22px', fontWeight: 700, color: '#50E3C2' }}>SocialAI</span>
             </div>
 
-            {/* Nav */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <Link
-                to="/login"
-                style={{
-                  padding: '10px 20px',
-                  color: 'rgba(242, 244, 248, 0.8)',
-                  fontWeight: 500,
-                  fontSize: '15px',
-                  textDecoration: 'none',
-                  transition: 'color 0.2s'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.color = '#50E3C2'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(242, 244, 248, 0.8)'}
-              >
-                Sign In
-              </Link>
-              <Link
-                to="/signup"
-                style={{
-                  padding: '12px 28px',
-                  background: '#50E3C2',
-                  color: '#1A1F36',
-                  fontWeight: 600,
-                  fontSize: '15px',
-                  borderRadius: '10px',
-                  textDecoration: 'none',
-                  transition: 'all 0.2s ease',
-                  boxShadow: '0 0 20px rgba(80, 227, 194, 0.3)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#2979FF'
-                  e.currentTarget.style.color = '#FFFFFF'
-                  e.currentTarget.style.boxShadow = '0 0 30px rgba(41, 121, 255, 0.4)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = '#50E3C2'
-                  e.currentTarget.style.color = '#1A1F36'
-                  e.currentTarget.style.boxShadow = '0 0 20px rgba(80, 227, 194, 0.3)'
-                }}
-              >
-                Get Started
-              </Link>
-            </div>
+            {/* Nav - Just Sign In */}
+            <Link
+              to="/login"
+              style={{
+                padding: '12px 28px',
+                background: '#50E3C2',
+                color: '#1A1F36',
+                fontWeight: 600,
+                fontSize: '15px',
+                borderRadius: '10px',
+                textDecoration: 'none',
+                transition: 'all 0.2s ease',
+                boxShadow: '0 0 15px rgba(80, 227, 194, 0.2)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#2979FF'
+                e.currentTarget.style.color = '#FFFFFF'
+                e.currentTarget.style.boxShadow = '0 0 20px rgba(41, 121, 255, 0.3)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#50E3C2'
+                e.currentTarget.style.color = '#1A1F36'
+                e.currentTarget.style.boxShadow = '0 0 15px rgba(80, 227, 194, 0.2)'
+              }}
+            >
+              Sign In
+            </Link>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section style={{ position: 'relative', padding: '100px 24px 120px', textAlign: 'center' }}>
+      <section className="hero-section" style={{ position: 'relative', padding: '80px 24px 100px', textAlign: 'center' }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-          {/* Badge */}
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '10px',
-              padding: '10px 20px',
-              background: 'rgba(80, 227, 194, 0.1)',
-              border: '1px solid rgba(80, 227, 194, 0.3)',
-              borderRadius: '50px',
-              marginBottom: '32px'
-            }}
-          >
-            <Sparkles style={{ width: '18px', height: '18px', color: '#50E3C2' }} />
-            <span style={{ color: '#50E3C2', fontWeight: 600, fontSize: '14px' }}>Powered by GPT-4 Vision AI</span>
-          </div>
-
           {/* Main Title */}
           <h1
             className="hero-title"
@@ -193,7 +172,7 @@ export function Landing() {
               lineHeight: 1.1
             }}
           >
-            AI-Powered Social Media
+            Social Media Management
             <br />
             <span className="gradient-text">Made Simple</span>
           </h1>
@@ -204,92 +183,55 @@ export function Landing() {
             style={{
               fontSize: '1.35rem',
               color: 'rgba(242, 244, 248, 0.7)',
-              maxWidth: '700px',
+              maxWidth: '650px',
               margin: '0 auto 48px',
               lineHeight: 1.7
             }}
           >
-            Upload your content, let AI craft perfect captions, and schedule posts
-            across all platforms. Your social media manager, powered by AI.
+            Create stunning captions, schedule posts across all platforms, and grow your audience. Your complete social media manager, in one place.
           </p>
 
-          {/* CTA Buttons */}
-          <div className="cta-buttons" style={{ display: 'flex', gap: '20px', justifyContent: 'center', marginBottom: '32px' }}>
-            <Link
-              to="/signup"
-              className="cta-button"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '10px',
-                padding: '18px 40px',
-                background: '#50E3C2',
-                color: '#1A1F36',
-                fontSize: '18px',
-                fontWeight: 700,
-                borderRadius: '12px',
-                textDecoration: 'none',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#2979FF'
-                e.currentTarget.style.color = '#FFFFFF'
-                e.currentTarget.style.transform = 'scale(1.05)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#50E3C2'
-                e.currentTarget.style.color = '#1A1F36'
-                e.currentTarget.style.transform = 'scale(1)'
-              }}
-            >
-              Start Free Trial
-              <ArrowRight style={{ width: '20px', height: '20px' }} />
-            </Link>
-            <Link
-              to="/login"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '10px',
-                padding: '18px 40px',
-                background: 'rgba(36, 42, 69, 0.8)',
-                border: '1px solid rgba(80, 227, 194, 0.3)',
-                color: '#F2F4F8',
-                fontSize: '18px',
-                fontWeight: 600,
-                borderRadius: '12px',
-                textDecoration: 'none',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#50E3C2'
-                e.currentTarget.style.background = 'rgba(80, 227, 194, 0.1)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(80, 227, 194, 0.3)'
-                e.currentTarget.style.background = 'rgba(36, 42, 69, 0.8)'
-              }}
-            >
-              View Demo
-            </Link>
-          </div>
-
-          {/* Trust Badge */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-            <CheckCircle2 style={{ width: '20px', height: '20px', color: '#50E3C2' }} />
-            <span style={{ color: 'rgba(242, 244, 248, 0.6)', fontSize: '15px' }}>
-              10 posts free • No credit card required
-            </span>
-          </div>
+          {/* Single CTA Button */}
+          <Link
+            to="/login"
+            className="cta-button"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '10px',
+              padding: '18px 40px',
+              background: '#50E3C2',
+              color: '#1A1F36',
+              fontSize: '18px',
+              fontWeight: 700,
+              borderRadius: '12px',
+              textDecoration: 'none',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = '#2979FF'
+              e.currentTarget.style.color = '#FFFFFF'
+              e.currentTarget.style.transform = 'scale(1.05)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = '#50E3C2'
+              e.currentTarget.style.color = '#1A1F36'
+              e.currentTarget.style.transform = 'scale(1)'
+            }}
+          >
+            Get Started
+            <ArrowRight style={{ width: '20px', height: '20px' }} />
+          </Link>
         </div>
       </section>
 
       {/* Features Section */}
-      <section style={{ padding: '80px 24px 120px', position: 'relative' }}>
+      <section className="features-section" style={{ padding: '80px 24px 120px', position: 'relative' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           {/* Section Header */}
           <div style={{ textAlign: 'center', marginBottom: '64px' }}>
             <h2
+              className="section-title"
               style={{
                 fontSize: '3rem',
                 fontWeight: 700,
@@ -300,7 +242,7 @@ export function Landing() {
             >
               Everything you need to <span style={{ color: '#50E3C2' }}>succeed</span>
             </h2>
-            <p style={{ fontSize: '1.2rem', color: 'rgba(242, 244, 248, 0.6)', maxWidth: '600px', margin: '0 auto' }}>
+            <p className="section-subtitle" style={{ fontSize: '1.2rem', color: 'rgba(242, 244, 248, 0.6)', maxWidth: '600px', margin: '0 auto' }}>
               Powerful features designed to streamline your social media workflow
             </p>
           </div>
@@ -315,8 +257,8 @@ export function Landing() {
             }}
           >
             {[
-              { icon: Wand2, title: 'AI Caption Generation', desc: 'GPT-4 Vision analyses your content and creates engaging captions tailored to your brand voice.' },
-              { icon: Calendar, title: 'Smart Scheduling', desc: 'Schedule posts across Instagram, Facebook, and Pinterest with our intuitive calendar.' },
+              { icon: Wand2, title: 'Smart Captions', desc: 'Generate engaging captions tailored to your brand voice and target audience.' },
+              { icon: Calendar, title: 'Easy Scheduling', desc: 'Schedule posts across Instagram, Facebook, and Pinterest with our intuitive calendar.' },
               { icon: TrendingUp, title: 'Multi-Platform', desc: 'Post to all your social accounts simultaneously with one click.' },
               { icon: Sparkles, title: 'Brand Voice', desc: 'Customise your brand voice and preferences for consistent, on-brand content.' }
             ].map((feature, i) => (
@@ -359,9 +301,9 @@ export function Landing() {
       </section>
 
       {/* Stats Section */}
-      <section style={{ padding: '60px 24px', background: 'rgba(36, 42, 69, 0.4)' }}>
+      <section className="stats-section" style={{ padding: '60px 24px', background: 'rgba(36, 42, 69, 0.4)' }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '40px', textAlign: 'center' }}>
+          <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '40px', textAlign: 'center' }}>
             {[
               { value: '10K+', label: 'Posts Scheduled' },
               { value: '500+', label: 'Happy Users' },
@@ -369,6 +311,7 @@ export function Landing() {
             ].map((stat, i) => (
               <div key={i}>
                 <div
+                  className="stat-value"
                   style={{
                     fontSize: '3.5rem',
                     fontWeight: 800,
@@ -388,104 +331,66 @@ export function Landing() {
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section style={{ padding: '100px 24px', position: 'relative' }}>
-        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-          {/* Section Header */}
-          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-            <h2 style={{ fontSize: '3rem', fontWeight: 700, color: '#F2F4F8', marginBottom: '16px' }}>
-              Simple, <span style={{ color: '#50E3C2' }}>Transparent</span> Pricing
-            </h2>
-            <p style={{ fontSize: '1.2rem', color: 'rgba(242, 244, 248, 0.6)' }}>
-              Start free, upgrade when you're ready
-            </p>
-          </div>
-
-          {/* Pricing Card */}
+      {/* CTA Section - Vague about pricing */}
+      <section className="cta-section" style={{ padding: '100px 24px', position: 'relative' }}>
+        <div style={{ maxWidth: '700px', margin: '0 auto' }}>
           <div
+            className="cta-card"
             style={{
               position: 'relative',
               background: 'linear-gradient(135deg, rgba(36, 42, 69, 0.9) 0%, rgba(26, 31, 54, 0.9) 100%)',
-              border: '2px solid #50E3C2',
+              border: '1px solid rgba(80, 227, 194, 0.3)',
               borderRadius: '24px',
               padding: '48px',
-              boxShadow: '0 0 60px rgba(80, 227, 194, 0.2), 0 0 100px rgba(80, 227, 194, 0.1)'
+              textAlign: 'center',
+              boxShadow: '0 0 60px rgba(80, 227, 194, 0.15), 0 0 100px rgba(80, 227, 194, 0.08)'
             }}
           >
-            {/* Badge */}
-            <div
+            <h2
+              className="cta-title"
               style={{
-                position: 'absolute',
-                top: '-16px',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                background: 'linear-gradient(135deg, #50E3C2 0%, #3dd4b0 100%)',
-                color: '#1A1F36',
-                padding: '8px 24px',
-                borderRadius: '50px',
+                fontSize: '2rem',
                 fontWeight: 700,
-                fontSize: '13px',
-                textTransform: 'uppercase',
-                letterSpacing: '1px'
+                color: '#F2F4F8',
+                marginBottom: '16px'
               }}
             >
-              Most Popular
-            </div>
-
-            <h3 style={{ fontSize: '2rem', fontWeight: 700, color: '#F2F4F8', marginBottom: '8px', marginTop: '8px' }}>
-              Pro Plan
-            </h3>
-            <div style={{ marginBottom: '32px' }}>
-              <span
-                className="gradient-text"
-                style={{ fontSize: '4rem', fontWeight: 800 }}
-              >
-                $29
-              </span>
-              <span style={{ color: 'rgba(242, 244, 248, 0.5)', fontSize: '1.25rem', marginLeft: '8px' }}>/month</span>
-            </div>
+              Ready to streamline your social media?
+            </h2>
+            <p style={{ fontSize: '1.1rem', color: 'rgba(242, 244, 248, 0.6)', marginBottom: '32px', lineHeight: 1.7 }}>
+              Join thousands of creators and businesses managing their social presence with ease.
+            </p>
 
             {/* Features List */}
-            <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 40px 0' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '24px', marginBottom: '32px' }}>
               {[
-                'Unlimited posts',
-                'AI caption generation',
-                'Multi-platform scheduling',
-                'Brand voice customisation',
-                'Priority support'
+                'Unlimited scheduling',
+                'Smart captions',
+                'Multi-platform support',
+                'Brand customisation'
               ].map((item, i) => (
-                <li
-                  key={i}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '14px',
-                    padding: '14px 0',
-                    borderBottom: i < 4 ? '1px solid rgba(80, 227, 194, 0.1)' : 'none'
-                  }}
-                >
-                  <CheckCircle2 style={{ width: '22px', height: '22px', color: '#50E3C2', flexShrink: 0 }} />
-                  <span style={{ color: '#F2F4F8', fontSize: '16px', fontWeight: 500 }}>{item}</span>
-                </li>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <CheckCircle2 style={{ width: '18px', height: '18px', color: '#50E3C2', flexShrink: 0 }} />
+                  <span style={{ color: '#F2F4F8', fontSize: '14px', fontWeight: 500 }}>{item}</span>
+                </div>
               ))}
-            </ul>
+            </div>
 
-            {/* CTA */}
             <Link
-              to="/signup"
+              to="/login"
+              className="cta-button"
               style={{
-                display: 'block',
-                width: '100%',
-                padding: '18px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: '18px 48px',
                 background: '#50E3C2',
                 color: '#1A1F36',
                 fontSize: '18px',
                 fontWeight: 700,
                 borderRadius: '12px',
                 textDecoration: 'none',
-                textAlign: 'center',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 0 30px rgba(80, 227, 194, 0.3)'
+                transition: 'all 0.3s ease'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = '#2979FF'
@@ -498,7 +403,8 @@ export function Landing() {
                 e.currentTarget.style.transform = 'scale(1)'
               }}
             >
-              Start Free Trial
+              Get Started
+              <ArrowRight style={{ width: '20px', height: '20px' }} />
             </Link>
           </div>
         </div>
@@ -513,10 +419,10 @@ export function Landing() {
         }}
       >
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '48px', marginBottom: '48px' }}>
+          <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '48px', marginBottom: '48px' }}>
             {/* Brand */}
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px', justifyContent: 'inherit' }}>
                 <div
                   style={{
                     width: '36px',
@@ -533,7 +439,7 @@ export function Landing() {
                 <span style={{ fontSize: '20px', fontWeight: 700, color: '#50E3C2' }}>SocialAI</span>
               </div>
               <p style={{ color: 'rgba(242, 244, 248, 0.5)', fontSize: '14px', lineHeight: 1.7 }}>
-                AI-powered social media management made simple. Create, schedule, and optimise your content effortlessly.
+                Social media management made simple. Create, schedule, and optimise your content effortlessly.
               </p>
             </div>
 
@@ -542,7 +448,7 @@ export function Landing() {
               <h4 style={{ color: '#F2F4F8', fontWeight: 600, marginBottom: '20px', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '1px' }}>
                 Quick Links
               </h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div className="footer-links" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {[
                   { to: '/privacy', label: 'Privacy Policy' },
                   { to: '/terms', label: 'Terms of Service' },
@@ -572,7 +478,7 @@ export function Landing() {
               <h4 style={{ color: '#F2F4F8', fontWeight: 600, marginBottom: '20px', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '1px' }}>
                 Follow Us
               </h4>
-              <div style={{ display: 'flex', gap: '12px' }}>
+              <div className="footer-social" style={{ display: 'flex', gap: '12px' }}>
                 {[Twitter, Facebook, Instagram, Linkedin].map((Icon, i) => (
                   <a
                     key={i}
